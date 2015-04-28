@@ -68,7 +68,7 @@ public class Game {
     // Start our game
     public void start() throws LWJGLException {
         // Set up our display
-        Display.setTitle("Display example"); //title of our window
+        Display.setTitle("LOL, soy yo"); //title of our window
         Display.setResizable(true); //whether our window is resizable
         Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT)); //resolution of our display
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
