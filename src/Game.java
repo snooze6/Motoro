@@ -1,11 +1,33 @@
 
+
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotated;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glViewport;
+
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
+
+import rubik.Node;
+import Others.Dibujo;
+import Others.Face;
 
 
 /**
@@ -27,12 +49,6 @@ public class Game {
 
     // Whether our game loop is running
     protected boolean running = false;
-
-    //Additional class
-    Axes axes = new Axes();
-    Cube cube= new Cube();
-    Sphere sphere= new Sphere();
-    Teapot tetera= new Teapot();
   
     //Cam perspective parameters
     //CamPosition
@@ -59,6 +75,10 @@ public class Game {
     int yPosition=0;
     int lastX;
     int lastY;
+    
+    private Face cara;
+    
+    Node nod;
 
     float fAngulo=0;
     public static void main(String[] args) throws LWJGLException {
@@ -68,12 +88,16 @@ public class Game {
     // Start our game
     public void start() throws LWJGLException {
         // Set up our display
-        Display.setTitle("Display example"); //title of our window
+        Display.setTitle("LOL, soy yo"); //title of our window
         Display.setResizable(true); //whether our window is resizable
         Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT)); //resolution of our display
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
+        
+        //nod = new Node();
+        cara = new Face(20);
+        
         //create and show our display
         Display.create();
 
@@ -82,6 +106,7 @@ public class Game {
 
         // Call this before running to set up our initial size
         resize();
+        
 
         running = true;
 
@@ -147,15 +172,12 @@ public class Game {
 
         input();
         fAngulo=Idle(fAngulo);
-        //axes.drawAxes(100);
+        //Dibujo.drawAxes(100);
         //cube.drawCube(5);
 
         glPushMatrix();
-        glColor3f(1.0f, 1.0f, 0.0f);
-        glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-        sphere.drawSphere(80,50,50);
-        
-        axes.drawAxes(40);
+          //Dibujo.drawCube(50);
+          cara.draw();
         glPopMatrix();
 
 
@@ -165,8 +187,8 @@ public class Game {
         glRotatef( 50*fAngulo, 0.0f, 1.0f, 0.0f);
         glTranslatef(0.0f, 0.0f, 100.0f);
         glRotatef( 30*fAngulo, 0.0f, 1.0f, 0.0f);
-        sphere.drawSphere(20,50,50);
-        axes.drawAxes(40);
+        Dibujo.drawSphere(20,50,50);
+        Dibujo.drawAxes(40);
         glPopMatrix();
 
         //Esfera 2
@@ -175,8 +197,8 @@ public class Game {
         glRotatef(8 * fAngulo, 0.0f, 1.0f, 0.0f);
         glTranslatef(0.0f, 0.0f, 200.0f);
         glRotatef(10 * fAngulo, 0.0f, 1.0f, 0.0f);
-        sphere.drawSphere(10.0f, 20, 20);
-        axes.drawAxes(40);
+        Dibujo.drawSphere(10.0f, 20, 20);
+        Dibujo.drawAxes(40);
         glPopMatrix();
 
         //Esfera 3
@@ -187,8 +209,8 @@ public class Game {
         glPushMatrix();
         glRotatef(fAngulo * 2, 0.0f, 1.0f, 0.0f);
         glPopMatrix();
-        sphere.drawSphere(20.0f, 20, 20);
-        axes.drawAxes(40);
+        Dibujo.drawSphere(20.0f, 20, 20);
+        Dibujo.drawAxes(40);
 
                 //Esfera  girando alrededor de esfera 2
                 glPushMatrix();
@@ -196,8 +218,8 @@ public class Game {
                 glRotatef(fAngulo*2.0f, 0.0f, 1.0f, 0.0f);
                 glTranslatef(0.0f, 0.0f, -50.0f);
                 glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-                sphere.drawSphere(10.0f, 20, 20);
-                axes.drawAxes(40);
+                Dibujo.drawSphere(10.0f, 20, 20);
+                Dibujo.drawAxes(40);
                 glPopMatrix();
                 //Esfera  girando alrededor de esfera 2
                 glPushMatrix();
@@ -205,8 +227,8 @@ public class Game {
                 glRotatef(fAngulo*2.0f + 120.0f, 0.0f, 1.0f, 0.0f);
                 glTranslatef(0.0f, 0.0f, -50.0f);
                 glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-                sphere.drawSphere(10.0f, 20, 20);
-                axes.drawAxes(40);
+                Dibujo.drawSphere(10.0f, 20, 20);
+                Dibujo.drawAxes(40);
                 glPopMatrix();
                 //Esfera  girando alrededor de esfera 2
                 glPushMatrix();
@@ -214,8 +236,8 @@ public class Game {
                 glRotatef(fAngulo*2.0f + 240.0f, 0.0f, 1.0f, 0.0f);
                 glTranslatef(0.0f, 0.0f, -50.0f);
                 glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-                sphere.drawSphere(10.0f, 20, 20);
-                axes.drawAxes(40);
+                Dibujo.drawSphere(10.0f, 20, 20);
+                Dibujo.drawAxes(40);
                 glPopMatrix();
         glPopMatrix();
         // ... render our game here ...
@@ -255,6 +277,12 @@ public class Game {
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
             xTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
             zTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+        	yTranslate+=speedMovement;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+        	yTranslate-=speedMovement;
         }
 
         //RotateCam
