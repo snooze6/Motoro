@@ -1,9 +1,7 @@
 package Others;
 
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -13,7 +11,9 @@ public class Face {
 	private Piece center;
 	private Piece aristas[];
 	private Piece esquinas[];
+	@SuppressWarnings("unused")
 	private Vector3f axis;
+	@SuppressWarnings("unused")
 	private float ratio;
 	private Vector3f[] faceOffsets;
 	
