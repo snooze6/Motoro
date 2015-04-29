@@ -55,7 +55,7 @@ public class game {
                 resize();
             update(getDelta());
             renderGL();
-            System.out.println("jodete 3.0");
+            System.out.println("jodete 4.0");
             Display.update();
             Display.sync(60); // cap fps to 60fps
         }
