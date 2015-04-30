@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Sphere;
 
 public class game {
 //Estupideces
@@ -98,12 +99,11 @@ public class game {
         GL11.glTranslatef(x, y, 0);
         GL11.glRotatef(rotation, 0f, 0f, 1f);
         GL11.glTranslatef(-x, -y, 0);
-
         GL11.glBegin(GL11.GL_QUADS);
-        GL11.glVertex2f(x - 50, y - 50);
-        GL11.glVertex2f(x + 50, y - 50);
-        GL11.glVertex2f(x + 50, y + 50);
-        GL11.glVertex2f(x - 50, y + 50);
+            GL11.glVertex2f(x - 50, y - 50);
+            GL11.glVertex2f(x + 50, y - 50);
+            GL11.glVertex2f(x + 50, y + 50);
+            GL11.glVertex2f(x - 50, y + 50);
         GL11.glEnd();
         GL11.glPopMatrix();
     }

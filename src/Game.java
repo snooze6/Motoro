@@ -28,6 +28,7 @@ import org.lwjgl.util.glu.GLU;
 import rubik.Node;
 import Others.Dibujo;
 import Others.Face;
+import Lights.*;
 
 
 /**
@@ -76,6 +77,7 @@ public class Game {
     int lastY;
     
     private Face cara;
+    private Light lightTest;
     
     Node nod;
 
@@ -96,7 +98,8 @@ public class Game {
         
         //nod = new Node();
         cara = new Face(20);
-        
+        lightTest=new Light();
+
         //create and show our display
         Display.create();
 
@@ -143,6 +146,7 @@ public class Game {
 
 
         // ... initialize resources here ...
+        lightTest.on();
     }
 
     // Called to render our game
