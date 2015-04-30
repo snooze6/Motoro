@@ -43,7 +43,6 @@ public class Game {
     // Width and height of our window
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
-    float scale;
     // Whether to use fullscreen mode
     public static final boolean FULLSCREEN = false; 
 
@@ -118,7 +117,7 @@ public class Game {
 
             // Render the game
             render();
-
+            System.out.println("Prueba 1");
             // Flip the buffers and sync to 60 FPS
             Display.update();
             Display.sync(60);
