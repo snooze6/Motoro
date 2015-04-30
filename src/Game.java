@@ -26,9 +26,11 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 
 import rubik.Node;
+import Camera.ICam;
+import Camera.Perspective;
+import Lights.Light;
 import Others.Dibujo;
 import Others.Face;
-import Lights.*;
 
 
 /**
@@ -79,6 +81,7 @@ public class Game {
     private Face cara;
     private Light lightTest;
     
+    private ICam camera;
     Node nod;
 
     float fAngulo=0;
@@ -95,6 +98,8 @@ public class Game {
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
+        camera = new Perspective(0,0,0,0,0,0,45);
+        camera.setWindow(Display.getWidth(), Display.getHeight());
         
         //nod = new Node();
         cara = new Face(20);
@@ -120,7 +125,6 @@ public class Game {
 
             // Render the MainDenis
             render();
-            System.out.println("Prueba 1");
             // Flip the buffers and sync to 60 FPS
             Display.update();
             Display.sync(60);
@@ -151,26 +155,8 @@ public class Game {
 
     // Called to render our MainDenis
     protected void render() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
-        glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_CULL_FACE);
 
-        glMatrixMode(GL_PROJECTION); //La camara
-        glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad propiedades de la camara
-        //Ortho cam
-        //glOrtho(-10*scale, 10*scale, -10, 10, -10, 10);
-
-        //perspective cam
-        GLU.gluPerspective(zoom*45,(float)Display.getWidth()/(float)Display.getHeight(),1,2000);
-
-        glRotated(xRotate, 1.0, 0.0, 0.0);
-        glRotated(yRotate, 0.0, 1.0, 0.0);
-        glTranslated(-xTranslate,-yTranslate,-zTranslate);
-        //GLU.gluLookAt(xTranslate ,yTranslate,zTranslate,xLookAt ,yLookAt,zTranslate-10,0,1,0);
-
-        glMatrixMode(GL_MODELVIEW); // Activamos la matriz del modelo
-        glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad
-
+    	camera.render();
 
 
         input();
@@ -263,44 +249,49 @@ public class Game {
         float rotateMovement=1.5f;
         //Translate cam
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            xTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
-            zTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
-            yTranslate-=Math.sin(Math.toRadians(xRotate))*speedMovement;
-
+//            xTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
+//            zTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
+//            yTranslate-=Math.sin(Math.toRadians(xRotate))*speedMovement;
+        	camera.moveStraight(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            xTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
-            zTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
-            yTranslate+=Math.sin(Math.toRadians(xRotate))*speedMovement;
+//            xTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
+//            zTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
+//            yTranslate+=Math.sin(Math.toRadians(xRotate))*speedMovement;
+        	camera.moveBack(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            xTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
-            zTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
+//            xTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
+//            zTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
+        	camera.moveRight(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            xTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
-            zTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
+//            xTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
+//            zTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
+        	camera.moveLeft(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-        	yTranslate+=speedMovement;
+//        	yTranslate+=speedMovement;
+        	camera.moveUp(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-        	yTranslate-=speedMovement;
+//        	yTranslate-=speedMovement;
+        	camera.moveDown(speedMovement);
         }
 
         //RotateCam
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-            xRotate+=1f*rotateMovement;
+            camera.lookDown(rotateMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-            xRotate-=1f*rotateMovement;
+            camera.lookUp(rotateMovement);
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-            yRotate+=1f*rotateMovement;
+            camera.lookRight(rotateMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-            yRotate-=1f*rotateMovement;
+            camera.lookLeft(rotateMovement);
         }
 
 

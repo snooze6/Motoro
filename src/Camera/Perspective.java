@@ -81,7 +81,7 @@ public class Perspective implements ICam {
 		}
 	}
 	
-	void setWindow(int i, int j){
+	public void setWindow(int i, int j){
 		W_WIDTH=i;
 		W_HEIGHT=j;
 	}
@@ -90,14 +90,40 @@ public class Perspective implements ICam {
 	
 	@Override
 	public void render() {
-		glMatrixMode (GL_PROJECTION);
-		glLoadIdentity();
-		GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT ,1,2000);
-			glRotatef(cam_ang_x, 1.0f, 0.0f, 0.0f);
-			glRotatef(cam_ang_y, 0.0f, 1.0f, 0.0f);
-			glTranslatef(-cam_x, -cam_y, -cam_z);
-		glMatrixMode (GL_MODELVIEW);
-		//glViewport(0,0,W_WIDTH,W_HEIGHT);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
+//        glEnable(GL_DEPTH_TEST);
+//        //glEnable(GL_CULL_FACE);
+//		
+//		glMatrixMode (GL_PROJECTION);
+//		glLoadIdentity();
+//		GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT ,1,2000);
+//			glRotatef(cam_ang_x, 1.0f, 0.0f, 0.0f);
+//			glRotatef(cam_ang_y, 0.0f, 1.0f, 0.0f);
+//			glTranslatef(-cam_x, -cam_y, -cam_z);
+//		glMatrixMode (GL_MODELVIEW);
+//		glViewport(0,0,W_WIDTH,W_HEIGHT);
+//		
+//		glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad
+		
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
+        glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_CULL_FACE);
+
+        glMatrixMode(GL_PROJECTION); //La camara
+        glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad propiedades de la camara
+        //Ortho camss
+        //glOrtho(-10*scale, 10*scale, -10, 10, -10, 10);
+
+        //perspective cam
+        GLU.gluPerspective(45,(float)Display.getWidth()/(float)Display.getHeight(),1,2000);
+
+        glRotated(cam_ang_x, 1.0, 0.0, 0.0);
+        glRotated(cam_ang_y, 0.0, 1.0, 0.0);
+        glTranslated(-cam_x,-cam_y,-cam_z);
+        //GLU.gluLookAt(xTranslate ,yTranslate,zTranslate,xLookAt ,yLookAt,zTranslate-10,0,1,0);
+
+        glMatrixMode(GL_MODELVIEW); // Activamos la matriz del modelo
+        glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad
 		
 	}
 	
@@ -136,37 +162,34 @@ public class Perspective implements ICam {
 	
 	//--------------------------------------------------------------------------
 	
-	@Override
-	public void lookUp() {
-		// TODO Auto-generated method stub
-		
+	private float updateang(float ang){
+		if (ang>360){
+			return ang-360;
+		} else {
+			if (ang<-360) {
+				return ang+360;
+			} else {
+				return ang;
+			}
+		}
 	}
 	@Override
-	public void lookDown() {
-		// TODO Auto-generated method stub
-		
+	public void lookUp(float ang) {
+		cam_ang_x=updateang(cam_ang_x-ang);
 	}
 	@Override
-	public void lookStraight() {
-		// TODO Auto-generated method stub
-		
+	public void lookDown(float ang) {
+		cam_ang_x=updateang(cam_ang_x+ang);
 	}
 	@Override
-	public void lookBack() {
-		// TODO Auto-generated method stub
-		
+	public void lookRight(float ang) {
+		cam_ang_y=updateang(cam_ang_y+ang);
 	}
 	@Override
-	public void lookRight() {
-		// TODO Auto-generated method stub
-		
+	public void lookLeft(float ang) {
+		cam_ang_y=updateang(cam_ang_y-ang);
 	}
-	@Override
-	public void lookLeft() {
-		// TODO Auto-generated method stub
 		
-	}
-	
 	//--------------------------------------------------------------------------
 	
 	
