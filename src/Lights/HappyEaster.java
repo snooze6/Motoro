@@ -1,20 +1,7 @@
 package Lights;
 
 
-        import org.lwjgl.LWJGLException;
-        import org.lwjgl.input.Keyboard;
-        import org.lwjgl.input.Mouse;
-        import org.lwjgl.opengl.Display;
-        import org.lwjgl.opengl.DisplayMode;
-        import org.lwjgl.util.vector.Vector3f;
-
-
-        import java.io.File;
-        import java.io.FileNotFoundException;
-        import java.io.IOException;
-
         import static org.lwjgl.opengl.GL11.*;
-        import java.nio.FloatBuffer;
 
 public class HappyEaster {
 

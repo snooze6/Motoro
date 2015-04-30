@@ -6,12 +6,6 @@ package Lights;
 
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Light {
