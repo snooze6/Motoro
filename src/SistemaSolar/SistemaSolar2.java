@@ -1,17 +1,16 @@
 package SistemaSolar;
 
+import Lights.Light;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
 
 import static org.lwjgl.opengl.GL11.*;
-import Lights.*;
 
-public class SistemaSolar {
+public class SistemaSolar2 {
 
     private static int lista;
     private static final String MODEL_LOCATION = "res/models/bunny.obj";
@@ -42,8 +41,6 @@ public class SistemaSolar {
     Ejes axes = new Ejes();
     Cubo cube= new Cubo();
     Esfera sphere= new Esfera();
-    Sphere s = new Sphere();
-
     //Cam perspective parameters
     //CamPosition
     float xTranslate=0;
@@ -61,7 +58,7 @@ public class SistemaSolar {
     float tiempo=0;
     Light light1;
     public static void main(String[] args) throws LWJGLException {
-        new SistemaSolar().start();
+        new SistemaSolar2().start();
     }
 
     // Start our MainDenis
@@ -124,7 +121,7 @@ public class SistemaSolar {
         luna3 = new Planeta(-40,0.05f*2,2,10);
         cubo= new Cubo();
         light1=new Light();
-         light1.on();
+
     }
 
 
@@ -133,7 +130,7 @@ public class SistemaSolar {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
-
+        light1.on();
         glMatrixMode(GL_PROJECTION); //La camara
         glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad propiedades de la camara
         //Ortho cam
@@ -168,8 +165,7 @@ public class SistemaSolar {
 
         glPushMatrix();
         glColor3f(1.0f, 1.0f, 0.0f);
-       // sol.drawPlaneta();
-        s.draw(20.0f, 20, 16);
+        sol.drawPlaneta();
         glPopMatrix();
 
 
@@ -295,12 +291,7 @@ public class SistemaSolar {
             yRotate-=1f*rotateMovement;
             control=1;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
-            light1.on();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
-            light1.off();
-        }
+
 
             int dWheel = Mouse.getDWheel();
             if (dWheel < 0) {

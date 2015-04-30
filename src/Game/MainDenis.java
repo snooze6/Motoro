@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-
+import org.lwjgl.util.glu.Sphere;
 public class MainDenis {
 //Estupideces
     /** position of quad */
@@ -53,7 +53,6 @@ public class MainDenis {
                 resize();
             update(getDelta());
             renderGL();
-            System.out.println("jodete 4.0");
             Display.update();
             Display.sync(60); // cap fps to 60fps
         }
@@ -92,12 +91,14 @@ public class MainDenis {
 
         // R,G,B,A Set The Color To Blue One Time Only
         GL11.glColor3f(0.5f, 0.5f, 1.0f);
-
+        Sphere s = new Sphere();
+        s.draw(2000.0f, 20, 16);
         // draw quad
         GL11.glPushMatrix();
         GL11.glTranslatef(x, y, 0);
         GL11.glRotatef(rotation, 0f, 0f, 1f);
         GL11.glTranslatef(-x, -y, 0);
+
         GL11.glBegin(GL11.GL_QUADS);
             GL11.glVertex2f(x - 50, y - 50);
             GL11.glVertex2f(x + 50, y - 50);
