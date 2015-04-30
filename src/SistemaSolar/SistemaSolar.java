@@ -1,4 +1,4 @@
-package com.company;
+package SistemaSolar;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -26,7 +26,7 @@ public class SistemaSolar {
     // Whether to use fullscreen mode
     public static final boolean FULLSCREEN = false;
 
-    // Whether our game loop is running
+    // Whether our MainDenis loop is running
     protected boolean running = false;
 
     //Additional class
@@ -73,10 +73,10 @@ public class SistemaSolar {
     float fAngulo=0;
     float tiempo=0;
     public static void main(String[] args) throws LWJGLException {
-        new com.company.SistemaSolar().start();
+        new SistemaSolar().start();
     }
 
-    // Start our game
+    // Start our MainDenis
     public void start() throws LWJGLException {
         // Set up our display
         Display.setTitle("Display example"); //title of our window
@@ -98,15 +98,15 @@ public class SistemaSolar {
 
         // While we're still running and the user hasn't closed the window...
         while (running && !Display.isCloseRequested()) {
-            // If the game was resized, we need to update our projection
+            // If the MainDenis was resized, we need to update our projection
 
 
-            // Render the game
+            // Render the MainDenis
             render();
 
             // Flip the buffers and sync to 60 FPS
             Display.update();
-            Display.sync(20);
+            Display.sync(60);
 
             System.out.println("caca");
         }
@@ -117,12 +117,12 @@ public class SistemaSolar {
         Display.destroy();
     }
 
-    // Exit our game loop and close the window
+    // Exit our MainDenis loop and close the window
     public void exit() {
         running = false;
     }
 
-    // Called to setup our game and context
+    // Called to setup our MainDenis and context
     protected void create() {
 //
         //Creacion de planetas
@@ -138,7 +138,7 @@ public class SistemaSolar {
     }
 
 
-    // Called to render our game
+    // Called to render our MainDenis
     protected void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
         glEnable(GL_DEPTH_TEST);
@@ -240,17 +240,17 @@ public class SistemaSolar {
 //                sphere.drawSphere(10.0f, 20, 20);
                 glPopMatrix();
         glPopMatrix();
-//        // ... render our game here ...
+//        // ... render our MainDenis here ...
 
     }
 
-    // Called to resize our game
+    // Called to resize our MainDenis
     protected void resize() {
         glViewport(0, 0, Display.getWidth(), Display.getHeight());
 
     }
 
-    // Called to destroy our game upon exiting
+    // Called to destroy our MainDenis upon exiting
     protected void dispose() {
         // ... dispose of any textures, etc ...
     }

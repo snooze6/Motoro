@@ -1,8 +1,9 @@
-package com.company;
+package SistemaSolar;
 
 /**
  * Created by Denis on 22/03/2015.
  */
+import SistemaSolar.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

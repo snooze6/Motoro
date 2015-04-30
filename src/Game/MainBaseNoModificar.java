@@ -1,16 +1,15 @@
 package Game;
 
-import static org.lwjgl.opengl.GL11.glViewport;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.Sphere;
 
-public class game {
+import static org.lwjgl.opengl.GL11.glViewport;
+
+public class MainBaseNoModificar {
 //Estupideces
     /** position of quad */
     float x = 400, y = 300;
@@ -28,7 +27,7 @@ public class game {
     public static final int HEIGHT = 800;
     // Whether to use fullscreen mode
     public static final boolean FULLSCREEN = false;
-    // Whether our game loop is running
+    // Whether our MainDenis loop is running
     protected boolean running = false;
 
     public void start() {
@@ -63,7 +62,7 @@ public class game {
         Display.destroy();
     }
 
-    // Exit our game loop and close the window
+    // Exit our MainDenis loop and close the window
     public void exit() {
         running = false;
     }
@@ -108,7 +107,7 @@ public class game {
         GL11.glPopMatrix();
     }
 
-    // Called to resize our game
+    // Called to resize our MainDenis
     protected void resize() {
         glViewport(0, 0, Display.getWidth(), Display.getHeight());
     }
@@ -123,7 +122,7 @@ public class game {
         GL11.glOrtho(0, WIDTH, 0, HEIGHT, 1, -1);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
     }
-    // Called to destroy our game upon exiting
+    // Called to destroy our MainDenis upon exiting
     protected void dispose() {}
 
     //------------------Time and fps
@@ -155,8 +154,8 @@ public class game {
     }
 
     public static void main(String[] argv) {
-        game game = new game();
-        game.start();
+        MainBaseNoModificar MainDenis = new MainBaseNoModificar();
+        MainDenis.start();
     }
 }
 

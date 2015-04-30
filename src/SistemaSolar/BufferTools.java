@@ -1,4 +1,4 @@
-package com.company;
+package SistemaSolar;
 
 /**
  * Created by Denis on 22/03/2015.

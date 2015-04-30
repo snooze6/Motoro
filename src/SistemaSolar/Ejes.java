@@ -1,4 +1,4 @@
-package com.company;
+package SistemaSolar;
         import static org.lwjgl.opengl.GL11.*;
 
 /**

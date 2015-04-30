@@ -1,4 +1,5 @@
-package com.company;
+package SistemaSolar;
+import SistemaSolar.*;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -133,7 +134,7 @@ public class TimerExample {
     }
 
     public static void main(String[] argv) {
-        com.company.TimerExample timerExample = new com.company.TimerExample();
+       TimerExample timerExample = new TimerExample();
         timerExample.start();
     }
 }
