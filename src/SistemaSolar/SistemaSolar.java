@@ -134,7 +134,7 @@ public class SistemaSolar {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
-
+        System.out.println("Es de noche !!");
         glMatrixMode(GL_PROJECTION); //La camara
         glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad propiedades de la camara
         //Ortho cam
