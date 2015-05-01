@@ -154,19 +154,15 @@ public class SistemaSolar {
         glTranslated(xTranslate + 5 * desx, yTranslate - 5 * desy, zTranslate - 5 * desz);
         glColor3f(2.0f, 0.5f, 0.0f);
         //System.out.println(yRotate + " Desx"+desx);
-        Dibujo.drawSphere(0.2f, 20, 20);
-        Dibujo.drawAxes(1);
+//        Dibujo.drawSphere(0.2f, 20, 20);
+//        Dibujo.drawAxes(1);
         glPopMatrix();
+        light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
+        light1.setSpotDir(new float[]{ 5 * desx,- 5 * desy,- 5 * desz,0.0f});
+        light1.on();
 
 
 
-        glPushMatrix();
-        glColor3f(1.0f, 1.0f, 1.0f);
-        // sol.drawPlaneta();
-        glTranslated(xTranslate, yTranslate, zTranslate-50);
-        s.draw(1,40,40);
-        //s.draw(1,40,40);
-        glPopMatrix();
         //GLU.gluLookAt(xTranslate ,yTranslate,zTranslate,xLookAt ,yLookAt,zTranslate-10,0,1,0);
 
         glMatrixMode(GL_MODELVIEW); // Activamos la matriz del modelo
@@ -319,12 +315,7 @@ public class SistemaSolar {
             yRotate-=1f*rotateMovement;
             control=1;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
-            light1.on();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
-            light1.off();
-        }
+
 
             int dWheel = Mouse.getDWheel();
             if (dWheel < 0) {
@@ -341,16 +332,31 @@ public class SistemaSolar {
 
 
 //
-
+        if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
+            light1.on();
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+            light1.off();
+        }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
             light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
             light1.setSpotDir(new float[]{ 5 * desx,- 5 * desy,- 5 * desz,0.0f});
-
-
-          // xTranslate + 5 * desx, yTranslate - 5 * desy, zTranslate - 5 * desz
             light1.on();
         }
+        if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+            light1.setCutoff(light1.getCutoff() + 1);
+            light1.on();
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
+            light1.setCutoff(light1.getCutoff() - 1);
+            light1.on();
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
+            System.out.println(light1.getCutoff());
+
+        }
+
     }
 
     public float Idle(float fAngulo){
