@@ -158,6 +158,20 @@ public class Game {
 
     	camera.render();
 
+        //Mirilla que apunta hacia la cámara
+        /*
+         * Si tienes alguna duda te lo explico más detenidamente
+         */
+        glPushMatrix();
+            float desx, desy, desz;
+            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
+	        glTranslated(camera.getCam_x() + 5*desx,camera.getCam_y() - 5*desy ,camera.getCam_z() - 5*desz);
+	        	glColor3f(2.0f, 0.5f, 0.0f);
+	            Dibujo.drawSphere(0.2f, 20, 20);
+	            Dibujo.drawAxes(1);
+        glPopMatrix();
 
         input();
         fAngulo=Idle(fAngulo);
@@ -231,22 +245,6 @@ public class Game {
                 Dibujo.drawAxes(40);
                 glPopMatrix();
         glPopMatrix();
-        
-        //Mirilla que apunta hacia la cámara
-        /*
-         * Si tienes alguna duda te lo explico más detenidamente
-         */
-        glPushMatrix();
-            float desx, desy, desz;
-            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-	        glTranslated(camera.getCam_x() + 5*desx,camera.getCam_y() - 5*desy ,camera.getCam_z() - 5*desz);
-	        	glColor3f(2.0f, 0.5f, 0.0f);
-	            Dibujo.drawSphere(0.2f, 20, 20);
-	            Dibujo.drawAxes(1);
-        glPopMatrix();
-
     }
 
     // Called to resize our MainDenis
