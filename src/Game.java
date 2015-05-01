@@ -233,6 +233,9 @@ public class Game {
         glPopMatrix();
         
         //Mirilla que apunta hacia la cámara
+        /*
+         * Si tienes alguna duda te lo explico más detenidamente
+         */
         glPushMatrix();
             float desx, desy, desz;
             desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
@@ -289,7 +292,7 @@ public class Game {
 	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-            System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
+            System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
             camera.lookUp(rotateMovement);
@@ -299,7 +302,7 @@ public class Game {
 	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-        System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
+        System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
             camera.lookRight(rotateMovement);
@@ -309,7 +312,7 @@ public class Game {
 	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-        System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
+        System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
             camera.lookLeft(rotateMovement);
@@ -319,7 +322,7 @@ public class Game {
 	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
 	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-        System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
+        System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
 
         //----------------------------------------------------------------------
