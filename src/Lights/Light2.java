@@ -4,19 +4,13 @@ package Lights;
  * Created by Denis on 30/04/2015.
  */
 
-import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
-import java.lang.String;import java.lang.StringBuilder;import java.nio.ByteBuffer;
+
 import java.nio.FloatBuffer;
+
 import static org.lwjgl.opengl.GL11.*;
 
-public class Light {
+public class Light2 {
 
 
 
@@ -39,7 +33,7 @@ public class Light {
 //    private FloatBuffer whiteLight;
 //    private FloatBuffer lModelAmbient;
 
-    public Light(){
+    public Light2(){
         initLightComponents();
     }
     public void on(){

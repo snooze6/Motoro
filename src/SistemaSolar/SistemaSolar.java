@@ -1,5 +1,6 @@
 package SistemaSolar;
 
+import Others.Dibujo;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -29,7 +30,7 @@ public class SistemaSolar {
 
     // Whether our MainDenis loop is running
     protected boolean running = false;
-
+    float desx, desy, desz;
     //Additional class
     Planeta sol;
     Planeta mercurio;
@@ -96,7 +97,7 @@ public class SistemaSolar {
             Display.update();
             Display.sync(60);
 
-            System.out.println("caca");
+
         }
 
         // Dispose any resources and destroy our window
@@ -145,6 +146,27 @@ public class SistemaSolar {
         glRotated(xRotate, 1.0, 0.0, 0.0);
         glRotated(yRotate, 0.0, 1.0, 0.0);
         glTranslated(-xTranslate,-yTranslate,-zTranslate);
+        glPushMatrix();
+
+        desx = (float) (Math.sin(Math.toRadians(yRotate))*Math.cos(Math.toRadians(xRotate)));
+        desz = (float) (Math.cos(Math.toRadians(yRotate))*Math.cos(Math.toRadians(xRotate)));
+        desy = (float) Math.sin(Math.toRadians(xRotate));
+        glTranslated(xTranslate + 5 * desx, yTranslate - 5 * desy, zTranslate - 5 * desz);
+        glColor3f(2.0f, 0.5f, 0.0f);
+        //System.out.println(yRotate + " Desx"+desx);
+        Dibujo.drawSphere(0.2f, 20, 20);
+        Dibujo.drawAxes(1);
+        glPopMatrix();
+
+
+
+        glPushMatrix();
+        glColor3f(1.0f, 1.0f, 1.0f);
+        // sol.drawPlaneta();
+        glTranslated(xTranslate, yTranslate, zTranslate-50);
+        s.draw(1,40,40);
+        //s.draw(1,40,40);
+        glPopMatrix();
         //GLU.gluLookAt(xTranslate ,yTranslate,zTranslate,xLookAt ,yLookAt,zTranslate-10,0,1,0);
 
         glMatrixMode(GL_MODELVIEW); // Activamos la matriz del modelo
@@ -168,8 +190,9 @@ public class SistemaSolar {
 
         glPushMatrix();
         glColor3f(1.0f, 1.0f, 0.0f);
-       // sol.drawPlaneta();
-        s.draw(20.0f, 20, 16);
+        //sol.drawPlaneta();
+       // cube.drawCube(20);
+       s.draw(20.0f, 20, 16);
         glPopMatrix();
 
 
@@ -232,6 +255,7 @@ public class SistemaSolar {
                 glPopMatrix();
         glPopMatrix();
 //        // ... render our MainDenis here ...
+
 
     }
 
@@ -313,6 +337,19 @@ public class SistemaSolar {
         }
         if(zoom>2.0){
             zoom=2.0f;
+        }
+
+
+//
+
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
+            light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
+            light1.setSpotDir(new float[]{ 5 * desx,- 5 * desy,- 5 * desz,0.0f});
+
+
+          // xTranslate + 5 * desx, yTranslate - 5 * desy, zTranslate - 5 * desz
+            light1.on();
         }
     }
 

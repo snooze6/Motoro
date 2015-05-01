@@ -77,7 +77,7 @@ public class Game {
     int yPosition=0;
     int lastX;
     int lastY;
-    
+
     private Face cara;
     private Light lightTest;
     
