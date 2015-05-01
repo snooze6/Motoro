@@ -159,7 +159,7 @@ public class SistemaSolar {
         glPopMatrix();
         light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
         light1.setSpotDir(new float[]{ 5 * desx,- 5 * desy,- 5 * desz,0.0f});
-        light1.on();
+     //   light1.on();
 
 
 
