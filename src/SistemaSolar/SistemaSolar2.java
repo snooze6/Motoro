@@ -1,6 +1,49 @@
 package SistemaSolar;
 
-import Lights.Light;
+import static org.lwjgl.opengl.GL11.GL_AMBIENT;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_COLOR_MATERIAL;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
+import static org.lwjgl.opengl.GL11.GL_FILL;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_LIGHT0;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.GL_LIGHT_MODEL_AMBIENT;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NORMALIZE;
+import static org.lwjgl.opengl.GL11.GL_POSITION;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_SHININESS;
+import static org.lwjgl.opengl.GL11.GL_SPECULAR;
+import static org.lwjgl.opengl.GL11.GL_SPOT_CUTOFF;
+import static org.lwjgl.opengl.GL11.GL_SPOT_DIRECTION;
+import static org.lwjgl.opengl.GL11.GL_SPOT_EXPONENT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDeleteLists;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLight;
+import static org.lwjgl.opengl.GL11.glLightModel;
+import static org.lwjgl.opengl.GL11.glLightf;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMaterial;
+import static org.lwjgl.opengl.GL11.glMaterialf;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotated;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScaled;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glViewport;
+
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -8,7 +51,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 
-import static org.lwjgl.opengl.GL11.*;
+import Lights.Light;
 
 public class SistemaSolar2 {
 
@@ -56,7 +99,6 @@ public class SistemaSolar2 {
 
     float fAngulo=0;
     float tiempo=0;
-    Light light1;
     public static void main(String[] args) throws LWJGLException {
         new SistemaSolar2().start();
     }
@@ -92,8 +134,6 @@ public class SistemaSolar2 {
             // Flip the buffers and sync to 60 FPS
             Display.update();
             Display.sync(60);
-
-            System.out.println("caca");
         }
 
         // Dispose any resources and destroy our window
@@ -120,8 +160,50 @@ public class SistemaSolar2 {
         luna2= new Planeta(-80,0.05f*8,3,10);
         luna3 = new Planeta(-40,0.05f*2,2,10);
         cubo= new Cubo();
-        light1=new Light();
-
+        
+        {
+	         FloatBuffer light_ambient;
+	         FloatBuffer light_diffuse;
+	         FloatBuffer light_specular;
+	         FloatBuffer light_position;
+	         FloatBuffer light_global;
+	         FloatBuffer mat_ambient;
+	         FloatBuffer mat_diffuse;
+	         FloatBuffer mat_specular;
+	         FloatBuffer high_shininess;
+	         FloatBuffer spotDir;
+	         float cutoff;
+	         float exponent;
+	        
+	         light_global=Light.asFloatBuffer(new float[]{0.0f, 0.0f, 0.0f, 1.0f});//Luz global
+	         light_ambient=Light.asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f}); //Todo unos ilumina con el color del objeto
+	         light_position=Light.asFloatBuffer(new float[]{ 0.0f, 0.0f, -50.0f, 1.0f}); //Posicion de la luz, ultimo parametro a 0 indica foco
+	         light_diffuse=Light.asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f });
+	         light_specular=Light.asFloatBuffer(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f});
+	         mat_ambient=Light.asFloatBuffer(new float[]{ 0.7f, 0.7f, 0.7f, 1.0f});
+	         mat_diffuse=Light.asFloatBuffer(new float[]{ 0.8f, 0.8f, 0.8f, 1.0f });
+	         mat_specular=Light.asFloatBuffer(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f});
+	         spotDir=Light.asFloatBuffer(new float[]{ 0.0f, 0.0f, 1.0f,0.0f});
+	         cutoff=15; //Angulo de apertura del foco
+	         exponent=100; //Grado de concentración de la luz
+	        
+	         glEnable (GL_NORMALIZE);
+	         glEnable (GL_LIGHTING);
+	         glLightModel(GL_LIGHT_MODEL_AMBIENT, light_global);
+	         glLight(GL_LIGHT0, GL_AMBIENT, light_ambient);
+	         glLight(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+	         glLight(GL_LIGHT0, GL_SPECULAR, light_specular);
+	         glLight(GL_LIGHT0, GL_POSITION, light_position);
+	         glEnable(GL_LIGHT0);
+//	         glEnable (GL_COLOR_MATERIAL);
+//	         glMaterial(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);
+//	         glMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
+//	         glMaterial(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
+//	         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0f);
+	         glLight(GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
+	         glLightf( GL_LIGHT0, GL_SPOT_CUTOFF, cutoff);
+	         glLightf( GL_LIGHT0, GL_SPOT_EXPONENT, exponent);
+        }
     }
 
 
@@ -130,7 +212,6 @@ public class SistemaSolar2 {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
-        light1.on();
         glMatrixMode(GL_PROJECTION); //La camara
         glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad propiedades de la camara
         //Ortho cam
@@ -160,8 +241,6 @@ public class SistemaSolar2 {
         glPopMatrix();
 
         fAngulo=Idle(fAngulo);
-       // axes.drawAxes(100);
-      //  cube.drawCube(1000);
 
         glPushMatrix();
         glColor3f(1.0f, 1.0f, 0.0f);
@@ -193,38 +272,21 @@ public class SistemaSolar2 {
         glPopMatrix();
         glPushMatrix();
 
-            //sphere.drawSphere(20.0f, 20, 20);
-            //tierra.drawPlaneta();
-
                 //Esfera  girando alrededor de esfera 2
                 glPushMatrix();
-
-                glColor3f(1.0f, 0.5f, 0.5f);
-//                glRotatef(fAngulo*2.0f, 0.0f, 1.0f, 0.0f);
-//                glTranslatef(0.0f, 0.0f, -50.0f);
-//                glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-//                sphere.drawSphere(10.0f, 20, 20);
-                luna1.drawPlaneta();
+	                glColor3f(1.0f, 0.5f, 0.5f);
+	                luna1.drawPlaneta();
                 glPopMatrix();
                 //Esfera  girando alrededor de esfera 2
 
                 glPushMatrix();
-                glColor3f(0.0f, 1.0f, 0.0f);
-                luna2.drawPlaneta();
-//                glRotatef(fAngulo*2.0f + 120.0f, 0.0f, 1.0f, 0.0f);
-//                glTranslatef(0.0f, 0.0f, -50.0f);
-//                glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-//                sphere.drawSphere(10.0f, 20, 20);
+	                glColor3f(0.0f, 1.0f, 0.0f);
+	                luna2.drawPlaneta();
                 glPopMatrix();
                 //Esfera  girando alrededor de esfera 2
                 glPushMatrix();
-                glColor3f(1.0f, 0.0f, 1.0f);
-
-                luna3.drawPlaneta();
-//                glRotatef(fAngulo*2.0f + 240.0f, 0.0f, 1.0f, 0.0f);
-//                glTranslatef(0.0f, 0.0f, -50.0f);
-//                glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-//                sphere.drawSphere(10.0f, 20, 20);
+	                glColor3f(1.0f, 0.0f, 1.0f);	
+	                luna3.drawPlaneta();
                 glPopMatrix();
         glPopMatrix();
 //        // ... render our MainDenis here ...
@@ -243,7 +305,6 @@ public class SistemaSolar2 {
     }
 
     public void input(){
-        int control=0;
         int speedMovement=3;
         float rotateMovement=1.5f;
         //Translate cam
@@ -251,24 +312,20 @@ public class SistemaSolar2 {
             xTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
             zTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
             yTranslate-=Math.sin(Math.toRadians(xRotate))*speedMovement;
-            control=1;
 
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
             xTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
             zTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
             yTranslate+=Math.sin(Math.toRadians(xRotate))*speedMovement;
-            control=1;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
             xTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
             zTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
-            control=1;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
             xTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
             zTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
-            control=1;
         }
 
 
@@ -276,20 +333,16 @@ public class SistemaSolar2 {
         //RotateCam
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
             xRotate+=1f*rotateMovement;
-            control=1;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
             xRotate-=1f*rotateMovement;
-            control=1;
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
             yRotate+=1f*rotateMovement;
-            control=1;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
             yRotate-=1f*rotateMovement;
-            control=1;
         }
 
 

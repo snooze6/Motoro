@@ -7,9 +7,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
-
-import static org.lwjgl.opengl.GL11.*;
 import Lights.*;
+import static org.lwjgl.opengl.GL11.*;
 
 public class SistemaSolar {
 
@@ -159,7 +158,7 @@ public class SistemaSolar {
         glPopMatrix();
         light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
         light1.setSpotDir(new float[]{ 5 * desx,- 5 * desy,- 5 * desz,0.0f});
-     //   light1.on();
+        light1.on();
 
 
 
@@ -295,8 +294,6 @@ public class SistemaSolar {
             control=1;
         }
 
-
-
         //RotateCam
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
             xRotate+=1f*rotateMovement;
@@ -354,7 +351,6 @@ public class SistemaSolar {
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
             System.out.println(light1.getCutoff());
-
         }
 
     }

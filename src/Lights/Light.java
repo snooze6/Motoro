@@ -50,11 +50,21 @@ public class Light {
         initLightComponents();
     }
     public void on(){
-    initGL();
-
+    	initGL();
     }
 
     public void off(){
+        glDisable (GL_LIGHT0);
+        glDisable (GL_NORMALIZE);
+        glDisable (GL_COLOR_MATERIAL);
+        glDisable (GL_LIGHTING);
+    }
+    
+    public void onMat(){
+    	initGL();
+    }
+
+    public void offMat(){
         glDisable (GL_LIGHT0);
         glDisable (GL_NORMALIZE);
         glDisable (GL_COLOR_MATERIAL);
@@ -71,41 +81,39 @@ private void initGL() {
     glLight(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLight(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLight(GL_LIGHT0, GL_POSITION, light_position);
-
-
     glEnable(GL_LIGHT0);
 
-    glEnable (GL_COLOR_MATERIAL);
+    glLight(GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
+    glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, cutoff);
+    glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, exponent);
+
     glMaterial(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);
     glMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
     glMaterial(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0f);
+    //glEnable(GL_FRONT_AND_BACK);
+    glEnable (GL_COLOR_MATERIAL);
 
-    glLight(GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
-    glLightf( GL_LIGHT0, GL_SPOT_CUTOFF, cutoff);
-    glLightf( GL_LIGHT0, GL_SPOT_EXPONENT, exponent);
+
 
     }
 
 
     public void initLightComponents(){
-        light_global=asFloatBuffer(new float[]{ 0.0f, 0.0f, 0.0f, 1.0f});//Luz global
-        light_ambient=asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f}); //Todo unos ilumina con el color del objeto
-        light_position=asFloatBuffer(new float[]{ 2.0f, 5.0f, -50.0f, 0.0f}); //Posicion de la luz, ultimo parametro a 0 indica foco
+    	
+        light_global=asFloatBuffer(new float[]{0.0f, 0.0f, 0.0f, 1.0f});//Luz global
+        light_ambient=asFloatBuffer(new float[]{0.0f, 0.0f, 0.0f, 1.0f}); //Todo unos ilumina con el color del objeto
+        light_position=asFloatBuffer(new float[]{ 0.0f, 0.0f, -50.0f, 1.0f}); //Posicion de la luz, ultimo parametro a 0 indica foco
         light_diffuse=asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f });
         light_specular=asFloatBuffer(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f});
-
-        System.out.println("initLightComponents");
+        
         mat_ambient=asFloatBuffer(new float[]{ 0.7f, 0.7f, 0.7f, 1.0f});
         mat_diffuse=asFloatBuffer(new float[]{ 0.8f, 0.8f, 0.8f, 1.0f });
         mat_specular=asFloatBuffer(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f});
-
-        //spotlight
+        
         spotDir=asFloatBuffer(new float[]{ 0.0f, 0.0f, 1.0f,0.0f});
         cutoff=15; //Angulo de apertura del foco
         exponent=100; //Grado de concentración de la luz
-
-
     }
 
 
