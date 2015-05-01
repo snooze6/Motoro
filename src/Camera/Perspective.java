@@ -80,7 +80,6 @@ public class Perspective implements ICam {
 			angvision+=zoom;
 		}
 	}
-	
 	public void setWindow(int i, int j){
 		W_WIDTH=i;
 		W_HEIGHT=j;
@@ -90,41 +89,22 @@ public class Perspective implements ICam {
 	
 	@Override
 	public void render() {
-//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
-//        glEnable(GL_DEPTH_TEST);
-//        //glEnable(GL_CULL_FACE);
-//		
-//		glMatrixMode (GL_PROJECTION);
-//		glLoadIdentity();
-//		GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT ,1,2000);
-//			glRotatef(cam_ang_x, 1.0f, 0.0f, 0.0f);
-//			glRotatef(cam_ang_y, 0.0f, 1.0f, 0.0f);
-//			glTranslatef(-cam_x, -cam_y, -cam_z);
-//		glMatrixMode (GL_MODELVIEW);
-//		glViewport(0,0,W_WIDTH,W_HEIGHT);
-//		
-//		glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad
-		
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
 
         glMatrixMode(GL_PROJECTION); //La camara
-        glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad propiedades de la camara
-        //Ortho camss
+        glLoadIdentity(); // Inicializamos la matriz de la cámara a la identidad
         //glOrtho(-10*scale, 10*scale, -10, 10, -10, 10);
-
-        //perspective cam
-        GLU.gluPerspective(45,(float)Display.getWidth()/(float)Display.getHeight(),1,2000);
+        //Perspective Cam
+        GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT,1,2000);
 
         glRotated(cam_ang_x, 1.0, 0.0, 0.0);
         glRotated(cam_ang_y, 0.0, 1.0, 0.0);
         glTranslated(-cam_x,-cam_y,-cam_z);
-        //GLU.gluLookAt(xTranslate ,yTranslate,zTranslate,xLookAt ,yLookAt,zTranslate-10,0,1,0);
 
         glMatrixMode(GL_MODELVIEW); // Activamos la matriz del modelo
         glLoadIdentity(); // Inicializamos la matriz del modelo a la identidad
-		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -192,8 +172,37 @@ public class Perspective implements ICam {
 		
 	//--------------------------------------------------------------------------
 	
+	@Override
+	public void morezoom() {
+		setZoom(1);
+	}
+	@Override
+	public void lesszoom() {
+		setZoom(-1);
+		
+	}
 	
+	//--------------------------------------------------------------------------
+	
+	public float getCam_x() {
+		return cam_x;
+	}
+	public float getCam_y() {
+		return cam_y;
+	}
+	public float getCam_z() {
+		return cam_z;
+	}
+	public float getCam_ang_x() {
+		return cam_ang_x;
+	}
+	public float getCam_ang_y() {
+		return cam_ang_y;
+	}
+	public float getCam_ang_z() {
+		return cam_ang_z;
+	}
 
 	
-
+	
 }

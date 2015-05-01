@@ -26,4 +26,18 @@ public interface ICam {
 	public void lookLeft(float ang);
     public void lookUp(float ang);
     public void lookDown(float ang);
+    
+    //--------------------------------------------------------------------------
+
+    public void morezoom();
+    public void lesszoom();
+    
+    //--------------------------------------------------------------------------
+    
+    public float getCam_x();
+	public float getCam_y();
+	public float getCam_z();
+	public float getCam_ang_x();
+	public float getCam_ang_y();
+	public float getCam_ang_z();
 }

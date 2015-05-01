@@ -235,8 +235,9 @@ public class Game {
 
     // Called to resize our MainDenis
     protected void resize() {
+    	camera.setWindow(Display.getWidth(), Display.getHeight());
         glViewport(0, 0, Display.getWidth(), Display.getHeight());
-
+        
     }
 
     // Called to destroy our MainDenis upon exiting
@@ -247,46 +248,32 @@ public class Game {
     public void input(){
         int speedMovement=3;
         float rotateMovement=1.5f;
-        //Translate cam
+        // Translate cam
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-//            xTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
-//            zTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
-//            yTranslate-=Math.sin(Math.toRadians(xRotate))*speedMovement;
         	camera.moveStraight(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-//            xTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
-//            zTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
-//            yTranslate+=Math.sin(Math.toRadians(xRotate))*speedMovement;
         	camera.moveBack(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-//            xTranslate+=Math.cos(Math.toRadians(yRotate))*speedMovement;
-//            zTranslate+=Math.sin(Math.toRadians(yRotate))*speedMovement;
         	camera.moveRight(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-//            xTranslate-=Math.cos(Math.toRadians(yRotate))*speedMovement;
-//            zTranslate-=Math.sin(Math.toRadians(yRotate))*speedMovement;
         	camera.moveLeft(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-//        	yTranslate+=speedMovement;
         	camera.moveUp(speedMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-//        	yTranslate-=speedMovement;
         	camera.moveDown(speedMovement);
         }
-
-        //RotateCam
+        // Rotate cam
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
             camera.lookDown(rotateMovement);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
             camera.lookUp(rotateMovement);
         }
-
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
             camera.lookRight(rotateMovement);
         }
@@ -294,18 +281,23 @@ public class Game {
             camera.lookLeft(rotateMovement);
         }
 
-
-            int dWheel = Mouse.getDWheel();
-            if (dWheel < 0) {
-                zoom=zoom+0.05f;
-            } else if (dWheel > 0){
-                zoom=zoom-0.05f;
-            }
-        if(zoom<0.1){
-            zoom=0.1f;
+        //----------------------------------------------------------------------
+        
+        if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+            camera.morezoom();
         }
-        if(zoom>2.0){
-            zoom=2.0f;
+        if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
+            camera.lesszoom();
+        }
+        //----------------------------------------------------------------------
+        
+        int dWheel = Mouse.getDWheel();
+        if (dWheel < 0) {
+            camera.morezoom();
+            System.out.println("Rueda arriba");
+        } else if (dWheel > 0){
+            camera.lesszoom();
+            System.out.println("Rueda abajo");
         }
     }
 
