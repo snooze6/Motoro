@@ -100,4 +100,18 @@ public class Dibujo {
         glEnd();
         //Termino de dibujar los ejes
     }
+    public static void drawMalla(float tam){
+    	glColor3f (0.25f,0.25f,0.25f);
+    	int i;
+    	glBegin(GL_LINES);
+    		for (i=0; i<=(2*tam/25); i++) {
+    			glVertex3f(-tam,0.0f,-tam+25*i);
+    			glVertex3f(tam,0.0f,-tam+25*i);
+    		}
+    		for (i=0; i<=(2*tam/25); i++) {
+    			glVertex3f(-tam+25*i,0.0f,-tam);
+    			glVertex3f(-tam+25*i,0.0f,tam);
+    		}
+    	glEnd();
+    }
 }

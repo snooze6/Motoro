@@ -167,6 +167,8 @@ public class Game {
         glPushMatrix();
           //Dibujo.drawCube(50);
           cara.draw();
+          glTranslatef(0.0f, -61.2f, 0.0f);
+            Dibujo.drawMalla(1000);
         glPopMatrix();
 
 
@@ -229,7 +231,18 @@ public class Game {
                 Dibujo.drawAxes(40);
                 glPopMatrix();
         glPopMatrix();
-        // ... render our MainDenis here ...
+        
+        //Mirilla que apunta hacia la cámara
+        glPushMatrix();
+            float desx, desy, desz;
+            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
+	        glTranslated(camera.getCam_x() + 5*desx,camera.getCam_y() - 5*desy ,camera.getCam_z() - 5*desz);
+	        	glColor3f(2.0f, 0.5f, 0.0f);
+	            Dibujo.drawSphere(0.2f, 20, 20);
+	            Dibujo.drawAxes(1);
+        glPopMatrix();
 
     }
 
@@ -270,15 +283,43 @@ public class Game {
         // Rotate cam
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
             camera.lookDown(rotateMovement);
+            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
+            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
+	            float desx, desy, desz;
+	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
+            System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
             camera.lookUp(rotateMovement);
+            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
+            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
+	            float desx, desy, desz;
+	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
+        System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
             camera.lookRight(rotateMovement);
+            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
+            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
+	            float desx, desy, desz;
+	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
+        System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
             camera.lookLeft(rotateMovement);
+            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
+            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
+	            float desx, desy, desz;
+	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
+	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
+        System.out.println("  -- Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
 
         //----------------------------------------------------------------------
