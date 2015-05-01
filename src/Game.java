@@ -1,18 +1,8 @@
 
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotated;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
@@ -23,12 +13,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.glu.GLU;
 
 import rubik.Node;
 import Camera.ICam;
-import Camera.Perspective;
-import Lights.Light;
+import Camera.Ortho;
 import Others.Dibujo;
 import Others.Face;
 
@@ -79,7 +67,6 @@ public class Game {
     int lastY;
 
     private Face cara;
-    private Light lightTest;
     
     private ICam camera;
     Node nod;
@@ -98,12 +85,11 @@ public class Game {
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
-        camera = new Perspective(0,0,0,0,0,0,45);
+        camera = new Ortho();
         camera.setWindow(Display.getWidth(), Display.getHeight());
         
         //nod = new Node();
         cara = new Face(20);
-        lightTest=new Light();
 
         //create and show our display
         Display.create();
@@ -150,7 +136,6 @@ public class Game {
 
 
         // ... initialize resources here ...
-        lightTest.on();
     }
 
     // Called to render our MainDenis

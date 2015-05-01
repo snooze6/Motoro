@@ -117,11 +117,11 @@ public class Perspective implements ICam {
 	
 	@Override
 	public void moveUp(float v) {
-		cam_y=cam_y+5;
+		cam_y=cam_y+v;
 	}
 	@Override
 	public void moveDown(float v) {
-		cam_y=cam_y-5;
+		cam_y=cam_y-v;
 	}
 	@Override
 	public void moveStraight(float v) {
