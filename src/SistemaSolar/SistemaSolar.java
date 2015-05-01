@@ -1,6 +1,5 @@
 package SistemaSolar;
 
-import Others.Dibujo;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
