@@ -1,6 +1,6 @@
 package SistemaSolar;
 
-import Lights.Light;
+import Lights.*;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -56,7 +56,7 @@ public class SistemaSolar2 {
 
     float fAngulo=0;
     float tiempo=0;
-    Light light1;
+    ILight light1;
     public static void main(String[] args) throws LWJGLException {
         new SistemaSolar2().start();
     }
@@ -120,7 +120,7 @@ public class SistemaSolar2 {
         luna2= new Planeta(-80,0.05f*8,3,10);
         luna3 = new Planeta(-40,0.05f*2,2,10);
         cubo= new Cubo();
-        light1=new Light();
+        light1=new SpotLight();
 
     }
 

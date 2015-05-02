@@ -1,18 +1,8 @@
 
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotated;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
@@ -23,14 +13,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.glu.GLU;
 
 import rubik.Node;
 import Camera.ICam;
 import Camera.Perspective;
-import Lights.Light;
 import Others.Dibujo;
 import Others.Face;
+import Lights.*;
 
 
 /**
@@ -79,7 +68,7 @@ public class Game {
     int lastY;
 
     private Face cara;
-    private Light lightTest;
+    private ILight lightTest;
     
     private ICam camera;
     Node nod;
@@ -103,7 +92,7 @@ public class Game {
         
         //nod = new Node();
         cara = new Face(20);
-        lightTest=new Light();
+        lightTest=new SpotLight();
 
         //create and show our display
         Display.create();

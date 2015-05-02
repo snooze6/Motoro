@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact name="Motoro:jar">
+    <output-path>$PROJECT_DIR$/../../../../</output-path>
+    <root id="root">
+      <element id="archive" name="Motoro.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/../../../../META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="Motoro" />
+      </element>
+      <element id="library" level="module" name="lwjgl_util.jar" module-name="Motoro" />
+      <element id="library" level="module" name="lwjgl.jar" module-name="Motoro" />
+    </root>
+  </artifact>
+</component>

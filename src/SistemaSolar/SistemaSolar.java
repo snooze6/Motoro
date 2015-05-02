@@ -59,7 +59,7 @@ public class SistemaSolar {
 
     float fAngulo=0;
     float tiempo=0;
-    Light light1;
+     ILight light1;
     public static void main(String[] args) throws LWJGLException {
         new SistemaSolar().start();
     }
@@ -123,9 +123,8 @@ public class SistemaSolar {
         luna2= new Planeta(-80,0.05f*8,3,10);
         luna3 = new Planeta(-40,0.05f*2,2,10);
         cubo= new Cubo();
-        light1=new Light();
+        light1=new SpotLight();
          light1.on();
-        System.out.println("Es de noche esta vez si !!");
     }
 
 
@@ -152,13 +151,14 @@ public class SistemaSolar {
         desz = (float) (Math.cos(Math.toRadians(yRotate))*Math.cos(Math.toRadians(xRotate)));
         desy = (float) Math.sin(Math.toRadians(xRotate));
         glTranslated(xTranslate + 5 * desx, yTranslate - 5 * desy, zTranslate - 5 * desz);
-        glColor3f(2.0f, 0.5f, 0.0f);
+
         //System.out.println(yRotate + " Desx"+desx);
 //        Dibujo.drawSphere(0.2f, 20, 20);
 //        Dibujo.drawAxes(1);
         glPopMatrix();
         light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
-        light1.setSpotDir(new float[]{ 5 * desx,- 5 * desy,- 5 * desz,0.0f});
+
+       light1.setSpotDir(new float[]{5 * desx, -5 * desy, -5 * desz, 1.0f});
      //   light1.on();
 
 
@@ -186,9 +186,13 @@ public class SistemaSolar {
 
         glPushMatrix();
         glColor3f(1.0f, 1.0f, 0.0f);
-        //sol.drawPlaneta();
-       // cube.drawCube(20);
-       s.draw(20.0f, 20, 16);
+       // sol.drawPlaneta();
+        glRotatef(fAngulo * 7, 1.0f, 1.0f, 0.0f);
+        light1.setEmission(new float[]{1.0f,0.0f,0.0f,0.0f});
+        s.draw(50,100,100);
+        light1.disableEmission();
+        //cube.drawCube(20);
+       //s.draw(20.0f, 20, 16);
         glPopMatrix();
 
 
@@ -338,24 +342,14 @@ public class SistemaSolar {
         if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
             light1.off();
         }
-
         if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
-            light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
-            light1.setSpotDir(new float[]{ 5 * desx,- 5 * desy,- 5 * desz,0.0f});
-            light1.on();
+            light1 = new DirectionalLight();
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
-            light1.setCutoff(light1.getCutoff() + 1);
-            light1.on();
+        if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
+            light1 = new SpotLight();
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
-            light1.setCutoff(light1.getCutoff() - 1);
-            light1.on();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
-            System.out.println(light1.getCutoff());
 
-        }
+
 
     }
 

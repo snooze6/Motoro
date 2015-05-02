@@ -4,19 +4,13 @@ package Lights;
  * Created by Denis on 30/04/2015.
  */
 
-import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
-import java.lang.String;import java.lang.StringBuilder;import java.nio.ByteBuffer;
+
 import java.nio.FloatBuffer;
+
 import static org.lwjgl.opengl.GL11.*;
 
-public class Light {
+public class DirectionalLight implements ILight {
 
 
 
@@ -30,25 +24,29 @@ public class Light {
     private FloatBuffer mat_ambient;
     private FloatBuffer mat_diffuse;
     private FloatBuffer mat_specular;
+    private FloatBuffer mat_emission;
     private FloatBuffer high_shininess;
 
     //spotlight
     private FloatBuffer spotDir;
     private float cutoff;
     private float exponent;
+    private float atenuation;
 
-    private float control=0;
 
 
-//    private FloatBuffer diffuse;
-//    private FloatBuffer matSpecular;
-//    private FloatBuffer lightPosition;
-//    private FloatBuffer whiteLight;
-//    private FloatBuffer lModelAmbient;
-
-    public Light(){
+    public DirectionalLight(){
         initLightComponents();
+
     }
+
+    public DirectionalLight(float[] position){
+        initLightComponents();
+        setLight_position(position);
+
+
+    }
+
     public void on(){
     initGL();
 
@@ -61,7 +59,7 @@ public class Light {
         glDisable (GL_LIGHTING);
     }
 
-private void initGL() {
+public void initGL() {
 
 
     glEnable (GL_NORMALIZE);
@@ -74,36 +72,27 @@ private void initGL() {
 
 
     glEnable(GL_LIGHT0);
-
-    glEnable (GL_COLOR_MATERIAL);
     glMaterial(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);
     glMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
     glMaterial(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0f);
-
-    glLight(GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
-    glLightf( GL_LIGHT0, GL_SPOT_CUTOFF, cutoff);
-    glLightf( GL_LIGHT0, GL_SPOT_EXPONENT, exponent);
+    glEnable (GL_COLOR_MATERIAL);
 
     }
 
 
     public void initLightComponents(){
-        light_global=asFloatBuffer(new float[]{ 0.0f, 0.0f, 0.0f, 1.0f});//Luz global
-        light_ambient=asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f}); //Todo unos ilumina con el color del objeto
-        light_position=asFloatBuffer(new float[]{ 2.0f, 5.0f, -50.0f, 0.0f}); //Posicion de la luz, ultimo parametro a 0 indica foco
+        light_global=asFloatBuffer(new float[]{ 0.1f, 0.1f, 0.1f, 1.0f});//Luz global
+        light_ambient=asFloatBuffer(new float[]{0.0f, 0.0f, 0.0f, 1.0f});
+        light_position=asFloatBuffer(new float[]{ 0.0f, 200.0f, 0.0f, 1.0f}); //Posicion de la luz, ultimo parametro a 0 indica foco
         light_diffuse=asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f });
         light_specular=asFloatBuffer(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f});
 
-        System.out.println("initLightComponents");
-        mat_ambient=asFloatBuffer(new float[]{ 0.7f, 0.7f, 0.7f, 1.0f});
-        mat_diffuse=asFloatBuffer(new float[]{ 0.8f, 0.8f, 0.8f, 1.0f });
-        mat_specular=asFloatBuffer(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f});
 
-        //spotlight
-        spotDir=asFloatBuffer(new float[]{ 0.0f, 0.0f, 1.0f,0.0f});
-        cutoff=15; //Angulo de apertura del foco
-        exponent=100; //Grado de concentración de la luz
+        mat_ambient=asFloatBuffer(new float[]{ 0.7f, 0.7f, 0.7f, 1.0f});
+        mat_diffuse=asFloatBuffer(new float[]{ 0.7f, 0.7f, 0.7f, 1.0f });
+        mat_specular=asFloatBuffer(new float[]{ 0.7f, 0.7f, 0.7f, 1.0f});
+
 
 
     }
@@ -126,17 +115,16 @@ private void initGL() {
 
     public void setLight_position(float [] parameter) {
         this.light_position = asFloatBuffer(parameter);
+        light_position.put(3,0.0f);
         glLight(GL_LIGHT0, GL_POSITION, light_position);
     }
 
     public void setLight_specular(float [] parameter) {
         this.light_specular = asFloatBuffer(parameter);
+        glLight(GL_LIGHT0, GL_SPECULAR, light_specular);
     }
 
-    public void setSpotDir(float [] parameter) {
-        this.spotDir = asFloatBuffer(parameter);
-        glLight(GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
-    }
+
 
     public void setMat_ambient(float [] parameter) {
         this.mat_ambient = asFloatBuffer(parameter);
@@ -156,19 +144,50 @@ private void initGL() {
         this.high_shininess = high_shininess;
     }
 
-    public void setCutoff(float cutoff) {
-        this.cutoff = cutoff;
-    }
-
+    @Override
     public void setExponent(float exponent) {
-        this.exponent = exponent;
+
     }
 
+    @Override
     public float getCutoff() {
-        return cutoff;
+        return 0;
     }
 
+    @Override
     public float getExponent() {
-        return exponent;
+        return 0;
+    }
+
+    @Override
+    public void setCutoff(float cutoff) {
+
+    }
+
+    @Override
+    public void setSpotDir(float[] parameter) {
+
+    }
+
+    @Override
+    public float getAtenuation() {
+        return 0;
+    }
+
+    @Override
+    public void setAtenuation(float atenuation) {
+
+    }
+
+    @Override
+    public void setEmission(float[] parameter) {
+        this.mat_emission = asFloatBuffer(parameter);
+        glMaterial(GL_FRONT_AND_BACK, GL_EMISSION, mat_emission);
+    }
+    @Override
+    public void disableEmission() {
+        float[] parameter ={0,0,0,0};
+        this.mat_emission = asFloatBuffer(parameter);
+        glMaterial(GL_FRONT_AND_BACK, GL_EMISSION, mat_emission);
     }
 }
