@@ -110,7 +110,7 @@ public class Game {
                 resize();
 
             // Render the MainDenis
-            render();
+             render();
             // Flip the buffers and sync to 60 FPS
             Display.update();
             Display.sync(60);
