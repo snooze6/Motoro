@@ -26,6 +26,7 @@ public interface ICam {
 	public void lookLeft(float ang);
     public void lookUp(float ang);
     public void lookDown(float ang);
+    //public void lookAt(float x, float y, float z);
     
     //--------------------------------------------------------------------------
 

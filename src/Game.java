@@ -16,10 +16,9 @@ import org.lwjgl.opengl.DisplayMode;
 
 import rubik.Node;
 import Camera.ICam;
-import Camera.Perspective;
+import Camera.Ortho;
 import Others.Dibujo;
 import Others.Face;
-import Lights.*;
 
 
 /**
@@ -68,7 +67,6 @@ public class Game {
     int lastY;
 
     private Face cara;
-    private ILight lightTest;
     
     private ICam camera;
     Node nod;
@@ -87,12 +85,11 @@ public class Game {
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
-        camera = new Perspective(0,0,0,0,0,0,45);
+        camera = new Ortho();
         camera.setWindow(Display.getWidth(), Display.getHeight());
         
         //nod = new Node();
         cara = new Face(20);
-        lightTest=new SpotLight();
 
         //create and show our display
         Display.create();
@@ -139,7 +136,6 @@ public class Game {
 
 
         // ... initialize resources here ...
-        lightTest.on();
     }
 
     // Called to render our MainDenis

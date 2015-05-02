@@ -18,6 +18,7 @@ public class Ortho implements ICam{
 	private float cam_x, cam_y, cam_z;                //Posición de la cámara
 	private float cam_ang_x, cam_ang_y, cam_ang_z;    //Ángulos de la cámara                //Ángulo de visión (Zoom)
 	private int W_WIDTH, W_HEIGHT;
+	private int tam;
 	
 	//--------------------------------------------------------------------------
 	
@@ -29,6 +30,8 @@ public class Ortho implements ICam{
 		cam_ang_x=0;
 		cam_ang_y=0;
 		cam_ang_z=0;
+		
+		tam = 100;
 	}
 	public Ortho(float cam_x, float cam_y, float cam_z, float cam_ang_x,
 			float cam_ang_y, float cam_ang_z) {
@@ -57,23 +60,20 @@ public class Ortho implements ICam{
 	
 	@Override
 	public void setPosition(float x, float y, float z) {
-		// TODO Auto-generated method stub
-		
+		cam_x = x; cam_y = y; cam_z = z;
 	}
 	@Override
 	public void setAngle(float angx, float angy, float angz) {
-		// TODO Auto-generated method stub
-		
+		cam_ang_x=angx; cam_ang_y=angy; cam_ang_z=angz;
 	}
 	@Override
 	public void setZoom(float zoom) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void setWindow(int i, int j) {
-		// TODO Auto-generated method stub
-		
+		W_WIDTH = i;
+		W_HEIGHT = j;
 	}
 
 	//--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public class Ortho implements ICam{
 
         glMatrixMode(GL_PROJECTION); //La camara
         glLoadIdentity(); // Inicializamos la matriz de la cámara a la identidad
-        glOrtho(-10, 10, -10, 10, -10, 10);
+        glOrtho(-(W_WIDTH/2), (W_WIDTH/2), -(W_HEIGHT/2), (W_HEIGHT/2), -(2000),(2000));
 
         glRotated(cam_ang_x, 1.0, 0.0, 0.0);
         glRotated(cam_ang_y, 0.0, 1.0, 0.0);
@@ -100,58 +100,59 @@ public class Ortho implements ICam{
 
 	@Override
 	public void moveUp(float v) {
-		// TODO Auto-generated method stub
-		
+		cam_y=cam_y+v;
 	}
 	@Override
 	public void moveDown(float v) {
-		// TODO Auto-generated method stub
-		
+		cam_y=cam_y-v;
 	}
 	@Override
 	public void moveStraight(float v) {
-		// TODO Auto-generated method stub
-		
+		cam_z=cam_z+v;
 	}
 	@Override
 	public void moveBack(float v) {
-		// TODO Auto-generated method stub
-		
+		cam_z=cam_z-v;
 	}
 	@Override
 	public void moveRight(float v) {
-		// TODO Auto-generated method stub
-		
+		cam_x=cam_x+v;
 	}
 	@Override
 	public void moveLeft(float v) {
-		// TODO Auto-generated method stub
-		
+		cam_x=cam_x-v;
 	}
 	
 	//--------------------------------------------------------------------------
 	
-	@Override
-	public void lookRight(float ang) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void lookLeft(float ang) {
-		// TODO Auto-generated method stub
-		
+	private float updateang(float ang){
+		if (ang>360){
+			return ang-360;
+		} else {
+			if (ang<-360) {
+				return ang+360;
+			} else {
+				return ang;
+			}
+		}
 	}
 	@Override
 	public void lookUp(float ang) {
-		// TODO Auto-generated method stub
-		
+		cam_ang_x=updateang(cam_ang_x-ang);
 	}
 	@Override
 	public void lookDown(float ang) {
-		// TODO Auto-generated method stub
-		
+		cam_ang_x=updateang(cam_ang_x+ang);
 	}
-
+	@Override
+	public void lookRight(float ang) {
+		cam_ang_y=updateang(cam_ang_y+ang);
+	}
+	@Override
+	public void lookLeft(float ang) {
+		cam_ang_y=updateang(cam_ang_y-ang);
+	}
+	
 	//--------------------------------------------------------------------------
 	
 	@Override
@@ -167,40 +168,22 @@ public class Ortho implements ICam{
 
 	//--------------------------------------------------------------------------
 	
-	@Override
 	public float getCam_x() {
-		// TODO Auto-generated method stub
-		return 0;
+		return cam_x;
 	}
-
-	@Override
 	public float getCam_y() {
-		// TODO Auto-generated method stub
-		return 0;
+		return cam_y;
 	}
-
-	@Override
 	public float getCam_z() {
-		// TODO Auto-generated method stub
-		return 0;
+		return cam_z;
 	}
-
-	@Override
 	public float getCam_ang_x() {
-		// TODO Auto-generated method stub
-		return 0;
+		return cam_ang_x;
 	}
-
-	@Override
 	public float getCam_ang_y() {
-		// TODO Auto-generated method stub
-		return 0;
+		return cam_ang_y;
 	}
-
-	@Override
 	public float getCam_ang_z() {
-		// TODO Auto-generated method stub
-		return 0;
+		return cam_ang_z;
 	}
-
 }
