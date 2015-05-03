@@ -91,6 +91,24 @@ public class TestPlano {
         p.add(new Plano(-1,0,0 , -150,0,0));
         p.add(new Plano(0,1,0 , 0,150,0));
         p.add(new Plano(0,-1,0 , 0,-150,0));
+        
+        p.add(new Plano(0,0,1 , 0,0,+150));
+        p.add(new Plano(0,0,-1 , 0,0,-150));
+        
+        
+        p.add(new Plano(1,1,1 , 300,300,300));
+        p.add(new Plano(1,-1,1 , 300,-300,300));
+        p.add(new Plano(-1,1,-1 , -300,300,-300));
+        p.add(new Plano(-1,-1,-1 , -300,-300,-300));
+        
+        p.add(new Plano(1,1,-1 , 300,300,-300));
+        p.add(new Plano(-1,-1,1 , -300,-300,300));
+        p.add(new Plano(1,-1,-1 , 300,-300,-300));
+        p.add(new Plano(-1,1,1 , -300,300,300));
+         
+//        p.add(new Plano(1,1,1 ,  0,+500,0));
+//        p.add(new Plano(1,1,-1 , 0,+500,0));
+        
 
 
         //create and show our display
