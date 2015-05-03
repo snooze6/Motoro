@@ -11,6 +11,7 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glRotated;
 import static org.lwjgl.opengl.GL11.glTranslated;
+
 //import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.glu.GLU;
 
@@ -79,12 +80,6 @@ public class Perspective implements ICam {
 	public void setAngle(float angx, float angy, float angz) {
 		cam_ang_x = angx; cam_ang_y = angy; cam_ang_z = angz;
 		
-	}
-	@Override
-	public void setZoom(float zoom) {
-		if (!(angvision + zoom < 35 || angvision + zoom > 100)){
-			angvision+=zoom;
-		}
 	}
 	public void setWindow(int i, int j){
 		W_WIDTH=i;
@@ -178,6 +173,11 @@ public class Perspective implements ICam {
 		
 	//--------------------------------------------------------------------------
 	
+	private void setZoom(float zoom) {
+		if (!(angvision + zoom < 35 || angvision + zoom > 100)){
+			angvision+=zoom;
+		}
+	}
 	@Override
 	public void morezoom() {
 		setZoom(1);
@@ -207,6 +207,28 @@ public class Perspective implements ICam {
 	}
 	public float getCam_ang_z() {
 		return cam_ang_z;
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	@Override
+	public float[] getDireccion() {
+        float[] aux; aux = new float[3];
+        aux[0] = (float) (Math.sin(Math.toRadians(cam_ang_y))*Math.cos(Math.toRadians(cam_ang_x)));
+        aux[1] = (float)  -Math.sin(Math.toRadians(cam_ang_x));
+        aux[2] = (float) -(Math.cos(Math.toRadians(cam_ang_y))*Math.cos(Math.toRadians(cam_ang_x)));
+        
+		return aux;
+	}
+	@Override
+	public void setDireccion(float x, float y, float z) {
+		//float ang_x = (float) Math.acos(-z);
+		
+		float ang_x = (float) Math.asin(-y);
+		
+		float ang_y = (float) (x/Math.cos(ang_x));
+		System.out.println("[Cam]: [False] angx: "+Math.toDegrees(ang_x)+" - angy: "+Math.toDegrees(ang_y));
+		System.out.println("[Cam]: [True]  angx: "+cam_ang_x+" - angy: "+cam_ang_y);
 	}
 
 	

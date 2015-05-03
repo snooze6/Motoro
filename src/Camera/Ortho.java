@@ -18,7 +18,7 @@ public class Ortho implements ICam{
 	private float cam_x, cam_y, cam_z;                //Posición de la cámara
 	private float cam_ang_x, cam_ang_y, cam_ang_z;    //Ángulos de la cámara                //Ángulo de visión (Zoom)
 	private int W_WIDTH, W_HEIGHT;
-	private int tam;
+	private float tam, scale;
 	
 	//--------------------------------------------------------------------------
 	
@@ -30,8 +30,8 @@ public class Ortho implements ICam{
 		cam_ang_x=0;
 		cam_ang_y=0;
 		cam_ang_z=0;
-		
 		tam = 100;
+		
 	}
 	public Ortho(float cam_x, float cam_y, float cam_z, float cam_ang_x,
 			float cam_ang_y, float cam_ang_z) {
@@ -54,6 +54,7 @@ public class Ortho implements ICam{
 		this.cam_ang_z = cam_ang_z;
 		W_WIDTH = w_WIDTH;
 		W_HEIGHT = w_HEIGHT;
+		setScale();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -67,13 +68,20 @@ public class Ortho implements ICam{
 		cam_ang_x=angx; cam_ang_y=angy; cam_ang_z=angz;
 	}
 	@Override
-	public void setZoom(float zoom) {
-
-	}
-	@Override
 	public void setWindow(int i, int j) {
-		W_WIDTH = i;
-		W_HEIGHT = j;
+		if ((i>0)&&(j>0)){
+			W_WIDTH = i;
+			W_HEIGHT = j;
+			setScale();
+		}
+	}
+	private void setScale() {
+		if (W_HEIGHT>0){
+			scale = (float)W_WIDTH/W_HEIGHT;
+		} else {
+			scale = 1;
+		}
+		//System.out.println("Scale: "+scale);
 	}
 
 	//--------------------------------------------------------------------------
@@ -86,7 +94,8 @@ public class Ortho implements ICam{
 
         glMatrixMode(GL_PROJECTION); //La camara
         glLoadIdentity(); // Inicializamos la matriz de la cámara a la identidad
-        glOrtho(-(W_WIDTH/2), (W_WIDTH/2), -(W_HEIGHT/2), (W_HEIGHT/2), -(2000),(2000));
+        
+        glOrtho(-tam*scale, tam*scale, -tam, tam, -(2000),(2000));
 
         glRotated(cam_ang_x, 1.0, 0.0, 0.0);
         glRotated(cam_ang_y, 0.0, 1.0, 0.0);
@@ -157,13 +166,15 @@ public class Ortho implements ICam{
 	
 	@Override
 	public void morezoom() {
-		// TODO Auto-generated method stub
-		
+		if (tam-5>0){
+			tam=tam-5;
+		}
 	}
 	@Override
 	public void lesszoom() {
-		// TODO Auto-generated method stub
-		
+		if (tam+5>0){
+			tam=tam+5;
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -185,5 +196,22 @@ public class Ortho implements ICam{
 	}
 	public float getCam_ang_z() {
 		return cam_ang_z;
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	@Override
+	public float[] getDireccion() {
+        float[] aux; aux = new float[3];
+        aux[0] = (float) (Math.sin(Math.toRadians(cam_ang_y))*Math.cos(Math.toRadians(cam_ang_x)));
+        aux[2] = (float) -(Math.cos(Math.toRadians(cam_ang_y))*Math.cos(Math.toRadians(cam_ang_x)));
+        aux[1] = (float)  -Math.sin(Math.toRadians(cam_ang_x));
+        
+		return aux;
+	}
+	@Override
+	public void setDireccion(float x, float y, float z) {
+		// TODO Auto-generated method stub
+		
 	}
 }

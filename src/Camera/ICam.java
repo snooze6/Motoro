@@ -4,7 +4,6 @@ public interface ICam {
 
 	public void setPosition(float x, float y, float z);
 	public void setAngle(float angx, float angy, float angz);
-	public void setZoom(float zoom);
 	public void setWindow(int i, int j);
 	
 	//--------------------------------------------------------------------------
@@ -26,7 +25,9 @@ public interface ICam {
 	public void lookLeft(float ang);
     public void lookUp(float ang);
     public void lookDown(float ang);
-    //public void lookAt(float x, float y, float z);
+    
+    public float[] getDireccion();
+    public void setDireccion(float x, float y, float z);
     
     //--------------------------------------------------------------------------
 

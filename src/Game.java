@@ -17,6 +17,7 @@ import org.lwjgl.opengl.DisplayMode;
 import rubik.Node;
 import Camera.ICam;
 import Camera.Ortho;
+import Camera.Perspective;
 import Others.Dibujo;
 import Others.Face;
 
@@ -68,7 +69,7 @@ public class Game {
 
     private Face cara;
     
-    private ICam camera;
+    private ICam camera, cam1, cam2;
     Node nod;
 
     float fAngulo=0;
@@ -85,7 +86,9 @@ public class Game {
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
-        camera = new Ortho();
+        cam1 = new Ortho();
+        cam2 = new Perspective();
+        camera = cam2;
         camera.setWindow(Display.getWidth(), Display.getHeight());
         
         //nod = new Node();
@@ -148,11 +151,8 @@ public class Game {
          * Si tienes alguna duda te lo explico más detenidamente
          */
         glPushMatrix();
-            float desx, desy, desz;
-            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-	        glTranslated(camera.getCam_x() + 5*desx,camera.getCam_y() - 5*desy ,camera.getCam_z() - 5*desz);
+            float[] v = camera.getDireccion();
+	        glTranslated(camera.getCam_x() + 5*v[0],camera.getCam_y() + 5*v[1] ,camera.getCam_z() + 5*v[2]);
 	        	glColor3f(2.0f, 0.5f, 0.0f);
 	            Dibujo.drawSphere(0.2f, 20, 20);
 	            Dibujo.drawAxes(1);
@@ -269,43 +269,15 @@ public class Game {
         // Rotate cam
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
             camera.lookDown(rotateMovement);
-            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
-            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
-	            float desx, desy, desz;
-	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-            System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
             camera.lookUp(rotateMovement);
-            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
-            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
-	            float desx, desy, desz;
-	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-        System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
             camera.lookRight(rotateMovement);
-            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
-            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
-	            float desx, desy, desz;
-	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-        System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
             camera.lookLeft(rotateMovement);
-            System.out.println("[CAM]: Angx: "+camera.getCam_ang_x()+" - Angy: "+camera.getCam_ang_y());
-            System.out.println("  --   Posx: "+camera.getCam_x()+" - Posy: "+camera.getCam_y()+" - Posz: "+ camera.getCam_z());
-	            float desx, desy, desz;
-	            desx = (float) (Math.sin(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desz = (float) (Math.cos(Math.toRadians(camera.getCam_ang_y()))*Math.cos(Math.toRadians(camera.getCam_ang_x())));
-	            desy = (float) Math.sin(Math.toRadians(camera.getCam_ang_x()));
-        System.out.println("  --   Desx: "+desx+" - Desy: "+desy+" - Desz: "+desz);
         }
 
         //----------------------------------------------------------------------
@@ -316,6 +288,21 @@ public class Game {
         if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
             camera.lesszoom();
         }
+        
+        if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+            camera=cam1;
+            resize();
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+            camera=cam2;
+            resize();
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
+        	float[] v = camera.getDireccion();
+            camera.setDireccion(v[0], v[1], v[2]);;
+            resize();
+        }
+        
         //----------------------------------------------------------------------
         
         int dWheel = Mouse.getDWheel();
