@@ -1,3 +1,4 @@
+package Collision.Objects;
 
 
 import static org.lwjgl.opengl.GL11.glColor3f;
@@ -7,6 +8,8 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glViewport;
+
+import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -18,7 +21,6 @@ import rubik.Node;
 import Camera.ICam;
 import Camera.Ortho;
 import Camera.Perspective;
-import Collision.Objects.Plano;
 import Others.Dibujo;
 import Others.Face;
 
@@ -27,7 +29,7 @@ import Others.Face;
  * A bare-bones implementation of a LWJGL application.
  * @author davedes
  */
-public class Game {
+public class TestPlano {
 
     // Whether to enable VSync in hardware.
     public static final boolean VSYNC = true;
@@ -54,11 +56,11 @@ public class Game {
     private ICam camera, cam1, cam2;
     Node nod;
     
-    private Plano p;
+    private ArrayList<Plano> p;
 
     float fAngulo=0;
     public static void main(String[] args) throws LWJGLException {
-        new Game().start();
+        new TestPlano().start();
     }
 
     // Start our MainDenis
@@ -78,7 +80,17 @@ public class Game {
         //nod = new Node();
         cara = new Face(20);
         
-        p=new Plano(0,0,1 , 100,100,100);
+        p=new ArrayList<Plano>();
+        
+        p.add(new Plano(1,1,0 , 100,100,0));
+        p.add(new Plano(-1,-1,0 , -100,-100,0));
+        p.add(new Plano(-1,1,0 , -100,100,0));
+        p.add(new Plano(1,-1,0 , 100,-100,0));
+        
+        p.add(new Plano(1,0,0 , 150,0,0));
+        p.add(new Plano(-1,0,0 , -150,0,0));
+        p.add(new Plano(0,1,0 , 0,150,0));
+        p.add(new Plano(0,-1,0 , 0,-150,0));
 
 
         //create and show our display
@@ -134,22 +146,19 @@ public class Game {
 
     	camera.render();
 
-        //Mirilla que apunta hacia la cámara
-        /*
-         * Si tienes alguna duda te lo explico más detenidamente
-         */
-        glPushMatrix();
-            float[] v = camera.getDireccion();
-	        glTranslated(camera.getCam_x() + 5*v[0],camera.getCam_y() + 5*v[1] ,camera.getCam_z() + 5*v[2]);
-	        	glColor3f(2.0f, 0.5f, 0.0f);
-	            Dibujo.drawSphere(0.2f, 20, 20);
-	            Dibujo.drawAxes(1);
-        glPopMatrix();
+//        //Mirilla que apunta hacia la cámara
+//        /*
+//         * Si tienes alguna duda te lo explico más detenidamente
+//         */
+//        glPushMatrix();
+//            float[] v = camera.getDireccion();
+//	        glTranslated(camera.getCam_x() + 5*v[0],camera.getCam_y() + 5*v[1] ,camera.getCam_z() + 5*v[2]);
+//	        	glColor3f(2.0f, 0.5f, 0.0f);
+//	            Dibujo.drawSphere(0.2f, 20, 20);
+//	            Dibujo.drawAxes(1);
+//        glPopMatrix();
 
         input();
-        fAngulo=Idle(fAngulo);
-        //Dibujo.drawAxes(100);
-        //cube.drawCube(5);
 
         glPushMatrix();
           //Dibujo.drawCube(50);
@@ -158,68 +167,10 @@ public class Game {
             Dibujo.drawMalla(1000);
         glPopMatrix();
         
-        p.draw();
-
-
-        //Esfera 1
-        glPushMatrix();
-        glColor3f(0.8f, 0.8f, 0.8f);
-        glRotatef( 50*fAngulo, 0.0f, 1.0f, 0.0f);
-        glTranslatef(0.0f, 0.0f, 100.0f);
-        glRotatef( 30*fAngulo, 0.0f, 1.0f, 0.0f);
-        Dibujo.drawSphere(20,50,50);
-        Dibujo.drawAxes(40);
-        glPopMatrix();
-
-        //Esfera 2
-        glPushMatrix();
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glRotatef(8 * fAngulo, 0.0f, 1.0f, 0.0f);
-        glTranslatef(0.0f, 0.0f, 200.0f);
-        glRotatef(10 * fAngulo, 0.0f, 1.0f, 0.0f);
-        Dibujo.drawSphere(10.0f, 20, 20);
-        Dibujo.drawAxes(40);
-        glPopMatrix();
-
-        //Esfera 3
-        glPushMatrix();
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glRotatef(5 * fAngulo, 0.0f, 1.0f, 0.0f);//Antes de transladar para que gire respecto a origen
-        glTranslatef(0.0f, 0.0f, 300.0f);
-        glPushMatrix();
-        glRotatef(fAngulo * 2, 0.0f, 1.0f, 0.0f);
-        glPopMatrix();
-        Dibujo.drawSphere(20.0f, 20, 20);
-        Dibujo.drawAxes(40);
-
-                //Esfera  girando alrededor de esfera 2
-                glPushMatrix();
-                glColor3f(1.0f, 0.5f, 0.5f);
-                glRotatef(fAngulo*2.0f, 0.0f, 1.0f, 0.0f);
-                glTranslatef(0.0f, 0.0f, -50.0f);
-                glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-                Dibujo.drawSphere(10.0f, 20, 20);
-                Dibujo.drawAxes(40);
-                glPopMatrix();
-                //Esfera  girando alrededor de esfera 2
-                glPushMatrix();
-                glColor3f(0.0f, 1.0f, 0.0f);
-                glRotatef(fAngulo*2.0f + 120.0f, 0.0f, 1.0f, 0.0f);
-                glTranslatef(0.0f, 0.0f, -50.0f);
-                glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-                Dibujo.drawSphere(10.0f, 20, 20);
-                Dibujo.drawAxes(40);
-                glPopMatrix();
-                //Esfera  girando alrededor de esfera 2
-                glPushMatrix();
-                glColor3f(1.0f, 0.0f, 1.0f);
-                glRotatef(fAngulo*2.0f + 240.0f, 0.0f, 1.0f, 0.0f);
-                glTranslatef(0.0f, 0.0f, -50.0f);
-                glRotatef(fAngulo, 0.0f, 1.0f, 0.0f);
-                Dibujo.drawSphere(10.0f, 20, 20);
-                Dibujo.drawAxes(40);
-                glPopMatrix();
-        glPopMatrix();
+        for (int i=0; i<p.size(); i++){
+        	p.get(i).draw();
+        }
+        
     }
 
     // Called to resize our MainDenis
