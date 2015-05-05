@@ -1,8 +1,19 @@
 package Collision.Objects;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotated;
+import static org.lwjgl.opengl.GL11.glScaled;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+import Collisions.IBoundingBox;
 
-public class Plano {
+public class Plano implements IBoundingBox{
 
 	Vector punto, normal;
 	
@@ -23,6 +34,8 @@ public class Plano {
 		normal = new Vector(a,b,c);
 		punto = new Vector(d,e,f);
 	}
+	
+	//--------------------------------------------------------------------------
 	
 	public void draw(){
 		int size = 100;
@@ -60,12 +73,26 @@ public class Plano {
 		glPopMatrix();
 	}
 	
-	public int collision(){
-		return 0;
+	//--------------------------------------------------------------------------
+
+	@Override
+	public Vector getPoint() {
+		return punto;
 	}
-	
-	public float[] nuevaDireccion(){
-		return new float[3];
+
+	@Override
+	public Vector getVel() {
+		return normal;
+	}
+
+	@Override
+	public void setVel(Vector v) {
+		normal = v;
+	}
+
+	@Override
+	public float getSize() {
+		return 100;
 	}
 	
 	

@@ -49,6 +49,10 @@ public class Vector {
 		return new Vector(a.x+b.x, a.y+b.y, a.z+b.z);
 	}
 	
+	public static Vector del(Vector a, Vector b){
+		return new Vector(a.x-b.x, a.y-b.y, a.z-b.z);
+	}
+	
 	public static Vector prod(Vector a, Vector b){
 		//Producto vectorial
 		//return new Vector(a.x*b.x, a.y*b.y, a.z*b.z);
@@ -59,12 +63,12 @@ public class Vector {
 		return new Vector(a.x*b, a.y*b, a.z*b);
 	}
 	
-	public static float dist(Vector a, Vector b){
-		return (prod(a, prod(b, -1))).mod();
-	}
-	
 	public static Vector prod(float a, Vector b){
 		return new Vector(a*b.x, a*b.y, a*b.z);
+	}
+	
+	public static float dist(Vector a, Vector b){
+		return (prod(a, prod(b, -1))).mod();
 	}
 	
 	public static float dot(Vector a, Vector b){

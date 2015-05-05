@@ -1,11 +1,7 @@
-package Collision.Objects;
 
 
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glViewport;
 
@@ -21,6 +17,7 @@ import rubik.Node;
 import Camera.ICam;
 import Camera.Ortho;
 import Camera.Perspective;
+import Collision.Objects.Plano;
 import Others.Dibujo;
 import Others.Face;
 
@@ -106,11 +103,6 @@ public class TestPlano {
         p.add(new Plano(1,-1,-1 , 300,-300,-300));
         p.add(new Plano(-1,1,1 , -300,300,300));
          
-//        p.add(new Plano(1,2,3,  0,+500,0));
-//        p.add(new Plano(1,0,0 , +500,0,0));
-        
-
-
         //create and show our display
         Display.create();
        

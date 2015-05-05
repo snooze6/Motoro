@@ -1,6 +1,8 @@
-package Collision.Objects;
+
 
 import java.util.ArrayList;
+
+import Collision.Objects.Vector;
 
 public class TestVector {
 
