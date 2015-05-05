@@ -38,6 +38,8 @@ public class TestVector {
 			a.get(i).z=aux;
 			a.get(i).print();
 		}
+		
+		System.out.println(Vector.ang(new Vector(1,1,1),  new Vector(1,1,0)));
 	}
 
 }
