@@ -45,8 +45,11 @@ public class Esfera implements IBoundingBox{
 	//--------------------------------------------------------------------------
 	
 	public void trasladar(){
+		point=Vector.sum(point, direction);
+	}
+	
+	public void draw(){
 		glPushMatrix();
-			point=Vector.sum(point, direction);
 			glTranslated(point.x,point.y,point.z);
 			Dibujo.drawSphere(size, 30, 30);
 		glPopMatrix();

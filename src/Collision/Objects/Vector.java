@@ -67,8 +67,12 @@ public class Vector {
 		return new Vector(a*b.x, a*b.y, a*b.z);
 	}
 	
+	public static Vector mult(Vector a, Vector b){
+		return new Vector(a.x*b.x, a.y*b.y, a.z*b.z);
+	}
+	
 	public static float dist(Vector a, Vector b){
-		return (prod(a, prod(b, -1))).mod();
+		return (sum(a, prod(b, -1))).mod();
 	}
 	
 	public static float dot(Vector a, Vector b){

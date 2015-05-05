@@ -1,5 +1,28 @@
 package SistemaSolar;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FILL;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDeleteLists;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotated;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScaled;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glViewport;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -8,8 +31,10 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
 
-import static org.lwjgl.opengl.GL11.*;
-import Lights.*;
+import Lights.DirectionalLight;
+import Lights.ILight;
+import Lights.SpotLight;
+import Others.Dibujo;
 
 public class SistemaSolar {
 
@@ -145,21 +170,21 @@ public class SistemaSolar {
         glRotated(xRotate, 1.0, 0.0, 0.0);
         glRotated(yRotate, 0.0, 1.0, 0.0);
         glTranslated(-xTranslate,-yTranslate,-zTranslate);
-        glPushMatrix();
-
-        desx = (float) (Math.sin(Math.toRadians(yRotate))*Math.cos(Math.toRadians(xRotate)));
-        desz = (float) (Math.cos(Math.toRadians(yRotate))*Math.cos(Math.toRadians(xRotate)));
-        desy = (float) Math.sin(Math.toRadians(xRotate));
-        glTranslated(xTranslate + 5 * desx, yTranslate - 5 * desy, zTranslate - 5 * desz);
-
-        //System.out.println(yRotate + " Desx"+desx);
-//        Dibujo.drawSphere(0.2f, 20, 20);
-//        Dibujo.drawAxes(1);
+	        glPushMatrix();
+	
+	        desx = (float) (Math.sin(Math.toRadians(yRotate))*Math.cos(Math.toRadians(xRotate)));
+	        desz = (float) (Math.cos(Math.toRadians(yRotate))*Math.cos(Math.toRadians(xRotate)));
+	        desy = (float) Math.sin(Math.toRadians(xRotate));
+	        glTranslated(xTranslate + 5 * desx, yTranslate - 5 * desy, zTranslate - 5 * desz);
+	
+	        //System.out.println(yRotate + " Desx"+desx);
+	        Dibujo.drawSphere(0.2f, 20, 20);
+	        //Dibujo.drawAxes(1);
         glPopMatrix();
+        
         light1.setLight_position(new float[]{xTranslate, yTranslate, zTranslate, 1.0f});
-
-       light1.setSpotDir(new float[]{5 * desx, -5 * desy, -5 * desz, 1.0f});
-     //   light1.on();
+        light1.setSpotDir(new float[]{5 * desx, -5 * desy, -5 * desz, 1.0f});
+        //   light1.on();
 
 
 
