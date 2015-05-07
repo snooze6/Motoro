@@ -16,6 +16,7 @@ import Collisions.IBoundingBox;
 public class Plano implements IBoundingBox{
 
 	Vector punto, normal;
+	private float size = 100;
 	
 	public Plano(Vector normal, Vector punto) {
 		super();
@@ -35,10 +36,16 @@ public class Plano implements IBoundingBox{
 		punto = new Vector(d,e,f);
 	}
 	
+	public Plano(float a, float b, float c, float d, float e, float f, float size){
+		super();
+		normal = new Vector(a,b,c);
+		punto = new Vector(d,e,f);
+		this.size = size;
+	}
+	
 	//--------------------------------------------------------------------------
 	
 	public void draw(){
-		int size = 100;
 		
 		//		System.out.println("[PLANO]: n[1] "+normal.x+" - n[2] "+normal.y+" - n[3] "+normal.z);
 		//		System.out.println("[PLANO]: p[1] "+punto.x+" - p[2] "+punto.y+" - p[3] "+punto.z);

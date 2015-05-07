@@ -29,6 +29,10 @@ public class MainArmando {
     public static final boolean FULLSCREEN = false;
     // Whether our MainDenis loop is running
     protected boolean running = false;
+    
+    private float runtime = 0;
+    private int afps = 60;
+    
 
     public void start() {
         try {
@@ -53,9 +57,8 @@ public class MainArmando {
                 resize();
             update(getDelta());
             renderGL();
-            System.out.println("jodete 4.0");
             Display.update();
-            Display.sync(60); // cap fps to 60fps
+            Display.sync(afps); // cap fps to 60fps
         }
         // Dispose any resources and destroy our window
         dispose();
@@ -66,16 +69,32 @@ public class MainArmando {
     public void exit() {
         running = false;
     }
+    
+ 
 
     public void update(int delta) {
         // rotate quad
         rotation += 0.15f * delta;
+        
+        runtime+=delta;
+        
+        System.out.println("runtime: "+runtime/1000);
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) x -= 0.35f * delta;
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) x += 0.35f * delta;
 
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) y -= 0.35f * delta;
         if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) y += 0.35f * delta;
+        
+        // Translate cam
+        if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
+        	afps--;
+        	//System.out.println("[FPS]: "+afps);
+        }
+        // Translate cam
+        if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+        	afps++;
+        }
 
         // keep quad on the screen
         if (x < 0) x = 0;

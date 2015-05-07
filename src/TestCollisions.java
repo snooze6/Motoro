@@ -7,6 +7,8 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.util.ArrayList;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -22,7 +24,6 @@ import Collision.Objects.Esfera;
 import Collision.Objects.Plano;
 import Collision.Objects.Vector;
 import Collisions.CollisionsManager;
-import Collisions.IBoundingBox;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Lights.SpotLight;
@@ -55,15 +56,22 @@ public class TestCollisions {
     int yPosition=0;
     int lastX;
     int lastY;
+    
+    long lastFrame;/** time at last frame */
+    int fps;/** frames per second */
+    long lastFPS;/** last fps time */
+    private float runtime = 0;
 
     private Face cara;
     
     private ICam camera, cam1, cam2;
     Node nod;
+    private int delta;
     
     private Esfera uno, dos, tres, cuatro, cinco;
     private Plano arr, aba, der, izq, del, atr;
     ILight light1;
+    private CollisionsManager col;
 
     float fAngulo=0;
     public static void main(String[] args) throws LWJGLException {
@@ -124,25 +132,63 @@ public class TestCollisions {
     public void exit() {
         running = false;
     }
+    
+    private ArrayList<Esfera> listaEsferas;
 
     // Called to setup our MainDenis and context
     protected void create() {
-    	uno = new Esfera(new Vector( 200,200,0), new Vector(-1,0,0), 50, 50);
-    	dos = new Esfera(new Vector(-200,200,0), new Vector(+1,0,0), 50, 50);
-    	tres = new Esfera(new Vector(-460, 50, -400), new Vector(0,-4,0), 50, 25);
-    	cuatro = new Esfera(new Vector(-320, 100, -350), new Vector(1,0,1), 30, 15);
-    	cinco = new Esfera(new Vector(-400, 20, -450), new Vector(1,-1,-2), 15, 10);
     	
-    	aba = new Plano(0,1,0 , -400, 0  , -400);
-    	arr = new Plano(0,-1,0, -400, 200, -400);
-    	izq = new Plano(1,0,0 , -500, 100, -400);
-    	der = new Plano(-1,0,0, -300, 100, -400);
-    	del = new Plano(0,0,-1, -400, 100, -300);
-    	atr = new Plano(0,0,1 , -400, 100, -500);
+    	listaEsferas = new ArrayList<Esfera>();
+        col = new CollisionsManager();
+    	
+    	for (int i=0; i<10; i++){
+    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50, -400), new Vector(-0.1f,-0.01f*i,0), 10, 10));
+    		col.add(listaEsferas.get(i));
+    	}
+    	for (int i=0; i<10; i++){
+    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50, -400), new Vector(-0.1f*i,-0.01f,0), 10, 10));
+    		col.add(listaEsferas.get(i+10));
+    	}
+    	for (int i=0; i<10; i++){
+    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+100, -400), new Vector(-0.1f,-0.01f,0.01f*i), 10, 10));
+    		col.add(listaEsferas.get(i+20));
+    	}
+    	for (int i=0; i<10; i++){
+    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50+50+50, -400), new Vector(-0.1f*i,-0.01f,0), 10, 10));
+    		col.add(listaEsferas.get(i+30));
+    	}
+    	for (int i=0; i<100; i++){
+    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 20, -400), new Vector(-0.1f,-0.01f,0.01f*i), 10, 10));
+    		col.add(listaEsferas.get(i+40));
+    	}
+//    	listaEsferas.add(new Esfera(new Vector(-460, 50, -400), new Vector(0,-4,0), 50, 25));
+//    	col.add(listaEsferas.get(0));
+    	
+//    	uno = new Esfera(new Vector( -460,50,-450), new Vector(-1,0,0), 50, 50);
+//    	dos = new Esfera(new Vector(-200,200,0), new Vector(+1,0,0), 50, 50);
+//    	tres = new Esfera(new Vector(-460, 50, -400), new Vector(0,-4,0), 50, 25);
+//    	listaEsferas.add(tres);
+//    	cuatro = new Esfera(new Vector(-320, 100, -350), new Vector(1,0,1), 30, 15);
+//    	cinco = new Esfera(new Vector(-400, 20, -450), new Vector(1,-1,-2), 15, 10);
+    	
+    	aba = new Plano(0,1,0 , -400, 0  , -400, 200);
+    	arr = new Plano(0,-1,0, -400, 400, -400, 200);
+    	izq = new Plano(1,0,0 , -600, 200, -400, 200);
+    	der = new Plano(-1,0,0, -200, 200, -400, 200);
+    	del = new Plano(0,0,-1, -400, 200, -200, 200);
+    	atr = new Plano(0,0,1 , -400, 200, -600, 200);
     	
         light1=new SpotLight();
         light1.setCutoff(120);
         light1.on();
+        
+        col.add(arr);
+        col.add(aba);
+        col.add(der);
+        col.add(izq);
+        col.add(atr);
+        col.add(del);
+        
     }
 
     // Called to render our MainDenis
@@ -162,11 +208,11 @@ public class TestCollisions {
           glTranslatef(0.0f, -61.2f, 0.0f);
             Dibujo.drawMalla(1000);
         glPopMatrix();
-//        
-//        uno.draw(); dos.draw(); 
-         tres.draw();
-         
-//        cuatro.draw(); cinco.draw();
+        
+        for(int i=0; i<listaEsferas.size(); i++){
+        	listaEsferas.get(i).draw();
+        }
+        
         aba.draw(); arr.draw(); der.draw(); izq.draw(); atr.draw(); //del.draw();
       } else {
       	camera.render();
@@ -287,19 +333,24 @@ public class TestCollisions {
         return fAngulo;
     }
 
-    long lastFrame;/** time at last frame */
-    int fps;/** frames per second */
-    long lastFPS;/** last fps time */
+
 	
     //--------------------------------------------------------------------------
     
+    
+    /*
+     * Devuelve los milisegundos del tiempo del sistema
+     */
     public long getTime() {
         return (Sys.getTime() * 1000) / Sys.getTimerResolution();
     }
 	
+    /*
+     * Muestra los FPS en la barra del título
+     */
     public void updateFPS() {
         if (getTime() - lastFPS > 1000) {
-            Display.setTitle("FPS: " + fps);
+            Display.setTitle("FPS: " + fps); runtime++;
             if (fps<10){
             	lag = true;
             } else {
@@ -311,6 +362,10 @@ public class TestCollisions {
         fps++;
     }
     
+    /*
+     * Actualiza el valor de delta
+     *   - Delta = intervalo de tiempo entre FPS en milisegundos
+     */
     public int getDelta() {
         long time = getTime();
         delta = (int) (time - lastFrame);
@@ -320,13 +375,13 @@ public class TestCollisions {
         return delta;
     }
 
-    private int delta;
     private boolean lag=false;
     private int afps = 60;
 
     public void update(int delta) {
-                
-
+    	
+        runtime+=delta;
+    	//System.out.println("[Runtime]: "+runtime/1000);
     	
         float aux = (float)delta/(float)17;
         if (aux>5.882353) {aux = 0;}
@@ -347,45 +402,12 @@ public class TestCollisions {
         if (!lag) {
 	        input(delta);
 	        
-//	        uno.trasladar(aux);
-//	        dos.trasladar(aux);
-	       
-//	        cuatro.trasladar(aux);
-//	        cinco.trasladar(aux);
+	        for(int i=0; i<listaEsferas.size(); i++){
+	        	listaEsferas.get(i).trasladar(delta);
+	        }
 	        
-	        //System.out.println("[Aux]: "+aux);
-	        tres.trasladar(aux);
-	        CollisionsManager.collide(tres, arr, aux);
-	        CollisionsManager.collide(tres, aba, aux);
-	        CollisionsManager.collide(tres, der, aux);
-	        CollisionsManager.collide(tres, izq, aux);
-	        CollisionsManager.collide(tres, atr, aux);
-	        CollisionsManager.collide(tres, del, aux);
-	        
-	      
-//	        CollisionsManager.collide(cuatro, arr);
-//	        CollisionsManager.collide(cuatro, aba);
-//	        CollisionsManager.collide(cuatro, der);
-//	        CollisionsManager.collide(cuatro, izq);
-//	        CollisionsManager.collide(cuatro, atr);
-//	        CollisionsManager.collide(cuatro, del);
-//	        
-//	        CollisionsManager.collide(cinco, arr);
-//	        CollisionsManager.collide(cinco, aba);
-//	        CollisionsManager.collide(cinco, der);
-//	        CollisionsManager.collide(cinco, izq);
-//	        CollisionsManager.collide(cinco, atr);
-//	        CollisionsManager.collide(cinco, del);
-	        
-//	        CollisionsManager.collide(tres, cuatro);
-//	        CollisionsManager.collide(cuatro, cinco);
-//	        CollisionsManager.collide(cinco, tres);
-	        
-//	        CollisionsManager.collide(uno, dos);
-//	        if(aux>1){
-//	        	 System.out.println("[AUX]: "+aux);
-//	        }
-	    }
+	        col.collide();
+        }
      }
 
 

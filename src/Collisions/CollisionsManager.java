@@ -24,31 +24,47 @@ public class CollisionsManager {
 	}
 	
 	public void collide(){
-		
+		for (int i=0; i<list.size(); i++){
+			for(int j=i+1; j<list.size(); j++){
+				collide(list.get(i), list.get(j), 0);
+			}
+		}
 	}
 	
-//	public static boolean collide(IBoundingBox A, IBoundingBox B){
-//		if (A instanceof Plano) {
-//			if (B instanceof Plano){
-//				System.out.println("[Main]: Colisión entre planos aún no implementada");
-//			}
-//			if (B instanceof Esfera){
-//				return collide((Plano)B,(Esfera)A);
-//			}
-//		}
-//		if (A instanceof Esfera){
-//			if (B instanceof Plano){
-//				return collide((Esfera)A, (Plano)B);
-//			}
-//			if (B instanceof Esfera){
-//				//System.out.println("[Main]: Colisión entre esferas aún no implementada");
-//				return collide((Esfera)A, (Esfera)B);
-//			}
-//		}
-//		return false;
-//	}
+	public void add(IBoundingBox ob){
+		list.add(ob);
+	}
+	
+	public void del(IBoundingBox ob){
+		list.remove(ob);
+	}
+	
+	public float gamma = 0;
+	public float gammaAcum = 0;
+	
+	public boolean collide(IBoundingBox A, IBoundingBox B, float delta){
+		
+		if (A instanceof Plano) {
+			if (B instanceof Plano){
+				//System.out.println("[Main]: Colisión entre planos aún no implementada");
+			}
+			if (B instanceof Esfera){
+				return collide((Plano)B,(Esfera)A, delta);
+			}
+		}
+		if (A instanceof Esfera){
+			if (B instanceof Plano){
+				return collide((Esfera)A, (Plano)B, delta);
+			}
+			if (B instanceof Esfera){
+				//System.out.println("[Main]: Colisión entre esferas aún no implementada");
+				return collide((Esfera)A, (Esfera)B, delta);
+			}
+		}
+		return false;
+	}
 
-	public static boolean collide(Esfera A, Esfera B, float delta) {
+	public boolean collide(Esfera A, Esfera B, float delta) {
 		if (Vector.dist(A.getPoint(), B.getPoint()) <= (A.getSize() + B.getSize())){
 			//System.out.println("[COLISIONADOR]: Colisión esfera-esfera");
 			Vector vel1,vel2, v1, v2, v1x, v2x, v1y, v2y, x; float m1, m2;
@@ -74,14 +90,17 @@ public class CollisionsManager {
 		}
 		return false;
 	}
-
-	public static boolean collide(Esfera A, Plano B, float delta) {
+	
+	public boolean collide(Esfera A, Plano B, float delta) {
+		if(delta>126){
+			delta=0;
+		}
+		gammaAcum += delta;
+		//System.out.println("Gamma: "+gamma/1000+ "  Delta: "+delta);
 		//System.out.println("[Main]: Colisión entre esfera y plano aún no implementada");
 		
-		gammaAcum=delta+gammaAcum;
-		int x=1;
-		if (gammaAcum>2*gamma ){
-			x=0;
+		if(gammaAcum>gamma*2 || true){
+		
 			float D1=0, D2 = 0, distancia=0;
 			Vector punto=A.getPoint(), normal = B.getVel(), punto2 = B.getPoint();
 			D1=(normal.x*punto2.x + normal.y*punto2.y + normal.z*punto2.z);
@@ -90,9 +109,8 @@ public class CollisionsManager {
 			//distancia=fabs(_normal.getX()*punto.getX()+_normal.getY()*punto.getY()+_normal.getZ()*punto.getZ()+D);
 			distancia=distancia/normal.mod();
 			if(distancia<A.getSize()){
-					gammaAcum = 0; gamma=delta;
-				
-					System.out.println("Y:  "+(A.getPoint().y - A.getSize()));
+				    gammaAcum=0; gamma=delta;
+					//System.out.println("Y:  "+(A.getPoint().y - A.getSize()));
 					//System.out.println("VY: "+(A.getVelocity().y));
 
 					Vector b = Vector.prod(distancia, Vector.prod(-1, Vector.norm(A.getVel())));
@@ -104,16 +122,11 @@ public class CollisionsManager {
 				return true;
 			}
 		}
-		else{
-			//System.out.println("tururu");
-		}
+			
 		return false;
 	}
 	
-	public static float gamma = 0;
-	public static float gammaAcum = 0;
-	
-	public static boolean collide(Plano B, Esfera A, float delta){
+	public boolean collide(Plano B, Esfera A, float delta){
 		return collide(A,B, delta);
 	}
 	
