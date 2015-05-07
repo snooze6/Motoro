@@ -1,10 +1,20 @@
 
 
+import static org.lwjgl.opengl.GL11.GL_COMPILE;
+import static org.lwjgl.opengl.GL11.GL_QUAD_STRIP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glNewList;
+import static org.lwjgl.opengl.GL11.glNormal3d;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex3d;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.util.ArrayList;
@@ -68,7 +78,6 @@ public class TestCollisions {
     Node nod;
     private int delta;
     
-    private Esfera uno, dos, tres, cuatro, cinco;
     private Plano arr, aba, der, izq, del, atr;
     ILight light1;
     private CollisionsManager col;
@@ -107,6 +116,38 @@ public class TestCollisions {
         running = true;
         getDelta();
         lastFPS = getTime();
+        
+    	int r=10, lats=15, longs=15;
+    	
+        int i, j; double lat0, z0, zr0, lat1, z1, zr1; 
+        displayListHandle = glGenLists(1);
+		glNewList(displayListHandle, GL_COMPILE);
+		
+	        for(i = 0; i <= lats; i++) {
+	            lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
+	            z0  = Math.sin(lat0);
+	            zr0 =  Math.cos(lat0);
+	
+	            lat1 = Math.PI * (-0.5 + (double) i / lats);
+	            z1 =  Math.sin(lat1);
+	            zr1 = Math.cos(lat1);
+	
+	            glBegin(GL_QUAD_STRIP);
+	            for(j = 0; j <= longs; j++) {
+	                double lng = 2 * Math.PI * (double) (j - 1) / longs;
+	                double x = r*Math.cos(lng);
+	                double y = r*Math.sin(lng);
+	
+	                glNormal3d(x * zr0, y * zr0, r*z0);
+	                glVertex3d(x * zr0, y * zr0, r*z0);
+	                glNormal3d(x * zr1, y * zr1, r*z1);
+	                glVertex3d(x * zr1, y * zr1, r*z1);
+	            }
+	            glEnd();
+	         }
+		
+			//Dibujo.drawCube(size);
+         glEndList();
 
         // While we're still running and the user hasn't closed the window...
         while (running && !Display.isCloseRequested()) {
@@ -134,6 +175,7 @@ public class TestCollisions {
     }
     
     private ArrayList<Esfera> listaEsferas;
+    private int displayListHandle = -1;
 
     // Called to setup our MainDenis and context
     protected void create() {
@@ -157,19 +199,10 @@ public class TestCollisions {
     		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50+50+50, -400), new Vector(-0.1f*i,-0.01f,0), 10, 10));
     		col.add(listaEsferas.get(i+30));
     	}
-    	for (int i=0; i<100; i++){
+    	for (int i=0; i<2000; i++){
     		listaEsferas.add(new Esfera(new Vector(-480+22*i, 20, -400), new Vector(-0.1f,-0.01f,0.01f*i), 10, 10));
     		col.add(listaEsferas.get(i+40));
     	}
-//    	listaEsferas.add(new Esfera(new Vector(-460, 50, -400), new Vector(0,-4,0), 50, 25));
-//    	col.add(listaEsferas.get(0));
-    	
-//    	uno = new Esfera(new Vector( -460,50,-450), new Vector(-1,0,0), 50, 50);
-//    	dos = new Esfera(new Vector(-200,200,0), new Vector(+1,0,0), 50, 50);
-//    	tres = new Esfera(new Vector(-460, 50, -400), new Vector(0,-4,0), 50, 25);
-//    	listaEsferas.add(tres);
-//    	cuatro = new Esfera(new Vector(-320, 100, -350), new Vector(1,0,1), 30, 15);
-//    	cinco = new Esfera(new Vector(-400, 20, -450), new Vector(1,-1,-2), 15, 10);
     	
     	aba = new Plano(0,1,0 , -400, 0  , -400, 200);
     	arr = new Plano(0,-1,0, -400, 400, -400, 200);
@@ -188,7 +221,7 @@ public class TestCollisions {
         col.add(izq);
         col.add(atr);
         col.add(del);
-        
+      
     }
 
     // Called to render our MainDenis
@@ -210,7 +243,16 @@ public class TestCollisions {
         glPopMatrix();
         
         for(int i=0; i<listaEsferas.size(); i++){
-        	listaEsferas.get(i).draw();
+        	Vector point = listaEsferas.get(i).getPoint();
+        	
+    		glPushMatrix();
+			glTranslated(point.x,point.y,point.z);
+			glCallList(displayListHandle);
+			
+			//Dibujo.drawSphere(size, 10, 10);
+			//Dibujo.drawCube(size);
+			//s.draw(size, 30, 30);
+		glPopMatrix();
         }
         
         aba.draw(); arr.draw(); der.draw(); izq.draw(); atr.draw(); //del.draw();
@@ -224,7 +266,6 @@ public class TestCollisions {
 	            Dibujo.drawSphere(0.2f, 20, 20);
 	            Dibujo.drawAxes(1);
 	    glPopMatrix();
-
       }
     } 
 

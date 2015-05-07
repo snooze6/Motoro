@@ -57,7 +57,9 @@ public class Dibujo {
 	        glVertex3f(size, -size, -size);
 	        glEnd();  // End of drawing color-cube
 	}
-    public static void drawSphere(double r, int lats, int longs) {
+
+	
+	public static void drawSphere(double r, int lats, int longs) {
         int i, j;
         for(i = 0; i <= lats; i++) {
             double lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
@@ -81,6 +83,7 @@ public class Dibujo {
             }
             glEnd();
         }
+    	//s.draw((float)r, lats, longs);
     }
     public static void drawAxes(float longitud){
         //DIBUJO LOS EJES

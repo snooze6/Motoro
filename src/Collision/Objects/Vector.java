@@ -54,8 +54,6 @@ public class Vector {
 	}
 	
 	public static Vector prod(Vector a, Vector b){
-		//Producto vectorial
-		//return new Vector(a.x*b.x, a.y*b.y, a.z*b.z);
 		return new Vector(a.y*b.z - b.y*a.z,-1*(a.x*b.z - b.x*a.z),a.x*b.y - b.x*a.y);
 	}
 	
