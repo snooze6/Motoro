@@ -1,11 +1,14 @@
 
 
+import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -77,7 +80,7 @@ public class TestCollisions {
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
         cam1 = new Ortho();
-        cam2 = new Perspective();
+        cam2 = new Perspective(-400, 50, 0, 0, 0, 0);
         camera = cam2;
         camera.setWindow(Display.getWidth(), Display.getHeight());
         
@@ -94,18 +97,22 @@ public class TestCollisions {
         resize();
         
         running = true;
+        getDelta();
+        lastFPS = getTime();
 
         // While we're still running and the user hasn't closed the window...
         while (running && !Display.isCloseRequested()) {
             // If the MainDenis was resized, we need to update our projection
+        	
             if (Display.wasResized())
                 resize();
 
             // Render the MainDenis
+             update(getDelta());
              render();
             // Flip the buffers and sync to 60 FPS
             Display.update();
-            Display.sync(60);
+            Display.sync(afps);
         }
 
         // Dispose any resources and destroy our window
@@ -122,7 +129,7 @@ public class TestCollisions {
     protected void create() {
     	uno = new Esfera(new Vector( 200,200,0), new Vector(-1,0,0), 50, 50);
     	dos = new Esfera(new Vector(-200,200,0), new Vector(+1,0,0), 50, 50);
-    	tres = new Esfera(new Vector(-460, 50, -400), new Vector(1,-1,0), 50, 25);
+    	tres = new Esfera(new Vector(-460, 50, -400), new Vector(0,-4,0), 50, 25);
     	cuatro = new Esfera(new Vector(-320, 100, -350), new Vector(1,0,1), 30, 15);
     	cinco = new Esfera(new Vector(-400, 20, -450), new Vector(1,-1,-2), 15, 10);
     	
@@ -134,19 +141,20 @@ public class TestCollisions {
     	atr = new Plano(0,0,1 , -400, 100, -500);
     	
         light1=new SpotLight();
+        light1.setCutoff(120);
         light1.on();
     }
 
     // Called to render our MainDenis
     protected void render() {
-
+      updateFPS(); // update FPS Counter
+    	
+      if (!lag){
     	camera.render();
        
 	    	float[] v = camera.getDireccion();
 	        light1.setLight_position(new float[]{camera.getCam_x(), camera.getCam_y(), camera.getCam_z(),1.0f});
 	        light1.setSpotDir(new float[]{5*v[0], 5*v[1], 5*v[2], 1.0f});
-
-        input();
 
         glPushMatrix();
           //Dibujo.drawCube(50);
@@ -154,40 +162,25 @@ public class TestCollisions {
           glTranslatef(0.0f, -61.2f, 0.0f);
             Dibujo.drawMalla(1000);
         glPopMatrix();
-        
-        uno.draw(); dos.draw(); tres.draw(); cuatro.draw(); cinco.draw();
-        
+//        
+//        uno.draw(); dos.draw(); 
+         tres.draw();
+         
+//        cuatro.draw(); cinco.draw();
         aba.draw(); arr.draw(); der.draw(); izq.draw(); atr.draw(); //del.draw();
-        
-        CollisionsManager.collide((IBoundingBox) tres, (IBoundingBox) arr);
-        CollisionsManager.collide((IBoundingBox) tres, (IBoundingBox) aba);
-        CollisionsManager.collide((IBoundingBox) tres, (IBoundingBox) der);
-        CollisionsManager.collide((IBoundingBox) tres, (IBoundingBox) izq);
-        CollisionsManager.collide((IBoundingBox) tres, (IBoundingBox) atr);
-        CollisionsManager.collide((IBoundingBox) tres, (IBoundingBox) del);
-        
-        CollisionsManager.collide((IBoundingBox) cuatro, (IBoundingBox) arr);
-        CollisionsManager.collide((IBoundingBox) cuatro, (IBoundingBox) aba);
-        CollisionsManager.collide((IBoundingBox) cuatro, (IBoundingBox) der);
-        CollisionsManager.collide((IBoundingBox) cuatro, (IBoundingBox) izq);
-        CollisionsManager.collide((IBoundingBox) cuatro, (IBoundingBox) atr);
-        CollisionsManager.collide((IBoundingBox) cuatro, (IBoundingBox) del);
-        
-        CollisionsManager.collide((IBoundingBox) cinco, (IBoundingBox) arr);
-        CollisionsManager.collide((IBoundingBox) cinco, (IBoundingBox) aba);
-        CollisionsManager.collide((IBoundingBox) cinco, (IBoundingBox) der);
-        CollisionsManager.collide((IBoundingBox) cinco, (IBoundingBox) izq);
-        CollisionsManager.collide((IBoundingBox) cinco, (IBoundingBox) atr);
-        CollisionsManager.collide((IBoundingBox) cinco, (IBoundingBox) del);
-        
-        CollisionsManager.collide((IBoundingBox) tres, (IBoundingBox) cuatro);
-        CollisionsManager.collide((IBoundingBox) cuatro, (IBoundingBox) cinco);
-        CollisionsManager.collide((IBoundingBox) cinco, (IBoundingBox) tres);
-        
-        CollisionsManager.collide((IBoundingBox) uno, (IBoundingBox) dos);
-        
-        uno.trasladar(); dos.trasladar(); tres.trasladar(); cuatro.trasladar(); cinco.trasladar();
-    }
+      } else {
+      	camera.render();
+
+        glPushMatrix();
+	        float[] v = camera.getDireccion();
+	        glTranslated(camera.getCam_x() + 5*v[0],camera.getCam_y() + 5*v[1] ,camera.getCam_z() + 5*v[2]);
+	        	glColor3f(2.0f, 0.5f, 0.0f);
+	            Dibujo.drawSphere(0.2f, 20, 20);
+	            Dibujo.drawAxes(1);
+	    glPopMatrix();
+
+      }
+    } 
 
     // Called to resize our MainDenis
     protected void resize() {
@@ -201,7 +194,7 @@ public class TestCollisions {
         // ... dispose of any textures, etc ...
     }
 
-    public void input(){
+    public void input(int delta){
         int speedMovement=3;
         float rotateMovement=1.5f;
         // Translate cam
@@ -294,6 +287,106 @@ public class TestCollisions {
         return fAngulo;
     }
 
+    long lastFrame;/** time at last frame */
+    int fps;/** frames per second */
+    long lastFPS;/** last fps time */
+	
+    //--------------------------------------------------------------------------
+    
+    public long getTime() {
+        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+    }
+	
+    public void updateFPS() {
+        if (getTime() - lastFPS > 1000) {
+            Display.setTitle("FPS: " + fps);
+            if (fps<10){
+            	lag = true;
+            } else {
+            	lag = false;
+            }
+            fps = 0;
+            lastFPS += 1000;
+        }
+        fps++;
+    }
+    
+    public int getDelta() {
+        long time = getTime();
+        delta = (int) (time - lastFrame);
+        lastFrame = time;
+        //System.out.println(delta);
+        //System.out.println("[DELTA]: "+delta);
+        return delta;
+    }
+
+    private int delta;
+    private boolean lag=false;
+    private int afps = 60;
+
+    public void update(int delta) {
+                
+
+    	
+        float aux = (float)delta/(float)17;
+        if (aux>5.882353) {aux = 0;}
+        
+        // Translate cam
+        if (Keyboard.isKeyDown(Keyboard.KEY_V)) {
+        	afps--;
+        	//System.out.println("[FPS]: "+afps);
+        }
+        // Translate cam
+        if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
+        	afps++;
+        }
+    	
+        
+        
+    	//System.out.println("Delta "+delta);
+        if (!lag) {
+	        input(delta);
+	        
+//	        uno.trasladar(aux);
+//	        dos.trasladar(aux);
+	       
+//	        cuatro.trasladar(aux);
+//	        cinco.trasladar(aux);
+	        
+	        //System.out.println("[Aux]: "+aux);
+	        tres.trasladar(aux);
+	        CollisionsManager.collide(tres, arr, aux);
+	        CollisionsManager.collide(tres, aba, aux);
+	        CollisionsManager.collide(tres, der, aux);
+	        CollisionsManager.collide(tres, izq, aux);
+	        CollisionsManager.collide(tres, atr, aux);
+	        CollisionsManager.collide(tres, del, aux);
+	        
+	      
+//	        CollisionsManager.collide(cuatro, arr);
+//	        CollisionsManager.collide(cuatro, aba);
+//	        CollisionsManager.collide(cuatro, der);
+//	        CollisionsManager.collide(cuatro, izq);
+//	        CollisionsManager.collide(cuatro, atr);
+//	        CollisionsManager.collide(cuatro, del);
+//	        
+//	        CollisionsManager.collide(cinco, arr);
+//	        CollisionsManager.collide(cinco, aba);
+//	        CollisionsManager.collide(cinco, der);
+//	        CollisionsManager.collide(cinco, izq);
+//	        CollisionsManager.collide(cinco, atr);
+//	        CollisionsManager.collide(cinco, del);
+	        
+//	        CollisionsManager.collide(tres, cuatro);
+//	        CollisionsManager.collide(cuatro, cinco);
+//	        CollisionsManager.collide(cinco, tres);
+	        
+//	        CollisionsManager.collide(uno, dos);
+//	        if(aux>1){
+//	        	 System.out.println("[AUX]: "+aux);
+//	        }
+	    }
+     }
 
 
 }

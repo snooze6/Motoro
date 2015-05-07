@@ -102,6 +102,8 @@ public class TestPlano {
         p.add(new Plano(-1,-1,1 , -300,-300,300));
         p.add(new Plano(1,-1,-1 , 300,-300,-300));
         p.add(new Plano(-1,1,1 , -300,300,300));
+        
+        p.add(new Plano(1,2,3 , 0,500,0));
          
         //create and show our display
         Display.create();

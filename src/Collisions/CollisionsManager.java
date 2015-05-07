@@ -27,28 +27,28 @@ public class CollisionsManager {
 		
 	}
 	
-	public static boolean collide(IBoundingBox A, IBoundingBox B){
-		if (A instanceof Plano) {
-			if (B instanceof Plano){
-				System.out.println("[Main]: Colisión entre planos aún no implementada");
-			}
-			if (B instanceof Esfera){
-				return EsferaPlano(B,A);
-			}
-		}
-		if (A instanceof Esfera){
-			if (B instanceof Plano){
-				return EsferaPlano(A, B);
-			}
-			if (B instanceof Esfera){
-				//System.out.println("[Main]: Colisión entre esferas aún no implementada");
-				return EsferaEsfera(A, B);
-			}
-		}
-		return false;
-	}
+//	public static boolean collide(IBoundingBox A, IBoundingBox B){
+//		if (A instanceof Plano) {
+//			if (B instanceof Plano){
+//				System.out.println("[Main]: Colisión entre planos aún no implementada");
+//			}
+//			if (B instanceof Esfera){
+//				return collide((Plano)B,(Esfera)A);
+//			}
+//		}
+//		if (A instanceof Esfera){
+//			if (B instanceof Plano){
+//				return collide((Esfera)A, (Plano)B);
+//			}
+//			if (B instanceof Esfera){
+//				//System.out.println("[Main]: Colisión entre esferas aún no implementada");
+//				return collide((Esfera)A, (Esfera)B);
+//			}
+//		}
+//		return false;
+//	}
 
-	private static boolean EsferaEsfera(IBoundingBox A, IBoundingBox B) {
+	public static boolean collide(Esfera A, Esfera B, float delta) {
 		if (Vector.dist(A.getPoint(), B.getPoint()) <= (A.getSize() + B.getSize())){
 			//System.out.println("[COLISIONADOR]: Colisión esfera-esfera");
 			Vector vel1,vel2, v1, v2, v1x, v2x, v1y, v2y, x; float m1, m2;
@@ -68,33 +68,53 @@ public class CollisionsManager {
 			
 			vel1 = Vector.sum(v1y, Vector.sum(Vector.prod(v1x, ((m1-m2)/(m1+m2))), Vector.prod(v2x, ((2*m2)/(m1+m2)))));
 			vel2 = Vector.sum(v2y, Vector.sum(Vector.prod(v1x, ((2*m1)/(m1+m2))), Vector.prod(v2x, ((m2-m1)/(m1+m2)))));
-			((Esfera) A).setDirection((vel1));
-			((Esfera) B).setDirection(vel2);;
+			((Esfera) A).setVelocity((vel1));
+			((Esfera) B).setVelocity(vel2);;
 			return true;
 		}
 		return false;
 	}
 
-	private static boolean EsferaPlano(IBoundingBox A, IBoundingBox B) {
+	public static boolean collide(Esfera A, Plano B, float delta) {
 		//System.out.println("[Main]: Colisión entre esfera y plano aún no implementada");
-		float D1=0, D2 = 0, distancia=0;
-		Vector punto=A.getPoint(), normal = B.getVel(), punto2 = B.getPoint();
+		
+		gammaAcum=delta+gammaAcum;
+		int x=1;
+		if (gammaAcum>2*gamma ){
+			x=0;
+			float D1=0, D2 = 0, distancia=0;
+			Vector punto=A.getPoint(), normal = B.getVel(), punto2 = B.getPoint();
+			D1=(normal.x*punto2.x + normal.y*punto2.y + normal.z*punto2.z);
+			D2=(normal.x*punto.x + normal.y*punto.y + normal.z*punto.z);
+			distancia = Math.abs(D2-D1);
+			//distancia=fabs(_normal.getX()*punto.getX()+_normal.getY()*punto.getY()+_normal.getZ()*punto.getZ()+D);
+			distancia=distancia/normal.mod();
+			if(distancia<A.getSize()){
+					gammaAcum = 0; gamma=delta;
+				
+					System.out.println("Y:  "+(A.getPoint().y - A.getSize()));
+					//System.out.println("VY: "+(A.getVelocity().y));
 
-		D1=(normal.x*punto2.x + normal.y*punto2.y + normal.z*punto2.z);
-		D2=(normal.x*punto.x + normal.y*punto.y + normal.z*punto.z);
-		distancia = Math.abs(D2-D1);
-		//distancia=fabs(_normal.getX()*punto.getX()+_normal.getY()*punto.getY()+_normal.getZ()*punto.getZ()+D);
-		distancia=distancia/normal.mod();
-		if(distancia<=A.getSize()){
-			//System.out.println("[COLISIONADOR]: Colisión esfera-plano");
-			
-				Vector I=Vector.norm(A.getVel()), N= Vector.norm(normal), R;
-				R = Vector.sum(Vector.mult(Vector.mult(Vector.prod(-1, I), N), Vector.prod(2, N)), I);
-				((Esfera) A).setDirection(Vector.prod(R, A.getVel().mod()));
-			
-			return true;
+					Vector b = Vector.prod(distancia, Vector.prod(-1, Vector.norm(A.getVel())));
+					//A.setPoint(Vector.sum(punto,  b));
+					
+					Vector I=Vector.norm(A.getVel()), N= Vector.norm(normal), R;
+					R = Vector.sum(Vector.mult(Vector.mult(Vector.prod(-1, I), N), Vector.prod(2, N)), I);
+					 A.setVelocity(Vector.prod(R, A.getVel().mod()));
+				return true;
+			}
+		}
+		else{
+			//System.out.println("tururu");
 		}
 		return false;
+	}
+	
+	public static float gamma = 0;
+	public static float gammaAcum = 0;
+	
+	public static boolean collide(Plano B, Esfera A, float delta){
+		return collide(A,B, delta);
 	}
 	
 }

@@ -3,11 +3,16 @@ package Collision.Objects;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslated;
+
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+
 import Collisions.IBoundingBox;
 import Others.Dibujo;
 
 public class Esfera implements IBoundingBox{
-	Vector point, direction;
+	Vector point, velocity;
 	float mass;
 	float size;
 	
@@ -16,36 +21,36 @@ public class Esfera implements IBoundingBox{
 	public Esfera() {
 		super();
 		this.point = new Vector(0,0,0);
-		this.direction = new Vector(0,0,0);
+		this.velocity = new Vector(0,0,0);
 		this.mass = 1;
 		this.size = 10;
 	}
 	public Esfera(Vector point, float mass, float size) {
 		super();
 		this.point = point;
-		this.direction = new Vector(0,0,0);
+		this.velocity = new Vector(0,0,0);
 		this.mass = mass;
 		this.size = size;
 	}
-	public Esfera(Vector point, Vector direction, float mass, float size) {
+	public Esfera(Vector point, Vector velocity, float mass, float size) {
 		super();
 		this.point = point;
-		this.direction = direction;
+		this.velocity = velocity;
 		this.mass = mass;
 		this.size = size;
 	}
 	public Esfera(float x, float y, float z, float mass, float size) {
 		super();
 		this.point = new Vector(x,y,z);
-		this.direction = new Vector(0,0,0);
+		this.velocity = new Vector(0,0,0);
 		this.mass = mass;
 		this.size = size;
 	}
 	
 	//--------------------------------------------------------------------------
 	
-	public void trasladar(){
-		point=Vector.sum(point, direction);
+	public void trasladar(float delta){
+		point=Vector.sum(point, Vector.prod(delta, velocity));
 	}
 	
 	public void draw(){
@@ -63,11 +68,11 @@ public class Esfera implements IBoundingBox{
 	public void setPoint(Vector point) {
 		this.point = point;
 	}
-	public Vector getDirection() {
-		return direction;
+	public Vector getVelocity() {
+		return velocity;
 	}
-	public void setDirection(Vector direction) {
-		this.direction = direction;
+	public void setVelocity(Vector velocity) {
+		this.velocity = velocity;
 	}
 	public float getMass() {
 		return mass;
@@ -83,13 +88,14 @@ public class Esfera implements IBoundingBox{
 	}
 	@Override
 	public Vector getVel() {
-		return direction;
+		return velocity;
 	}
 	@Override
 	public void setVel(Vector v) {
-		direction = v;
+		velocity = v;
 	}
 	
+	//--------------------------------------------------------------------------
 	
 
 }

@@ -62,14 +62,33 @@ public class Plano implements IBoundingBox{
 				glEnd();
 			  glScaled(1/size,1/size,1/size);
 			glPopMatrix();
+			
 			glPushMatrix();
 				glColor3f(1.0f, 1.0f, 0.0f);
-				p = Vector.norm(normal);
+				Vector n = Vector.norm(normal);
 				glBegin(GL_LINES);
 					glVertex3f(0,0,0);
-					glVertex3f(size*p.x, size*p.y, size*p.z); 
+					glVertex3f(size*n.x, size*n.y, size*n.z); 
 				glEnd();
 			glPopMatrix();
+			
+			glPushMatrix();
+			glColor3f(0.0f, 0.0f, 1.0f);
+			glBegin(GL_LINES);
+				glVertex3f(0,0,0);
+				glVertex3f(size*p.x, size*p.y, size*p.z); 
+			glEnd();
+			glPopMatrix();
+			
+			Vector a = Vector.prod(p, normal);
+			glPushMatrix();
+			glColor3f(0.0f, 1.0f, 0.0f);
+			glBegin(GL_LINES);
+				glVertex3f(0,0,0);
+				glVertex3f(size*a.x, size*a.y, size*a.z); 
+			glEnd();
+			glPopMatrix();
+			
 		glPopMatrix();
 	}
 	
