@@ -18,6 +18,7 @@ import Camera.ICam;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.Objects.Plano;
+import Collision.Objects.Vector;
 import Others.Dibujo;
 import Others.Face;
 
@@ -251,8 +252,8 @@ public class TestPlano {
             resize();
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
-        	float[] v = camera.getDireccion();
-            camera.setDireccion(v[0], v[1], v[2]);;
+        	Vector v = camera.getDireccion();
+            camera.setDireccion(v.x, v.y, v.z);;
             resize();
         }
         

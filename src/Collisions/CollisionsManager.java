@@ -132,6 +132,7 @@ public class CollisionsManager {
 		 puntoA = Vector.sum(puntoA, Vector.prod(delta, A.getVel()));
 		Vector puntoB = Vector.sum(B.getPoint(), Vector.prod(delta, B.getVel()));
 		 puntoB = Vector.sum(puntoB, Vector.prod(delta, B.getVel()));
+		 
 		if (Vector.dist(puntoA, puntoB) <= (A.getSize() + B.getSize())){
 			//System.out.println("[COLISIONADOR]: Colisión esfera-esfera");
 			Vector vel1,vel2, v1, v2, v1x, v2x, v1y, v2y, x; float m1, m2;
