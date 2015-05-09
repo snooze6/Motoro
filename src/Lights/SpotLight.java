@@ -5,10 +5,10 @@ package Lights;
  */
 
 import org.lwjgl.BufferUtils;
+
 import java.nio.FloatBuffer;
+
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_LIGHT0;
-import static org.lwjgl.opengl.GL11.GL_SPOT_DIRECTION;
 
 public class SpotLight implements ILight {
 
@@ -73,7 +73,11 @@ public void initGL() {
     glLight(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLight(GL_LIGHT0, GL_POSITION, light_position);
     glEnable(GL_LIGHT0);
-
+ 
+    glCullFace(GL_BACK);
+ 
+    
+    
     glShadeModel(GL_SMOOTH);
     glMaterial(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);
     glMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);

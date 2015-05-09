@@ -34,6 +34,7 @@ import Collision.Objects.Esfera;
 import Collision.Objects.Plano;
 import Collision.Objects.Vector;
 import Collisions.CollisionsManager;
+import Collisions.IBoundingBox;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Lights.SpotLight;
@@ -117,7 +118,7 @@ public class TestCollisions {
         getDelta();
         lastFPS = getTime();
         
-    	int r=10, lats=15, longs=15;
+    	int r=10, lats=35, longs=35;
     	
         int i, j; double lat0, z0, zr0, lat1, z1, zr1; 
         displayListHandle = glGenLists(1);
@@ -178,32 +179,80 @@ public class TestCollisions {
     private int displayListHandle = -1;
 
     // Called to setup our MainDenis and context
+    Vector point2 ;
     protected void create() {
+    	point2=new Vector(0,0,1);
+    	int cte=80;
     	
     	listaEsferas = new ArrayList<Esfera>();
-        col = new CollisionsManager();
+       int value=0;
     	
-    	for (int i=0; i<10; i++){
-    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50, -400), new Vector(-0.1f,-0.01f*i,0), 10, 10));
-    		col.add(listaEsferas.get(i));
-    	}
-    	for (int i=0; i<10; i++){
-    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50, -400), new Vector(-0.1f*i,-0.01f,0), 10, 10));
-    		col.add(listaEsferas.get(i+10));
-    	}
-    	for (int i=0; i<10; i++){
-    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+100, -400), new Vector(-0.1f,-0.01f,0.01f*i), 10, 10));
-    		col.add(listaEsferas.get(i+20));
-    	}
-    	for (int i=0; i<10; i++){
-    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50+50+50, -400), new Vector(-0.1f*i,-0.01f,0), 10, 10));
-    		col.add(listaEsferas.get(i+30));
-    	}
-    	for (int i=0; i<2000; i++){
-    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 20, -400), new Vector(-0.1f,-0.01f,0.01f*i), 10, 10));
-    		col.add(listaEsferas.get(i+40));
+    	for (int i=0; i<1; i++){
+    		listaEsferas.add(new Esfera(new Vector(-400, 0+11, -220), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+//    		col.add(listaEsferas.get(i));
     	}
     	
+    	for (int i=0; i<1; i++){
+    		listaEsferas.add(new Esfera(new Vector(-400, 0+11, -360+10*value-1-cte), new Vector(-0.0f,-0.0f,0.0f), 20, 10));
+//    		col.add(listaEsferas.get(i));
+    	}
+    	value++;
+    	for (int i=0; i<2; i++){
+    		listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+//    		col.add(listaEsferas.get(i));
+    	}
+    	value++;
+    	for (int i=0; i<3; i++){
+    		listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+//    		col.add(listaEsferas.get(i));
+    	}
+    	    	value++;
+    	for (int i=0; i<4; i++){
+    		listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+//    		col.add(listaEsferas.get(i));
+    	}
+    	value++;
+    	for (int i=0; i<5; i++){
+    		listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+//    		col.add(listaEsferas.get(i));
+    	}
+   	
+
+       
+//    	for (int i=0; i<10; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-490+20*i, 0+11, -400), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+////    		col.add(listaEsferas.get(i));
+//    	}
+//
+//    	for (int i=0; i<20; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-480, 50+22*i, -400), new Vector(-0.1f,+0.01f*i*2,0), 10, 10));
+////    		col.add(listaEsferas.get(i));
+//    	}
+//    	for (int i=0; i<20; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-480, 50, -400+22*i), new Vector(-0.1f*i,+0.01f*i*2,0), 30, 10));
+////    		col.add(listaEsferas.get(i));
+//    	}
+//    	for (int i=0; i<10; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50, -400), new Vector(-0.1f*i*2,-0.01f,0), 10, 10));
+//    		
+//    	}
+//    	for (int i=0; i<10; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+100, -400), new Vector(-0.1f,-0.01f,0.01f*i*2), 10, 10));
+//    		
+//    	}
+//    	for (int i=0; i<10; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50+50+50, -400), new Vector(-0.1f*i*2,-0.01f,0), 10, 10));
+//    		
+//    	}
+//    	for (int i=0; i<200; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 20, -400), new Vector(-0.1f,-0.01f,0.01f*i), 10, 10));
+//    		
+//    	}
+    	
+    	ArrayList<IBoundingBox> lista = new ArrayList<IBoundingBox>(listaEsferas);
+    	
+    	 
+    	 
     	aba = new Plano(0,1,0 , -400, 0  , -400, 200);
     	arr = new Plano(0,-1,0, -400, 400, -400, 200);
     	izq = new Plano(1,0,0 , -600, 200, -400, 200);
@@ -211,19 +260,23 @@ public class TestCollisions {
     	del = new Plano(0,0,-1, -400, 200, -200, 200);
     	atr = new Plano(0,0,1 , -400, 200, -600, 200);
     	
+        lista.add(arr);
+        lista.add(aba);
+        lista.add(der);
+        lista.add(izq);
+        lista.add(atr);
+        lista.add(del);
+        
+        col = new CollisionsManager(lista);
+    	
         light1=new SpotLight();
         light1.setCutoff(120);
         light1.on();
         
-        col.add(arr);
-        col.add(aba);
-        col.add(der);
-        col.add(izq);
-        col.add(atr);
-        col.add(del);
+
       
     }
-
+   
     // Called to render our MainDenis
     protected void render() {
       updateFPS(); // update FPS Counter
@@ -244,10 +297,19 @@ public class TestCollisions {
         
         for(int i=0; i<listaEsferas.size(); i++){
         	Vector point = listaEsferas.get(i).getPoint();
-        	
     		glPushMatrix();
 			glTranslated(point.x,point.y,point.z);
-			glCallList(displayListHandle);
+		
+			if(i==0){
+				glColor3f(0.0f,0.0f,0.0f);
+				glCallList(displayListHandle);
+			}
+				
+			else{
+				
+				glColor3f(1.0f,1.0f,1.0f);
+				glCallList(displayListHandle);
+			}
 			
 			//Dibujo.drawSphere(size, 10, 10);
 			//Dibujo.drawCube(size);
@@ -354,6 +416,17 @@ public class TestCollisions {
         if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
             light1 = new SpotLight();
         }
+        if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
+	    	float[] v = camera.getDireccion();
+	        light1.setLight_position(new float[]{camera.getCam_x(), camera.getCam_y(), camera.getCam_z(),1.0f});
+	        light1.setSpotDir(new float[]{5*v[0], 5*v[1], 5*v[2], 1.0f});
+	        Vector aux = new Vector(5*v[0], 5*v[1], 5*v[2]);
+	        Vector.norm(aux);
+            listaEsferas.get(0).setVelocity(Vector.prod(0.9f, Vector.norm(aux)));
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+            listaEsferas.get(0).setVelocity(0.0f,0.0f,0.0f);
+        }
         
         //----------------------------------------------------------------------
         
@@ -445,9 +518,13 @@ public class TestCollisions {
 	        
 	        for(int i=0; i<listaEsferas.size(); i++){
 	        	listaEsferas.get(i).trasladar(delta);
+	        	if(i==0){
+	        		camera.setPosition(listaEsferas.get(i).getPoint().x+20, listaEsferas.get(i).getPoint().y, listaEsferas.get(i).getPoint().z);
+	        		//camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);
+	        	}
 	        }
 	        
-	        col.collide();
+	        col.collide(delta);
         }
      }
 

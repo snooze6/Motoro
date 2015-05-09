@@ -121,6 +121,10 @@ public class Plano implements IBoundingBox{
 		return 100;
 	}
 	
+	public void trasladar(float delta){
+		
+	}
+	
 	
 	
 }

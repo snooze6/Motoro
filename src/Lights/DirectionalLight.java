@@ -69,7 +69,8 @@ public void initGL() {
     glLight(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLight(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLight(GL_LIGHT0, GL_POSITION, light_position);
-
+    
+    glCullFace(GL_BACK);
 
     glEnable(GL_LIGHT0);
     glMaterial(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient);

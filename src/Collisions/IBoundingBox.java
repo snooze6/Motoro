@@ -11,4 +11,5 @@ public interface IBoundingBox {
 	public Vector getVel();
 	public float getSize();
 	public void setVel(Vector v);
+	public void trasladar(float delta);
 }

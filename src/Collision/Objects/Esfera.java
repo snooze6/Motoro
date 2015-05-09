@@ -124,6 +124,11 @@ public class Esfera implements IBoundingBox{
 	public void setVelocity(Vector velocity) {
 		this.velocity = velocity;
 	}
+	public void setVelocity(float x,float y,float z) {
+		this.velocity.x=x;
+		this.velocity.y=y;
+		this.velocity.z=z;
+	}
 	public float getMass() {
 		return mass;
 	}
