@@ -19,6 +19,7 @@ import Camera.ICam;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.Objects.Plano;
+import Collision.Objects.Vector;
 import Others.Dibujo;
 import Others.Face;
 
@@ -139,8 +140,8 @@ public class Game {
          * Si tienes alguna duda te lo explico más detenidamente
          */
         glPushMatrix();
-            float[] v = camera.getDireccion();
-	        glTranslated(camera.getCam_x() + 5*v[0],camera.getCam_y() + 5*v[1] ,camera.getCam_z() + 5*v[2]);
+            Vector v = camera.getDireccion();
+	        glTranslated(camera.getX() + 5*v.x,camera.getY() + 5*v.y ,camera.getZ() + 5*v.z);
 	        	glColor3f(2.0f, 0.5f, 0.0f);
 	            Dibujo.drawSphere(0.2f, 20, 20);
 	            Dibujo.drawAxes(1);
@@ -285,11 +286,6 @@ public class Game {
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
             camera=cam2;
-            resize();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
-        	float[] v = camera.getDireccion();
-            camera.setDireccion(v[0], v[1], v[2]);;
             resize();
         }
         

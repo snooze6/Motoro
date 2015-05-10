@@ -1,9 +1,15 @@
 package Camera;
 
+import Collision.Objects.Vector;
+
 public interface ICam {
+	
+	//--------------------------------------------------------------------------
 
 	public void setPosition(float x, float y, float z);
+	public void setPosition(Vector v);
 	public void setAngle(float angx, float angy, float angz);
+	public void setAngle(Vector v);
 	public void setWindow(int i, int j);
 	
 	//--------------------------------------------------------------------------
@@ -26,8 +32,9 @@ public interface ICam {
     public void lookUp(float ang);
     public void lookDown(float ang);
     
-    public float[] getDireccion();
+    public Vector getDireccion();
     public void setDireccion(float x, float y, float z);
+    public void setDireccion(Vector v);
     
     //--------------------------------------------------------------------------
 
@@ -36,10 +43,13 @@ public interface ICam {
     
     //--------------------------------------------------------------------------
     
-    public float getCam_x();
-	public float getCam_y();
-	public float getCam_z();
-	public float getCam_ang_x();
-	public float getCam_ang_y();
-	public float getCam_ang_z();
+    public float getX();
+	public float getY();
+	public float getZ();
+	public float getAngX();
+	public float getAngY();
+	public float getAngZ();
+	
+	//--------------------------------------------------------------------------
+	
 }
