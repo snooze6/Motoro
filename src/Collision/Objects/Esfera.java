@@ -14,6 +14,7 @@ import Others.Dibujo;
 
 public class Esfera implements IBoundingBox{
 	Vector point, velocity;
+    public Vector lastPoint;
 	float mass;
 	float size;
 	int displayListHandle = glGenLists(1);
@@ -23,6 +24,7 @@ public class Esfera implements IBoundingBox{
 	public Esfera() {
 		super();
 		this.point = new Vector(0,0,0);
+        this.lastPoint=point;
 		this.velocity = new Vector(0,0,0);
 		this.mass = 1;
 		this.size = 10;
@@ -32,16 +34,19 @@ public class Esfera implements IBoundingBox{
 	public Esfera(Vector point, float mass, float size) {
 		super();
 		this.point = point;
+        this.lastPoint=point;
 		this.velocity = new Vector(0,0,0);
 		this.mass = mass;
 		this.size = size;
 		
-		NewLista(size, 30, 30);
+		NewLista(this.size, 30, 30);
 	}
 	public Esfera(Vector point, Vector velocity, float mass, float size) {
 		super();
 		this.point = point;
-		this.velocity = velocity;
+        this.lastPoint=point;
+		//this.velocity = Vector.prod(1.0f/1000.0f,velocity);
+       this.velocity = velocity;
 		this.mass = mass;
 		this.size = size;
 		
@@ -50,6 +55,7 @@ public class Esfera implements IBoundingBox{
 	public Esfera(float x, float y, float z, float mass, float size) {
 		super();
 		this.point = new Vector(x,y,z);
+        this.lastPoint=point;
 		this.velocity = new Vector(0,0,0);
 		this.mass = mass;
 		this.size = size;
@@ -100,6 +106,7 @@ public class Esfera implements IBoundingBox{
 	
 	public void draw(){
 		glPushMatrix();
+            lastPoint=point;
 			glTranslated(point.x,point.y,point.z);
 			
 			glCallList(this.displayListHandle);
