@@ -144,7 +144,6 @@ public class CollisionsManager {
     }
 
     public boolean collide(Esfera A, Plano B) {
-        System.out.println("Metodo ejecutando");
         float D1 = 0, D2 = 0, distancia = 0, distancia1, distancia2;
         boolean ret = false;
         float angulo1 = 0;
