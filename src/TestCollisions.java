@@ -304,9 +304,9 @@ public class TestCollisions {
       if (!lag){
     	camera.render();
        
-	    	float[] v = camera.getDireccion();
-	        light1.setLight_position(new float[]{camera.getCam_x(), camera.getCam_y(), camera.getCam_z(),1.0f});
-	        light1.setSpotDir(new float[]{5*v[0], 5*v[1], 5*v[2], 1.0f});
+	    	Vector v = camera.getDireccion();
+	        light1.setLight_position(new float[]{camera.getX(), camera.getY(), camera.getZ(),1.0f});
+	        light1.setSpotDir(new float[]{5*v.x, 5*v.y, 5*v.z, 1.0f});
 
         glPushMatrix();
           //Dibujo.drawCube(50);
@@ -345,8 +345,8 @@ public class TestCollisions {
       	camera.render();
 
         glPushMatrix();
-	        float[] v = camera.getDireccion();
-	        glTranslated(camera.getCam_x() + 5*v[0],camera.getCam_y() + 5*v[1] ,camera.getCam_z() + 5*v[2]);
+	        Vector v = camera.getDireccion();
+	        glTranslated(camera.getX() + 5*v.x,camera.getY() + 5*v.y ,camera.getZ() + 5*v.z);
 	        	glColor3f(2.0f, 0.5f, 0.0f);
 	            Dibujo.drawSphere(0.2f, 20, 20);
 	            Dibujo.drawAxes(1);
@@ -420,8 +420,8 @@ public class TestCollisions {
             resize();
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
-        	float[] v = camera.getDireccion();
-            camera.setDireccion(v[0], v[1], v[2]);;
+        	Vector v = camera.getDireccion();
+            camera.setDireccion(v.x, v.y, v.z);;
             resize();
         }
         
@@ -440,10 +440,10 @@ public class TestCollisions {
             light1 = new SpotLight();
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
-	    	float[] v = camera.getDireccion();
-	        light1.setLight_position(new float[]{camera.getCam_x(), camera.getCam_y(), camera.getCam_z(),1.0f});
-	        light1.setSpotDir(new float[]{5*v[0], 5*v[1], 5*v[2], 1.0f});
-	        Vector aux = new Vector(5*v[0], 5*v[1], 5*v[2]);
+	    	Vector v = camera.getDireccion();
+	        light1.setLight_position(new float[]{camera.getX(), camera.getY(), camera.getZ(),1.0f});
+	        light1.setSpotDir(new float[]{5*v.x, 5*v.y, 5*v.z, 1.0f});
+	        Vector aux = new Vector(5*v.x, 5*v.y, 5*v.z);
 	        Vector.norm(aux);
             listaEsferas.get(0).setVelocity(Vector.prod(0.9f, Vector.norm(aux)));
         }
