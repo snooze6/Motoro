@@ -44,10 +44,10 @@ public class TestVector {
 //		System.out.println(Vector.ang(new Vector(1,1,1),  new Vector(1,1,0)));
 
         Vector v1, v2, v3, v4, v5;
-        v1 = new Vector (1,0,0);
-        v2 = new Vector (-1,0,0);
+        v1 = new Vector (-1,0,0);
+        v2 = new Vector (-1,1,0);
 
-        System.out.println(Vector.ang(new Vector(1,0,0),  new Vector(-1,0,0)));
+        System.out.println(Vector.ang(v1,v2));
 
 	}
 
