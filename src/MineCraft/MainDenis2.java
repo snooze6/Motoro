@@ -122,18 +122,18 @@ public class MainDenis2 {
                 listaCuadrados= new ArrayList<BoundingBoxQuad>();
                 for(int i=0;i<20;i++){
                   //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-                    listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(50+40*i*2,0,0),50));
+                    listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(50+50*i*2,0,0),50));
                     System.out.println(listaCuadrados.get(i).getSize());
                 }
             for(int i=0;i<20;i++){
                 //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-                listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(40*i*2,40,0),50));
+                listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(50*i*2,40,0),50));
                 System.out.println(listaCuadrados.get(i).getSize());
             }
 
         for(int i=0;i<20;i++){
             //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-            listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(25+40*i*2,-40,0),50));
+            listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(25+50*i*2,-40,0),50));
             System.out.println(listaCuadrados.get(i).getSize());
         }
         for(int i=0;i<40;i++){
