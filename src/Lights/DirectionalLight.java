@@ -84,7 +84,7 @@ public void initGL() {
 
     public void initLightComponents(){
         light_global=asFloatBuffer(new float[]{ 0.1f, 0.1f, 0.1f, 1.0f});//Luz global
-        light_ambient=asFloatBuffer(new float[]{0.0f, 0.0f, 0.0f, 1.0f});
+        light_ambient=asFloatBuffer(new float[]{0.3f, 0.3f, 0.3f, 1.0f});
         light_position=asFloatBuffer(new float[]{ 0.0f, 200.0f, 0.0f, 1.0f}); //Posicion de la luz, ultimo parametro a 0 indica foco
         light_diffuse=asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f });
         light_specular=asFloatBuffer(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f});

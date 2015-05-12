@@ -66,6 +66,11 @@ public class Vector {
     public static Vector sum(Vector a, Vector b){
         return new Vector(a.x+b.x, a.y+b.y, a.z+b.z);
     }
+
+    public static Vector sum(Vector a, float x,float y,float z){
+        return new Vector(a.x+x, a.y+y, a.z+z);
+    }
+
     public static Vector sum(float ax,float ay,float az, float bx, float by,float bz){
         return new Vector(ax+bx, ay+by, az+bz);
     }
@@ -73,6 +78,11 @@ public class Vector {
     public static Vector del(Vector a, Vector b){
         return new Vector(a.x-b.x, a.y-b.y, a.z-b.z);
     }
+
+    public static Vector del(Vector a, float a1, float b1,float c1){
+        return new Vector(a.x-a1, a.y-b1, a.z-c1);
+    }
+
     public static Vector del(float ax,float ay,float az, float bx, float by,float bz){
         return new Vector(ax-bx, ay-by, az-bz);
     }

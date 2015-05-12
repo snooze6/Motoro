@@ -1,31 +1,3 @@
-
-
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_QUAD_STRIP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glEndList;
-import static org.lwjgl.opengl.GL11.glGenLists;
-import static org.lwjgl.opengl.GL11.glNewList;
-import static org.lwjgl.opengl.GL11.glNormal3d;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex3d;
-import static org.lwjgl.opengl.GL11.glViewport;
-
-import java.util.ArrayList;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-
-import rubik.Node;
 import Camera.ICam;
 import Camera.Ortho;
 import Camera.Perspective;
@@ -38,6 +10,17 @@ import Lights.ILight;
 import Lights.SpotLight;
 import Others.Dibujo;
 import Others.Face;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import rubik.Node;
+
+import java.util.ArrayList;
+
+import static org.lwjgl.opengl.GL11.*;
 
 
 /**
@@ -119,31 +102,7 @@ public class TestCollisions {
     	int r=10, lats=35, longs=35;
     	
         int i, j; double lat0, z0, zr0, lat1, z1, zr1; 
-        displayListHandle = glGenLists(1);
-		glNewList(displayListHandle, GL_COMPILE);
-		
-	        for(i = 0; i <= lats; i++) {
-	            lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
-	            z0  = Math.sin(lat0);
-	            zr0 =  Math.cos(lat0);
-	
-	            lat1 = Math.PI * (-0.5 + (double) i / lats);
-	            z1 =  Math.sin(lat1);
-	            zr1 = Math.cos(lat1);
-	
-	            glBegin(GL_QUAD_STRIP);
-	            for(j = 0; j <= longs; j++) {
-	                double lng = 2 * Math.PI * (double) (j - 1) / longs;
-	                double x = r*Math.cos(lng);
-	                double y = r*Math.sin(lng);
-	
-	                glNormal3d(x * zr0, y * zr0, r*z0);
-	                glVertex3d(x * zr0, y * zr0, r*z0);
-	                glNormal3d(x * zr1, y * zr1, r*z1);
-	                glVertex3d(x * zr1, y * zr1, r*z1);
-	            }
-	            glEnd();
-	         }
+
 		
 			//Dibujo.drawCube(size);
          glEndList();
@@ -221,6 +180,7 @@ public class TestCollisions {
            	}
         }
         System.out.println(tam);
+        System.out.println(siz*siz*siz);
 
 //    	for (int i=0; i<1; i++){
 //    		listaEsferas.add(new Esfera(new Vector(-400, 0+11, -360+10*value-1-cte), new Vector(-0.0f,-0.0f,0.0f), 20, 10));
@@ -298,7 +258,7 @@ public class TestCollisions {
         glPopMatrix();
         
         for(int i=0; i<listaEsferas.size(); i++){
-        	Vector point = listaEsferas.get(i).getPoint();
+
     		glPushMatrix();
 		//	glTranslated(point.x,point.y,point.z);
 		
@@ -312,7 +272,7 @@ public class TestCollisions {
 				
 				glColor3f(1.0f,1.0f,1.0f);
 				//glCallList(displayListHandle);
-                listaEsferas.get(i).draw();
+                listaEsferas.get(i).draw2();
 			}
 			
 			//Dibujo.drawSphere(size, 10, 10);
@@ -429,13 +389,13 @@ public class TestCollisions {
 	        light1.setSpotDir(new float[]{5*v.x, 5*v.y, 5*v.z, 1.0f});
 	        Vector aux = new Vector(5*v.x, 5*v.y, 5*v.z);
 	        Vector.norm(aux);
-            listaEsferas.get(0).setVelocity(Vector.prod(0.9f, Vector.norm(aux)));
+            listaEsferas.get(0).setVelocity(Vector.prod(1.2f, Vector.norm(aux)));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
             listaEsferas.get(0).setVelocity(0.0f,0.0f,0.0f);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-            listaEsferas.get(0).setVelocity(-0.0f,0.0f,-0.5f);
+            listaEsferas.get(0).setVelocity(-0.0f,0.1f,-1.5f);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
             listaEsferas.get(0).setVelocity(-0.0f,0.1f,1.5f);

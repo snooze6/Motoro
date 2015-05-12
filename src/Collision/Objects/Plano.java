@@ -16,58 +16,65 @@ import Collisions.IBoundingBox;
 public class Plano implements IBoundingBox{
 
 	Vector punto, normal;
-	private float size = 100;
+	private float sizeDraw=500,size;
+
 	
 	public Plano(Vector normal, Vector punto) {
-		super();
 		this.normal = normal;
 		this.punto = punto;
 	}
+    public Plano(Vector normal, Vector punto, float size) {
+
+        this.normal = normal;
+        this.punto = punto;
+        this.size=size;
+        this.sizeDraw=size/2;
+
+
+
+    }
 	
 	public Plano() {
-		super();
 		normal = new Vector(0,1,0);
 		punto = new Vector(0,0,0);
 	}
 	
 	public Plano(float a, float b, float c, float d, float e, float f){
-		super();
 		normal = new Vector(a,b,c);
 		punto = new Vector(d,e,f);
 	}
 	
 	public Plano(float a, float b, float c, float d, float e, float f, float size){
-		super();
 		normal = new Vector(a,b,c);
 		punto = new Vector(d,e,f);
-		this.size = size;
+        this.size=size;
+        this.sizeDraw=size/2;
+
 	}
 	
 	//--------------------------------------------------------------------------
 	
 	public void draw(){
-		
-		//		System.out.println("[PLANO]: n[1] "+normal.x+" - n[2] "+normal.y+" - n[3] "+normal.z);
+        //		System.out.println("[PLANO]: n[1] "+normal.x+" - n[2] "+normal.y+" - n[3] "+normal.z);
 		//		System.out.println("[PLANO]: p[1] "+punto.x+" - p[2] "+punto.y+" - p[3] "+punto.z);
 		//		System.out.println("[PLANO]: r[1] "+punto.x+100*normal.x+" - r[2] "+(punto.y+100*normal.y)+" - r[3] "+ punto.z+100*normal.z);
-			
+
 		glPushMatrix();
 			glTranslated(punto.x, punto.y, punto.z);
 			glPushMatrix();
 			Vector p = Vector.prod(normal, Vector.ejey);
 			glRotated(-Vector.ang(normal, Vector.ejey), p.x, p.y, p.z );
 		
-				glScaled(size,size,size);
+				glScaled(sizeDraw,sizeDraw,sizeDraw);
 				glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
 				
 					glColor3f(1.0f, 0.5f, 0.0f);     // Orange
-		
 					glVertex3f( -1, 0,  1);
 					glVertex3f( -1, 0, -1);
 					glVertex3f(  1, 0, -1);
 					glVertex3f(  1, 0,  1);
 				glEnd();
-			  glScaled(1/size,1/size,1/size);
+
 			glPopMatrix();
 			
 			glPushMatrix();
@@ -75,7 +82,7 @@ public class Plano implements IBoundingBox{
 				Vector n = Vector.norm(normal);
 				glBegin(GL_LINES);
 					glVertex3f(0,0,0);
-					glVertex3f(size*n.x, size*n.y, size*n.z); 
+					glVertex3f(sizeDraw*n.x, sizeDraw*n.y, sizeDraw*n.z);
 				glEnd();
 			glPopMatrix();
 			
@@ -83,7 +90,7 @@ public class Plano implements IBoundingBox{
 			glColor3f(0.0f, 0.0f, 1.0f);
 			glBegin(GL_LINES);
 				glVertex3f(0,0,0);
-				glVertex3f(size*p.x, size*p.y, size*p.z); 
+				glVertex3f(sizeDraw*p.x, sizeDraw*p.y, sizeDraw*p.z);
 			glEnd();
 			glPopMatrix();
 			
@@ -92,10 +99,10 @@ public class Plano implements IBoundingBox{
 			glColor3f(0.0f, 1.0f, 0.0f);
 			glBegin(GL_LINES);
 				glVertex3f(0,0,0);
-				glVertex3f(size*a.x, size*a.y, size*a.z); 
+				glVertex3f(a.x, a.y, a.z);
 			glEnd();
 			glPopMatrix();
-			
+        glScaled(1/sizeDraw,1/sizeDraw,1/sizeDraw);
 		glPopMatrix();
 	}
 	
@@ -118,7 +125,7 @@ public class Plano implements IBoundingBox{
 
 	@Override
 	public float getSize() {
-		return 100;
+		return this.size;
 	}
 	
 	public void trasladar(float delta){

@@ -327,7 +327,7 @@ public class TestCollisions2 {
          if(i<11){
             glColor3f(0.0f,1.0f,1.0f);
                 //glCallList(displayListHandle);
-            listaEsferas.get(i).draw();
+            listaEsferas.get(i).draw2();
          }
             
          else{
