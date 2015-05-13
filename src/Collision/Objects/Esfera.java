@@ -1,19 +1,11 @@
 package Collision.Objects;
 
-import static org.lwjgl.opengl.GL11.GL_QUAD_STRIP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glNormal3d;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.*;
-
-import Collisions.IBoundingBox;
 import Others.Dibujo;
+
 import org.lwjgl.util.glu.Sphere;
 
-public class Esfera implements IBoundingBox{
+public class Esfera extends BoundingBox{
 	Vector point, velocity;
     public Vector lastPoint;
 	float mass;
@@ -48,7 +40,7 @@ public class Esfera implements IBoundingBox{
 		this.point = point;
         this.lastPoint=point;
 		//this.velocity = Vector.prod(1.0f/1000.0f,velocity);
-       this.velocity = velocity;
+        this.velocity = velocity;
 		this.mass = mass;
 		this.size = size;
 		
@@ -104,7 +96,7 @@ public class Esfera implements IBoundingBox{
 	
 	//--------------------------------------------------------------------------
 	
-	public void trasladar(float delta){
+	public void move(float delta){
 		point=Vector.sum(point, Vector.prod(delta, velocity));
 	}
 	
@@ -170,6 +162,30 @@ public class Esfera implements IBoundingBox{
 	@Override
 	public void setVel(Vector v) {
 		velocity = v;
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	@Override
+	public void add(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void del(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public BoundingBox getSon(int i) {
+		return this;
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void del(int c) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	//--------------------------------------------------------------------------

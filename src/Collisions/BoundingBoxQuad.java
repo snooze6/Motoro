@@ -1,6 +1,7 @@
 package Collisions;
 
 import Collision.Objects.Esfera;
+import Collision.Objects.IBoundingBox;
 import Collision.Objects.Plano;
 import Collision.Objects.Vector;
 

@@ -5,12 +5,13 @@ import Camera.Perspective;
 import Collision.Objects.*;
 import Collisions.BoundingBoxQuad;
 import Collisions.CollisionsManager;
-import Collisions.IBoundingBox;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Lights.SpotLight;
 import Others.Dibujo;
+
 import com.sun.javafx.css.StyleCacheEntry;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -208,7 +209,7 @@ public class MainDenis2 {
     //Metodos de entrada por teclado
     input(delta);
         for(int i=0; i<listaEsferas.size(); i++){
-            listaEsferas.get(i).trasladar(delta);
+            listaEsferas.get(i).move(delta);
             if(i==0){
 //	        		camera.setPosition(listaEsferas.get(i).getPoint().x, listaEsferas.get(i).getPoint().y, listaEsferas.get(i).getPoint().z-50);
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);

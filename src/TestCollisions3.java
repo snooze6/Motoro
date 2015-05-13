@@ -29,10 +29,10 @@ import Camera.ICam;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.Objects.Esfera;
+import Collision.Objects.IBoundingBox;
 import Collision.Objects.Plano;
 import Collision.Objects.Vector;
 import Collisions.CollisionsManager;
-import Collisions.IBoundingBox;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Lights.SpotLight;
@@ -534,7 +534,7 @@ public class TestCollisions3 {
             input(delta);
 
             for(int i=0; i<listaEsferas.size(); i++){
-                listaEsferas.get(i).trasladar(delta);
+                listaEsferas.get(i).move(delta);
                 if(i==0){
 //	        		camera.setPosition(listaEsferas.get(i).getPoint().x, listaEsferas.get(i).getPoint().y, listaEsferas.get(i).getPoint().z-50);
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);
