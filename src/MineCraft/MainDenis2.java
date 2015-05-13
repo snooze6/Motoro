@@ -2,9 +2,9 @@ package MineCraft;
 
 import Camera.ICam;
 import Camera.Perspective;
+import Collision.BoundingBoxQuad;
+import Collision.CollisionsManager;
 import Collision.Objects.*;
-import Collisions.BoundingBoxQuad;
-import Collisions.CollisionsManager;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Lights.SpotLight;

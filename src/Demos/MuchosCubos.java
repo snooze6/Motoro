@@ -1,11 +1,12 @@
+package Demos;
 import Camera.ICam;
 import Camera.Ortho;
 import Camera.Perspective;
+import Collision.CollisionsManager;
 import Collision.Objects.Esfera;
 import Collision.Objects.IBoundingBox;
 import Collision.Objects.Plano;
 import Collision.Objects.Vector;
-import Collisions.CollisionsManager;
 import Lights.ILight;
 import Lights.SpotLight;
 import Others.Dibujo;
@@ -29,7 +30,7 @@ import static org.lwjgl.opengl.GL11.*;
  * A bare-bones implementation of a LWJGL application.
  * @author davedes
  */
-public class TestCollisions {
+public class MuchosCubos {
 
     // Whether to enable VSync in hardware.
     public static final boolean VSYNC = true;
@@ -68,7 +69,7 @@ public class TestCollisions {
 
     float fAngulo=0;
     public static void main(String[] args) throws LWJGLException {
-        new TestCollisions().start();
+        new MuchosCubos().start();
     }
 
     // Start our MainDenis

@@ -1,4 +1,4 @@
-package Collisions;
+package Collision;
 
 import Collision.Objects.Esfera;
 import Collision.Objects.IBoundingBox;
