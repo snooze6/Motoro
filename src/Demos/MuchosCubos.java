@@ -1,5 +1,23 @@
 package Demos;
-import Camera.ICam;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glViewport;
+
+import java.util.ArrayList;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+
+import rubik.Node;
+import Camera.Cam;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.CollisionsManager;
@@ -11,19 +29,6 @@ import Lights.ILight;
 import Lights.SpotLight;
 import Others.Dibujo;
 import Others.Face;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-
-import rubik.Node;
-
-import java.util.ArrayList;
-
-import static org.lwjgl.opengl.GL11.*;
 
 
 /**
@@ -59,7 +64,7 @@ public class MuchosCubos {
 
     private Face cara;
     
-    private ICam camera, cam1, cam2;
+    private Cam camera, cam1, cam2;
     Node nod;
     private int delta;
     

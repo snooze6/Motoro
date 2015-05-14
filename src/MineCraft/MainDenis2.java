@@ -1,28 +1,33 @@
 package MineCraft;
 
-import Camera.ICam;
-import Camera.Perspective;
-import Collision.BoundingBoxQuad;
-import Collision.CollisionsManager;
-import Collision.Objects.*;
-import Lights.DirectionalLight;
-import Lights.ILight;
-import Lights.SpotLight;
-import Others.Dibujo;
-
-import com.sun.javafx.css.StyleCacheEntry;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.input.Mouse;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+
+import Camera.Cam;
+import Camera.Perspective;
+import Collision.BoundingBoxQuad;
+import Collision.CollisionsManager;
+import Collision.Objects.Cubo;
+import Collision.Objects.Esfera;
+import Collision.Objects.IBoundingBox;
+import Collision.Objects.Plano;
+import Collision.Objects.Vector;
+import Lights.DirectionalLight;
+import Lights.ILight;
+import Lights.SpotLight;
+import Others.Dibujo;
 
 public class MainDenis2 {
 
@@ -33,7 +38,7 @@ public class MainDenis2 {
     long lastFPS;/** last fps time */
 
     //Cam
-    private ICam camera;
+    private Cam camera;
     private CollisionsManager col;
     boolean flag;
     //Lights

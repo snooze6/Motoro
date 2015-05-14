@@ -2,7 +2,6 @@ package Demos;
 import static org.lwjgl.opengl.GL11.GL_COMPILE;
 import static org.lwjgl.opengl.GL11.GL_QUAD_STRIP;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glEndList;
@@ -11,7 +10,6 @@ import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glNormal3d;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex3d;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -26,7 +24,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 import rubik.Node;
-import Camera.ICam;
+import Camera.Cam;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.CollisionsManager;
@@ -74,7 +72,7 @@ public class Billar {
 
     private Face cara;
 
-    private ICam camera, cam1, cam2;
+    private Cam camera, cam1, cam2;
     Node nod;
     private int delta;
 

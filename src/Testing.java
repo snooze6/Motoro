@@ -17,10 +17,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix;
-import org.lwjgl.util.vector.Matrix4f;
 
-import Camera.ICam;
+import Camera.Cam;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.Objects.Vector;
@@ -47,7 +45,7 @@ public class Testing {
     private int delta;
 
     private Face cara;
-    private ICam camera, cam1, cam2;
+    private Cam camera, cam1, cam2;
     ILight light1;
     
     public static void main(String[] args) throws LWJGLException {
@@ -118,40 +116,14 @@ public class Testing {
 
     }
     
-//    public Matrix4f getModelviewMatrix() {
-//        return getMatrix( GL11.GL_MODELVIEW_MATRIX );
-//     }
-//     public Matrix4f getProjectionMatrix() {
-//        return getMatrix( GL11.GL_PROJECTION_MATRIX );
-//     }
-//     /**
-//      * @param matrix4f the Matrix4f that is to be turned into a FloatBuffer that is readable to OpenGL (but not to you)
-//      * @return a FloatBuffer representation of matrix4f
-//      */
-//     public static FloatBuffer asFlippedFloatBuffer(Matrix4f matrix4f) {
-//         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-//         matrix4f.store(buffer);
-//         buffer.flip();
-//         return buffer;
-//     }
-//     private Matrix4f getMatrix( int name ) {
-//        // Retrieve specified matrix buffer
-//        buffer.rewind();
-//        GL11.glGetFloat( name, buffer );
-//
-//        // Convert to array
-//        final float[] array = new float[ 16 ];
-//        buffer.get(array);
-//
-//        // Convert to matrix
-//        return (Matrix4f) new Matrix4f().store(buffer);
-//     }
     private void print(int name ){
     	FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         buffer.rewind();
         GL11.glGetFloat( name, buffer );
-        final float[] array = new float[ 16 ];
+        final float[] array = new float[16];
         buffer.get(array);
+        
+        //buffer.
     	
     	System.out.println("  <  Matrix >");
     	  for(int i=0; i<4; i++){

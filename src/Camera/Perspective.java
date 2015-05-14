@@ -16,10 +16,9 @@ import org.lwjgl.util.glu.GLU;
 
 import Collision.Objects.Vector;
 
-public class Perspective implements ICam{
+public class Perspective extends Cam{
 	
-	private Vector pos, ang;
-	private int angvision, W_WIDTH, W_HEIGHT;
+	protected int angvision;
 	
 	//--------------------------------------------------------------------------
 	
@@ -80,26 +79,6 @@ public class Perspective implements ICam{
 	//--------------------------------------------------------------------------
 
 	@Override
-	public void setPosition(float x, float y, float z) {
-		pos = new Vector(x,y,z);
-	}
-
-	@Override
-	public void setPosition(Vector v) {
-		pos = new Vector(v);
-	}
-
-	@Override
-	public void setAngle(float angx, float angy, float angz) {
-		ang = new Vector(angx, angy, angz);
-	}
-
-	@Override
-	public void setAngle(Vector v) {
-		ang = new Vector(v);
-	}
-
-	@Override
 	public void setWindow(int i, int j) {
 		W_WIDTH=i; W_HEIGHT=j;
 	}
@@ -128,92 +107,31 @@ public class Perspective implements ICam{
 	public void moveUp(float v) {
 		pos.y+=+v;
 	}
-
 	@Override
 	public void moveDown(float v) {
 		pos.y-=v;
 	}
-
+	@Override
 	public void moveStraight(float v) {
         pos.x+=Math.sin(Math.toRadians(ang.y))*v;
         pos.z-=Math.cos(Math.toRadians(ang.y))*v;
         pos.y-=Math.sin(Math.toRadians(ang.x))*v;		
 	}
-	
+	@Override
 	public void moveBack(float v) {
         pos.x-=Math.sin(Math.toRadians(ang.y))*v;
         pos.z+=Math.cos(Math.toRadians(ang.y))*v;
         pos.y+=Math.sin(Math.toRadians(ang.x))*v;		
 	}
-
 	@Override
 	public void moveRight(float v) {
         pos.x+=Math.cos(Math.toRadians(ang.y))*v;
         pos.z+=Math.sin(Math.toRadians(ang.y))*v;
 	}
-	
 	@Override
 	public void moveLeft(float v) {
         pos.x-=Math.cos(Math.toRadians(ang.y))*v;
         pos.z-=Math.sin(Math.toRadians(ang.y))*v;	
-	}
-	
-	//--------------------------------------------------------------------------
-
-	private float updateang(float ang){
-		if (ang>360){
-			return ang-360;
-		} else {
-			if (ang<-360) {
-				return ang+360;
-			} else {
-				return ang;
-			}
-		}
-	}
-	
-	@Override
-	public void lookUp(float v) {
-		ang.x=updateang(ang.x-v);
-	}
-	
-	@Override
-	public void lookDown(float v) {
-		ang.x=updateang(ang.x+v);
-	}
-	
-	@Override
-	public void lookRight(float v) {
-		ang.y=updateang(ang.y+v);
-	}
-	
-	@Override
-	public void lookLeft(float v) {
-		ang.y=updateang(ang.y-v);
-	}
-	
-	@Override
-	public Vector getDireccion() {
-		return new Vector(
-				(float)  (Math.sin(Math.toRadians(ang.y))*Math.cos(Math.toRadians(ang.x))),
-        		(float)  -Math.sin(Math.toRadians(ang.x)),
-        		(float) -(Math.cos(Math.toRadians(ang.y))*Math.cos(Math.toRadians(ang.x)))
-        		);
-	}
-
-	@Override
-	public void setDireccion(float x, float y, float z) {
-		ang.x = (float) Math.toDegrees(Math.asin(-y));
-		ang.y = (float) Math.toDegrees(Math.asin(x/Math.cos(Math.toRadians(ang.x))));
-		ang.z = 0;
-	}
-
-	@Override
-	public void setDireccion(Vector v) {
-		ang.x = (float) Math.toDegrees(Math.asin(-v.y));
-		ang.y = (float) Math.toDegrees(Math.asin(v.x/Math.cos(Math.toRadians(ang.x))));
-		ang.z = 0;
-		
 	}
 	
 	//--------------------------------------------------------------------------
@@ -235,36 +153,4 @@ public class Perspective implements ICam{
 		
 	}
 	
-	//--------------------------------------------------------------------------
-
-	@Override
-	public float getX() {
-		return pos.x;
-	}
-
-	@Override
-	public float getY() {
-		return pos.y;
-	}
-
-	@Override
-	public float getZ() {
-		return pos.z;
-	}
-
-	@Override
-	public float getAngX() {
-		return ang.x;
-	}
-
-	@Override
-	public float getAngY() {
-		return ang.y;
-	}
-
-	@Override
-	public float getAngZ() {
-		return ang.z;
-	}
-
 }
