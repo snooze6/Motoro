@@ -36,7 +36,6 @@ public class CollisionsManager {
     //-------------------------------------------------------------------------
 
     public void add(IBoundingBox ob) {
-        int i = 0;
         list.add(ob);
         size++;
     }
@@ -54,46 +53,37 @@ public class CollisionsManager {
         } else {
             this.delta = delta;
         }
-        int position = 0;
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = i + 1; j < list.size(); j++) {
-                collide(list.get(i), list.get(j), position);
-                position++;
+        for (int i = 0; i < size; i++) {
+            for (int j = i + 1; j < size; j++) {
+                collide(list.get(i), list.get(j));
             }
         }
     }
 
-    public boolean collide(IBoundingBox A, IBoundingBox B, int ij) {
-
-        boolean aux = false;
-        if (true) {
-            if (A instanceof Plano) {
-                if (B instanceof Plano) {
-                    //System.out.println("[Main]: Colisión entre planos aún no implementada");
-                }
-                if (B instanceof Esfera) {
-                    aux = collide((Plano) B, (Esfera) A);
-                }
-
+    public boolean collide(IBoundingBox A, IBoundingBox B) {
+	    boolean aux = false;
+        if (A instanceof Plano) {
+            if (B instanceof Plano) {
+                //System.out.println("[Main]: Colisión entre planos aún no implementada");
             }
-            if (A instanceof Esfera) {
-                if (B instanceof Plano) {
-                    aux =  collide((Esfera)A, (Plano)B);
-                   // aux =  collideP((IBoundingBox) A, (IBoundingBox) B);
-                }
-                if (B instanceof Esfera) {
-                    //System.out.println("[Main]: Colisión entre esferas aún no implementada");
-                    aux = collide((Esfera) A, (Esfera) B);
-                }
-                if (B instanceof BoundingBoxCube) {
-                    aux = collide((Esfera) A, (BoundingBoxCube) B);
-
-                }
+            if (B instanceof Esfera) {
+                aux = collide((Plano) B, (Esfera) A);
             }
 
-            return aux;
         }
-        return false;
+        if (A instanceof Esfera) {
+            if (B instanceof Plano) {
+                aux =  collide((Esfera)A, (Plano)B);
+            }
+            if (B instanceof Esfera) {
+                aux = collide((Esfera) A, (Esfera) B);
+            }
+            if (B instanceof BoundingBoxCube) {
+                aux = collide((Esfera) A, (BoundingBoxCube) B);
+
+            }
+        }
+	    return aux;
     }
 
     public boolean collide(Esfera A, Esfera B) {
@@ -144,7 +134,7 @@ public class CollisionsManager {
             //B.setPoint(B.lastPoint);
             A.setVelocity((vel1));
             B.setVelocity(vel2);
-            ;
+            
             return true;
         }
         return false;

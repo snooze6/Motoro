@@ -18,7 +18,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import Camera.Cam;
+import Camera.CamListener;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.Objects.Vector;
@@ -45,7 +45,7 @@ public class Testing {
     private int delta;
 
     private Face cara;
-    private Cam camera, cam1, cam2;
+    private CamListener camera;
     ILight light1;
     
     public static void main(String[] args) throws LWJGLException {
@@ -61,10 +61,9 @@ public class Testing {
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
-        cam1 = new Ortho();
-        cam2 = new Perspective(-400, 50, 0, 0, 0, 0);
-        camera = cam2;
-        camera.setWindow(Display.getWidth(), Display.getHeight());
+        camera = new CamListener();
+        camera.addCam(new Ortho());
+        camera.addCam(new Perspective(-400, 50, 0, 0, 0, 0));
         
         //nod = new Node();
         cara = new Face(20);
@@ -205,63 +204,8 @@ public class Testing {
     }
 
     public void input(int delta){
-        int speedMovement=3;
-        float rotateMovement=1.5f;
-        // Translate cam
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-        	camera.moveStraight(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-        	camera.moveBack(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-        	camera.moveRight(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-        	camera.moveLeft(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-        	camera.moveUp(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-        	camera.moveDown(speedMovement);
-        }
-        // Rotate cam
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-            camera.lookDown(rotateMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-            camera.lookUp(rotateMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-            camera.lookRight(rotateMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-            camera.lookLeft(rotateMovement);
-        }
-
-        //----------------------------------------------------------------------
         
-        if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-            camera.morezoom();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
-            camera.lesszoom();
-        }
-        
-        if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
-            camera=cam1;
-            resize();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-            camera=cam2;
-            resize();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
-        	Vector v = camera.getDireccion();
-            camera.setDireccion(v.x, v.y, v.z);;
-            resize();
-        }
+    	camera.listen();
         
         //----------------------------------------------------------------------
         

@@ -18,7 +18,10 @@ import Collision.Objects.Vector;
 
 public class Perspective extends Cam{
 	
+	public static enum tipos {FirstPerson, ThirdPerson}
+	
 	protected int angvision;
+	protected tipos tipo = tipos.FirstPerson;
 	
 	//--------------------------------------------------------------------------
 	
@@ -150,7 +153,14 @@ public class Perspective extends Cam{
 	@Override
 	public void lesszoom() {
 		setZoom(-1);
-		
+	}
+	
+	public void firstPerson(){
+		tipo = tipos.FirstPerson;
+	}
+	
+	public void thirdPerson(){
+		tipo = tipos.ThirdPerson;
 	}
 	
 }
