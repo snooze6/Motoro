@@ -195,7 +195,6 @@ public class Testing {
     protected void resize() {
     	camera.setWindow(Display.getWidth(), Display.getHeight());
         glViewport(0, 0, Display.getWidth(), Display.getHeight());
-        
     }
 
     // Called to destroy our MainDenis upon exiting
