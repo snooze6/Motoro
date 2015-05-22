@@ -10,8 +10,6 @@
       </element>
       <element id="library" level="module" name="lwjgl_util.jar" module-name="Motoro" />
       <element id="library" level="module" name="lwjgl.jar" module-name="Motoro" />
-      <element id="file-copy" path="$PROJECT_DIR$/libs/slick.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/libs/slick-util.jar" />
     </root>
   </artifact>
 </component>

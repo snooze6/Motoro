@@ -16,8 +16,6 @@ import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.util.ArrayList;
 
-import Collision.BBSphere;
-import Collision.BoundingBox;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -25,18 +23,19 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-
+import rubik.Node;
 import Camera.Cam;
 import Camera.Ortho;
 import Camera.Perspective;
 import Collision.CollisionsManager;
-
-import Collision.BBPlane;
-import Utilities.Vector;
+import Collision.Objects.Esfera;
+import Collision.Objects.IBoundingBox;
+import Collision.Objects.Plano;
+import Collision.Objects.Vector;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Lights.SpotLight;
-import Utilities.Dibujo;
+import Others.Dibujo;
 import Others.Face;
 
 
@@ -74,9 +73,10 @@ public class Billar {
     private Face cara;
 
     private Cam camera, cam1, cam2;
+    Node nod;
     private int delta;
 
-    private BBPlane arr, aba, der, izq, del, atr, atratr;
+    private Plano arr, aba, der, izq, del, atr, atratr;
     ILight light1;
     private CollisionsManager col;
 
@@ -172,7 +172,7 @@ public class Billar {
         running = false;
     }
 
-    private ArrayList<BBSphere> listaBBSpheres;
+    private ArrayList<Esfera> listaEsferas;
     private int displayListHandle = -1;
 
     // Called to setup our MainDenis and context
@@ -181,28 +181,28 @@ public class Billar {
         point2=new Vector(0,0,1);
         int cte=80;
 
-        listaBBSpheres = new ArrayList<BBSphere>();
+        listaEsferas = new ArrayList<Esfera>();
         int value=0;
 
         for (int i=0; i<1; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400, 0+11, -220), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+            listaEsferas.add(new Esfera(new Vector(-400, 0+11, -220), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
 //    		col.add(listaEsferas.get(i));
         }
 
 
 //
         for (int i=0; i<1; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400, 0+11, -360+10*value-1-cte), new Vector(-0.0f,-0.0f,0.0f), 20, 10));
+            listaEsferas.add(new Esfera(new Vector(-400, 0+11, -360+10*value-1-cte), new Vector(-0.0f,-0.0f,0.0f), 20, 10));
 //    		col.add(listaEsferas.get(i));
         }
         value++;
         for (int i=0; i<2; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+            listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
 //    		col.add(listaEsferas.get(i));
         }
         value++;
         for (int i=0; i<3; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+            listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
 //    		col.add(listaEsferas.get(i));
         }
 //        value++;
@@ -212,7 +212,7 @@ public class Billar {
 //        }
         value++;
         for (int i=0; i<4; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+            listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
 //    		col.add(listaEsferas.get(i));
         }
 
@@ -243,17 +243,17 @@ public class Billar {
 //
 //    	}
 //
-        ArrayList<BoundingBox> lista = new ArrayList<BoundingBox>(listaBBSpheres);
+        ArrayList<IBoundingBox> lista = new ArrayList<IBoundingBox>(listaEsferas);
 
 
 
-        aba = new BBPlane(0,1,0 , -400, 0  , -400, 200);
-        arr = new BBPlane(0,-1,0, -400, 400, -400, 200);
-        izq = new BBPlane(1,0,0 , -600, 200, -400, 200);
-        der = new BBPlane(-1,0,0, -200, 200, -400, 200);
-        del = new BBPlane(0,0,-1, -400, 200, -200, 200);
-        atr = new BBPlane(0,0,1 , -400, 200, -600, 200);
-        atratr = new BBPlane(0,0,1 , -400, 200, +200, 200);
+        aba = new Plano(0,1,0 , -400, 0  , -400, 200);
+        arr = new Plano(0,-1,0, -400, 400, -400, 200);
+        izq = new Plano(1,0,0 , -600, 200, -400, 200);
+        der = new Plano(-1,0,0, -200, 200, -400, 200);
+        del = new Plano(0,0,-1, -400, 200, -200, 200);
+        atr = new Plano(0,0,1 , -400, 200, -600, 200);
+        atratr = new Plano(0,0,1 , -400, 200, +200, 200);
 //
         lista.add(arr);
         lista.add(aba);
@@ -263,13 +263,13 @@ public class Billar {
         lista.add(del);
         lista.add(atratr);
 
-        aba = new BBPlane(0,1,0 , -400, 0  , -400, 400);
-        arr = new BBPlane(0,-1,0, -400, 400, -400, 400);
-        izq = new BBPlane(1,0,0 , -600, 200, -400, 400);
-        der = new BBPlane(-1,0,0, -200, 200, -400, 400);
-        del = new BBPlane(0,0,-1, -400, 200, -200, 400);
-        atr = new BBPlane(0,0,1 , -400, 200, -600, 400);
-        atratr = new BBPlane(0,0,1 , -400, 200, +200, 400);
+        aba = new Plano(0,1,0 , -400, 0  , -400, 200);
+        arr = new Plano(0,-1,0, -400, 400, -400, 200);
+        izq = new Plano(1,0,0 , -600, 200, -400, 200);
+        der = new Plano(-1,0,0, -200, 200, -400, 200);
+        del = new Plano(0,0,-1, -400, 200, -200, 200);
+        atr = new Plano(0,0,1 , -400, 200, -600, 200);
+        atratr = new Plano(0,0,1 , -400, 200, +200, 200);
 //
         lista.add(arr);
         lista.add(aba);
@@ -309,22 +309,22 @@ public class Billar {
             Dibujo.drawMalla(1000);
             glPopMatrix();
 
-            for(int i=0; i< listaBBSpheres.size(); i++){
-                Vector point = listaBBSpheres.get(i).getPoint();
+            for(int i=0; i<listaEsferas.size(); i++){
+                Vector point = listaEsferas.get(i).getPoint();
                 glPushMatrix();
                 //	glTranslated(point.x,point.y,point.z);
 
                 if(i<1){
                     glColor3f(1.0f,1.0f,1.0f);
                     //glCallList(displayListHandle);
-                    listaBBSpheres.get(i).draw();
+                    listaEsferas.get(i).draw();
                 }
 
                 else{
 
                     glColor3f(0.0f,1.0f,1.0f);
                     //glCallList(displayListHandle);
-                    listaBBSpheres.get(i).draw();
+                    listaEsferas.get(i).draw();
                 }
 
                 //Dibujo.drawSphere(size, 10, 10);
@@ -432,16 +432,16 @@ public class Billar {
             light1.setSpotDir(new float[]{5*v.x, 5*v.y, 5*v.z, 1.0f});
             Vector aux = new Vector(5*v.x, 5*v.y, 5*v.z);
             Vector.norm(aux);
-            listaBBSpheres.get(0).setVelocity(Vector.prod(0.3f, Vector.norm(aux)));
+            listaEsferas.get(0).setVelocity(Vector.prod(0.3f, Vector.norm(aux)));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
-            listaBBSpheres.get(0).setVelocity(0.0f,0.0f,0.0f);
+            listaEsferas.get(0).setVelocity(0.0f,0.0f,0.0f);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-            listaBBSpheres.get(0).setVelocity(-0.5f,0.0f,-0.0f);
+            listaEsferas.get(0).setVelocity(-0.5f,0.0f,-0.0f);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-            listaBBSpheres.get(0).setVelocity(-0.0f,0.0f,-0.9f);
+            listaEsferas.get(0).setVelocity(-0.0f,0.0f,0.3f);
         }
 
         //----------------------------------------------------------------------
@@ -532,8 +532,8 @@ public class Billar {
         if (!lag) {
             input(delta);
 
-            for(int i=0; i< listaBBSpheres.size(); i++){
-                listaBBSpheres.get(i).move(delta);
+            for(int i=0; i<listaEsferas.size(); i++){
+                listaEsferas.get(i).move(delta);
                 if(i==0){
 //	        		camera.setPosition(listaEsferas.get(i).getPoint().x, listaEsferas.get(i).getPoint().y, listaEsferas.get(i).getPoint().z-50);
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);

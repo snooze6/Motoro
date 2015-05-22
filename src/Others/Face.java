@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import Utilities.Dibujo;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Face {
@@ -83,7 +82,7 @@ public class Face {
 			glPopMatrix();
 		}
 	        glTranslatef(0.0f, 0.0f, 0.0f);
-	        Dibujo.drawSphere(20, 50, 50);
+	        Dibujo.drawSphere(20,50,50);
 	        Dibujo.drawAxes(40);
 	        
         glPopMatrix();
