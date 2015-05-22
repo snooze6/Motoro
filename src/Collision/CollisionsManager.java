@@ -2,21 +2,26 @@ package Collision;
 
 import java.util.ArrayList;
 
-import Utilities.Vector;
+import Collision.Objects.Esfera;
+import Collision.Objects.IBoundingBox;
+import Collision.Objects.Plano;
+import Collision.Objects.Vector;
+import Collision.Objects.BoundingBoxCube;
 
+import org.lwjgl.Sys;
 
 /**
  * Created by Denis on 30/04/2015.
  */
 public class CollisionsManager {
     int p = 0;
-    private ArrayList<BoundingBox> list;
+    private ArrayList<IBoundingBox> list;
     private int size = 0;
     private float delta = 0;
 
     //-------------------------------------------------------------------------
 
-    public CollisionsManager(ArrayList<BoundingBox> list) {
+    public CollisionsManager(ArrayList<IBoundingBox> list) {
         super();
         this.list = list;
         size = list.size();
@@ -24,18 +29,18 @@ public class CollisionsManager {
 
     public CollisionsManager() {
         super();
-        this.list = new ArrayList<BoundingBox>();
+        this.list = new ArrayList<IBoundingBox>();
         size = 0;
     }
 
     //-------------------------------------------------------------------------
 
-    public void add(BoundingBox ob) {
+    public void add(IBoundingBox ob) {
         list.add(ob);
         size++;
     }
 
-    public void del(BoundingBox ob) {
+    public void del(IBoundingBox ob) {
         list.remove(ob);
         size--;
     }
@@ -55,29 +60,33 @@ public class CollisionsManager {
         }
     }
 
-    public boolean collide(BoundingBox A, BoundingBox B) {
+    public boolean collide(IBoundingBox A, IBoundingBox B) {
 	    boolean aux = false;
-        if (A instanceof BBPlane) {
-            if (B instanceof BBPlane) {
+        if (A instanceof Plano) {
+            if (B instanceof Plano) {
                 //System.out.println("[Main]: Colisión entre planos aún no implementada");
             }
-            if (B instanceof BBSphere) {
-                aux = collide((BBPlane) B, (BBSphere) A);
+            if (B instanceof Esfera) {
+                aux = collide((Plano) B, (Esfera) A);
             }
 
         }
-        if (A instanceof BBSphere) {
-            if (B instanceof BBPlane) {
-                aux =  collide((BBSphere)A, (BBPlane)B);
+        if (A instanceof Esfera) {
+            if (B instanceof Plano) {
+                aux =  collide((Esfera)A, (Plano)B);
             }
-            if (B instanceof BBSphere) {
-                aux = collide((BBSphere) A, (BBSphere) B);
+            if (B instanceof Esfera) {
+                aux = collide((Esfera) A, (Esfera) B);
+            }
+            if (B instanceof BoundingBoxCube) {
+                aux = collide((Esfera) A, (BoundingBoxCube) B);
+
             }
         }
 	    return aux;
     }
 
-    public boolean collide(BBSphere A, BBSphere B) {
+    public boolean collide(Esfera A, Esfera B) {
 
         Vector puntoA = Vector.sum(A.getPoint(), Vector.prod(delta, A.getVel()));
         Vector puntoB = Vector.sum(B.getPoint(), Vector.prod(delta, B.getVel()));
@@ -132,7 +141,7 @@ public class CollisionsManager {
 
     }
 
-    public boolean collide(BBSphere A, BBPlane B) {
+    public boolean collide(Esfera A, Plano B) {
         float D1 = 0, D2 = 0, distancia = 0, distancia1, distancia2;
         boolean ret = false;
         float angulo1 = 0;
@@ -173,8 +182,8 @@ public class CollisionsManager {
         boolean dentro=true;
 
 
-        if(B instanceof BBQuad){
-            dentro=((BBQuad)B).intersection(punto,A);
+        if(B instanceof BoundingBoxQuad){
+            dentro=((BoundingBoxQuad)B).intersection(punto,A);
         }
 
 
@@ -224,11 +233,11 @@ public class CollisionsManager {
         return ret;
     }
 
-    public boolean collide(BBPlane B, BBSphere A) {
+    public boolean collide(Plano B, Esfera A) {
         return collide(A, B);
     }
 
-    public boolean collide(BBPlane B, BBPlane A) {
+    public boolean collide(Plano B, Plano A) {
         return false;
     }
 
@@ -310,7 +319,60 @@ public class CollisionsManager {
 //        return true;
 //    }
 
+    public boolean collide(Esfera A, BoundingBoxCube C) {
+        Esfera B= new Esfera(C.getPoint(),20,C.getSize());
+        Vector puntoA = Vector.sum(A.getPoint(), Vector.prod(delta, A.getVel()));
+        Vector puntoB = Vector.sum(B.getPoint(), Vector.prod(delta, B.getVel()));
 
+        float distR;
+        if ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
+
+            Vector vel1, vel2, v1, v2, v1x, v2x, v1y, v2y, x;
+            float m1, m2;
+
+            x = Vector.norm(Vector.del(puntoA, puntoB));
+
+            v1 = A.getVel();
+            v1x = Vector.prod(x, Vector.dot(x, v1));
+            v1y = Vector.del(v1, v1x);
+            m1 = A.getMass();
+
+            x = Vector.prod(x, -1);
+            v2 = B.getVel();
+            v2x = Vector.prod(x, Vector.dot(x, v2));
+            v2y = Vector.del(v2, v2x);
+            m2 = B.getMass();
+
+            vel1 = Vector.sum(v1y, Vector.sum(Vector.prod(v1x, ((m1 - m2) / (m1 + m2))), Vector.prod(v2x, ((2 * m2) / (m1 + m2)))));
+            vel2 = Vector.sum(v2y, Vector.sum(Vector.prod(v1x, ((2 * m1) / (m1 + m2))), Vector.prod(v2x, ((m2 - m1) / (m1 + m2)))));
+
+            Vector AB, ABN, distanciaA, distanciaB, posFA, posFB;
+
+            //Direccion AB
+            AB = Vector.del(A.getPoint(), B.getPoint());
+            //Direccion AB normalizada
+            ABN = Vector.norm(AB);
+            //Cantidad a desplazar
+            float dist = A.getSize() + B.getSize() - distR;
+
+            distanciaA = Vector.prod(dist / 2.0f, ABN);
+            distanciaB = Vector.prod(-dist / 2.0f, ABN);
+
+            posFA = Vector.sum(distanciaA, puntoA);
+            posFB = Vector.sum(distanciaB, puntoB);
+
+            A.setPoint(posFA);
+            B.setPoint(posFB);
+
+            //B.setPoint(B.lastPoint);
+            A.setVelocity((vel1));
+            B.setVelocity(vel2);
+            ;
+            return true;
+        }
+        return false;
+
+    }
 
 }
 
