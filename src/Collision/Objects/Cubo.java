@@ -3,7 +3,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Denis on 10/05/2015.
  */
-public class Cubo {
+public class Cubo extends BoundingBox{
     int size;
     int sizeDraw;
     Vector position;
@@ -81,11 +81,6 @@ public class Cubo {
         glPopMatrix();
     }
 
-
-    public int getSize() {
-        return size;
-    }
-
     public void setSize(int size) {
         this.size = size;
     }
@@ -97,6 +92,61 @@ public class Cubo {
     public void setPosition(Vector position) {
         this.position = position;
     }
+
+	@Override
+	public Vector getPoint() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Vector getVel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public float getSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setVel(Vector v) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void move(float delta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void add(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void del(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BoundingBox getSon(int i) {
+		return this;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void del(int c) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 }

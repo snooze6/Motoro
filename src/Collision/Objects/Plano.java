@@ -11,9 +11,8 @@ import static org.lwjgl.opengl.GL11.glRotated;
 import static org.lwjgl.opengl.GL11.glScaled;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glVertex3f;
-import Collisions.IBoundingBox;
 
-public class Plano implements IBoundingBox{
+public class Plano extends BoundingBox{
 
 	Vector punto, normal;
 	private float sizeDraw=500,size;
@@ -24,14 +23,10 @@ public class Plano implements IBoundingBox{
 		this.punto = punto;
 	}
     public Plano(Vector normal, Vector punto, float size) {
-
         this.normal = normal;
         this.punto = punto;
         this.size=size;
         this.sizeDraw=size/2;
-
-
-
     }
 	
 	public Plano() {
@@ -128,7 +123,28 @@ public class Plano implements IBoundingBox{
 		return this.size;
 	}
 	
-	public void trasladar(float delta){
+	public void move(float delta){
+		
+	}
+	@Override
+	public void add(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void del(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public BoundingBox getSon(int i) {
+		return this;
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void del(int c) {
+		// TODO Auto-generated method stub
 		
 	}
 	

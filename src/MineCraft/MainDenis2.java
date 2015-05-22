@@ -1,27 +1,33 @@
 package MineCraft;
 
-import Camera.ICam;
-import Camera.Perspective;
-import Collision.Objects.*;
-import Collisions.BoundingBoxQuad;
-import Collisions.CollisionsManager;
-import Collisions.IBoundingBox;
-import Lights.DirectionalLight;
-import Lights.ILight;
-import Lights.SpotLight;
-import Others.Dibujo;
-import com.sun.javafx.css.StyleCacheEntry;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.input.Mouse;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+
+import Camera.Cam;
+import Camera.Perspective;
+import Collision.BoundingBoxQuad;
+import Collision.CollisionsManager;
+import Collision.Objects.Cubo;
+import Collision.Objects.Esfera;
+import Collision.Objects.IBoundingBox;
+import Collision.Objects.Plano;
+import Collision.Objects.Vector;
+import Lights.DirectionalLight;
+import Lights.ILight;
+import Lights.SpotLight;
+import Others.Dibujo;
 
 public class MainDenis2 {
 
@@ -32,7 +38,7 @@ public class MainDenis2 {
     long lastFPS;/** last fps time */
 
     //Cam
-    private ICam camera;
+    private Cam camera;
     private CollisionsManager col;
     boolean flag;
     //Lights
@@ -208,7 +214,7 @@ public class MainDenis2 {
     //Metodos de entrada por teclado
     input(delta);
         for(int i=0; i<listaEsferas.size(); i++){
-            listaEsferas.get(i).trasladar(delta);
+            listaEsferas.get(i).move(delta);
             if(i==0){
 //	        		camera.setPosition(listaEsferas.get(i).getPoint().x, listaEsferas.get(i).getPoint().y, listaEsferas.get(i).getPoint().z-50);
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);

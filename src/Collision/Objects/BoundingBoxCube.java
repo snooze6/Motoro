@@ -1,11 +1,10 @@
 package Collision.Objects;
 
-import Collisions.IBoundingBox;
 
 /**
  * Created by Denis on 11/05/2015.
  */
-public class BoundingBoxCube implements IBoundingBox {
+public class BoundingBoxCube extends BoundingBox {
     private Cubo cube;
     private Vector velocidad;
     private Vector position;
@@ -42,7 +41,7 @@ public class BoundingBoxCube implements IBoundingBox {
     }
 
     @Override
-    public void trasladar(float delta) {
+    public void move(float delta) {
         System.out.println("El cubo no se traslada aun");
     }
 
@@ -53,4 +52,35 @@ public class BoundingBoxCube implements IBoundingBox {
     public void setCube(Cubo cube) {
         this.cube = cube;
     }
+    
+    //--------------------------------------------------------------------------
+
+	@Override
+	public void draw() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void add(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void del(BoundingBox c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BoundingBox getSon(int i) {
+		return cube;
+	}
+
+	@Override
+	public void del(int c) {
+		// TODO Auto-generated method stub
+		
+	}
 }
