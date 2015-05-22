@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL11.glTranslated;
 
 import org.lwjgl.util.glu.GLU;
 
-import Collision.Objects.Vector;
+import Utilities.Vector;
 
 public class Perspective extends Cam{
 	
@@ -95,7 +95,7 @@ public class Perspective extends Cam{
 
         glMatrixMode(GL_PROJECTION); //La camara
 	        glLoadIdentity(); // Inicializamos la matriz de la cámara a la identidad
-	        GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT,1,4000);
+	        GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT,1,10000);
 	        glRotated(ang.x, 1.0, 0.0, 0.0);
 	        glRotated(ang.y, 0.0, 1.0, 0.0);
 	        glTranslated(-pos.x,-pos.y,-pos.z);

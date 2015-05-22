@@ -2,7 +2,7 @@ package Camera;
 
 import java.util.ArrayList;
 import org.lwjgl.input.Keyboard;
-import Collision.Objects.Vector;
+import Utilities.Vector;
 
 public class CamListener extends Cam{
 	
@@ -10,8 +10,8 @@ public class CamListener extends Cam{
 	private int selected=0;
 	private int size=-1;
 	
-    public int speedMovement=3;
-    public float rotateMovement=1.5f;
+    public int speedMovement=5;
+    public float rotateMovement=2.0f;
 	
 	public CamListener(){
 		list = new ArrayList<Cam>();
@@ -111,21 +111,19 @@ public class CamListener extends Cam{
         }
 
         //----------------------------------------------------------------------
-        
-        if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-            list.get(selected).morezoom();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
-            list.get(selected).lesszoom();
-        }
-        
-        //----------------------------------------------------------------------
-        
-        if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
-        	prevCam();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-        	nextCam();
+        while(Keyboard.next()) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+                list.get(selected).morezoom();
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
+                list.get(selected).lesszoom();
+            }
+
+            //----------------------------------------------------------------------
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+                prevCam();
+            }
         }
 	}
 	
