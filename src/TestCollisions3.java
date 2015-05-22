@@ -264,13 +264,13 @@ public class TestCollisions3 {
         lista.add(del);
         lista.add(atratr);
 
-        aba = new Plano(0,1,0 , -400, 0  , -400, 200);
-        arr = new Plano(0,-1,0, -400, 400, -400, 200);
-        izq = new Plano(1,0,0 , -600, 200, -400, 200);
-        der = new Plano(-1,0,0, -200, 200, -400, 200);
-        del = new Plano(0,0,-1, -400, 200, -200, 200);
-        atr = new Plano(0,0,1 , -400, 200, -600, 200);
-        atratr = new Plano(0,0,1 , -400, 200, +200, 200);
+        aba = new Plano(0,1,0 , -400, 0  , -400, 400);
+        arr = new Plano(0,-1,0, -400, 400, -400, 400);
+        izq = new Plano(1,0,0 , -600, 200, -400, 400);
+        der = new Plano(-1,0,0, -200, 200, -400, 400);
+        del = new Plano(0,0,-1, -400, 200, -200, 400);
+        atr = new Plano(0,0,1 , -400, 200, -600, 400);
+        atratr = new Plano(0,0,1 , -400, 200, +200, 400);
 //
         lista.add(arr);
         lista.add(aba);
@@ -442,7 +442,7 @@ public class TestCollisions3 {
             listaEsferas.get(0).setVelocity(-0.5f,0.0f,-0.0f);
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-            listaEsferas.get(0).setVelocity(-0.0f,0.0f,0.3f);
+            listaEsferas.get(0).setVelocity(-0.0f,0.0f,-0.9f);
         }
 
         //----------------------------------------------------------------------
