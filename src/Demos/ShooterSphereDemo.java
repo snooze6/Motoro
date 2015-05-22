@@ -1,23 +1,16 @@
 package Demos;
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_QUAD_STRIP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glEndList;
-import static org.lwjgl.opengl.GL11.glGenLists;
-import static org.lwjgl.opengl.GL11.glNewList;
-import static org.lwjgl.opengl.GL11.glNormal3d;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex3d;
-import static org.lwjgl.opengl.GL11.glViewport;
-
-import java.util.ArrayList;
-
-import Collision.BBSphere;
+import Camera.Cam;
+import Camera.Ortho;
+import Camera.Perspective;
 import Collision.BoundingBox;
+import Collision.BBSphere;
+import Collision.BBPlane;
+import Utilities.Vector;
+import Collision.CollisionsManager;
+import Lights.ILight;
+import Lights.SpotLight;
+import Utilities.Dibujo;
+import Others.Face;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -25,26 +18,16 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import java.util.ArrayList;
 
-import Camera.Cam;
-import Camera.Ortho;
-import Camera.Perspective;
-import Collision.CollisionsManager;
-
-import Collision.BBPlane;
-import Utilities.Vector;
-import Lights.DirectionalLight;
-import Lights.ILight;
-import Lights.SpotLight;
-import Utilities.Dibujo;
-import Others.Face;
+import static org.lwjgl.opengl.GL11.*;
 
 
 /**
  * A bare-bones implementation of a LWJGL application.
  * @author davedes
  */
-public class Billar {
+public class ShooterSphereDemo {
 
     // Whether to enable VSync in hardware.
     public static final boolean VSYNC = true;
@@ -79,10 +62,12 @@ public class Billar {
     private BBPlane arr, aba, der, izq, del, atr, atratr;
     ILight light1;
     private CollisionsManager col;
+    int valorLanzamiento=0;
+    int rafaga=10;
 
     float fAngulo=0;
     public static void main(String[] args) throws LWJGLException {
-        new Billar().start();
+        new ShooterSphereDemo().start();
     }
 
     // Start our MainDenis
@@ -118,31 +103,7 @@ public class Billar {
         int r=10, lats=35, longs=35;
 
         int i, j; double lat0, z0, zr0, lat1, z1, zr1;
-        displayListHandle = glGenLists(1);
-        glNewList(displayListHandle, GL_COMPILE);
 
-        for(i = 0; i <= lats; i++) {
-            lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
-            z0  = Math.sin(lat0);
-            zr0 =  Math.cos(lat0);
-
-            lat1 = Math.PI * (-0.5 + (double) i / lats);
-            z1 =  Math.sin(lat1);
-            zr1 = Math.cos(lat1);
-
-            glBegin(GL_QUAD_STRIP);
-            for(j = 0; j <= longs; j++) {
-                double lng = 2 * Math.PI * (double) (j - 1) / longs;
-                double x = r*Math.cos(lng);
-                double y = r*Math.sin(lng);
-
-                glNormal3d(x * zr0, y * zr0, r*z0);
-                glVertex3d(x * zr0, y * zr0, r*z0);
-                glNormal3d(x * zr1, y * zr1, r*z1);
-                glVertex3d(x * zr1, y * zr1, r*z1);
-            }
-            glEnd();
-        }
 
         //Dibujo.drawCube(size);
         glEndList();
@@ -173,6 +134,7 @@ public class Billar {
     }
 
     private ArrayList<BBSphere> listaBBSpheres;
+    private ArrayList<BBSphere> listaEsferasLanzar;
     private int displayListHandle = -1;
 
     // Called to setup our MainDenis and context
@@ -182,106 +144,81 @@ public class Billar {
         int cte=80;
 
         listaBBSpheres = new ArrayList<BBSphere>();
+        listaEsferasLanzar = new ArrayList<BBSphere>();
         int value=0;
 
-        for (int i=0; i<1; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400, 0+11, -220), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
-//    		col.add(listaEsferas.get(i));
+        for (int i=0; i<100; i++){
+            listaEsferasLanzar.add(new BBSphere(new Vector(-5000, +100, +100), new Vector(-0.0f,-0.0f,-0.0f), 20, 20));
         }
 
 
-//
-        for (int i=0; i<1; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400, 0+11, -360+10*value-1-cte), new Vector(-0.0f,-0.0f,0.0f), 20, 10));
-//    		col.add(listaEsferas.get(i));
-        }
-        value++;
-        for (int i=0; i<2; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
-//    		col.add(listaEsferas.get(i));
-        }
-        value++;
-        for (int i=0; i<3; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
-//    		col.add(listaEsferas.get(i));
-        }
-//        value++;
-//        for (int i=0; i<4; i++){
-//            listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, 1000*i-20*value*i-1-cte), new Vector(-0.0f,0.01f*i,-0.9f), 20, 10));
-////    		col.add(listaEsferas.get(i));
-//        }
-        value++;
-        for (int i=0; i<4; i++){
-            listaBBSpheres.add(new BBSphere(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
-//    		col.add(listaEsferas.get(i));
-        }
 
-//        for (int i=0; i<10; i++){
-//            listaEsferas.add(new Esfera(new Vector(-490+20*i, 0+11, -400), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
-//        }
-//
-//        for (int i=0; i<20; i++){
-//            listaEsferas.add(new Esfera(new Vector(-480, 50+22*i, -400), new Vector(-0.1f,+0.01f*i*2,0), 10, 10));
-//        }
-//        for (int i=0; i<20; i++){
-//            listaEsferas.add(new Esfera(new Vector(-480, 50, -400+22*i), new Vector(-0.1f*i,+0.01f*i*2,0), 30, 10));
-//        }
-//        for (int i=0; i<10; i++){
-//            listaEsferas.add(new Esfera(new Vector(-400+22*i, 50+50, 100), new Vector(-0.1f*i*2,-0.01f,0.1f), 10, 10));
-//
-//        }
-//        for (int i=0; i<10; i++){
-//            listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+100, -400), new Vector(-0.1f,-0.01f,0.01f*i*2), 10, 10));
-//
-//        }
-//        for (int i=0; i<10; i++){
-//            listaEsferas.add(new Esfera(new Vector(-480+22*i, 50+50+50+50, -400), new Vector(-0.1f*i*2,-0.01f,0), 10, 10));
-//
-//        }
+        int siz = 10, tam=0;
+        for (int i=0; i<siz; i++){
+            for (int j=0; j<siz; j++){
+                for (int k=0; k<siz; k++){
+                    tam++;
+                    listaBBSpheres.add(new BBSphere(new Vector(-580 + 22*k, 12 + 22*j, -580 + 22*i), new Vector(0.0f,0.0f,0.0f),25 , 20));
+                }
+            }
+        }
+        for(int i=0;i<10;i++){
+            listaEsferasLanzar.add(new BBSphere(new Vector(-5000, +100, +100), new Vector(-0.0f,-0.0f,-0.0f), 20, 20));
+        }
+        System.out.println(tam);
+        System.out.println(siz*siz*siz);
+
+//    	for (int i=0; i<1; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-400, 0+11, -360+10*value-1-cte), new Vector(-0.0f,-0.0f,0.0f), 20, 10));
+//    	}
+//    	value++;
+//    	for (int i=0; i<2; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+//    	}
+//    	value++;
+//    	for (int i=0; i<3; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-400-10*value+i*20, 0+11, -360-20*value-1-cte), new Vector(-0.0f,-0.0f,-0.0f), 20, 10));
+//    	}
+
 //    	for (int i=0; i<400; i++){
 //    		listaEsferas.add(new Esfera(new Vector(-480+22*i, 20, -400), new Vector(-0.1f,-0.01f,0.01f*i), 10, 10));
 //
 //    	}
-//
+
+//    	//Lanzadera desde atrás
+//    	for (int i=0; i<300; i++){
+//    		listaEsferas.add(new Esfera(new Vector(-300, 200, +2000+70*i), new Vector(0,0,-0.2f), 10, 10));
+//    	}
+
         ArrayList<BoundingBox> lista = new ArrayList<BoundingBox>(listaBBSpheres);
 
 
-
-        aba = new BBPlane(0,1,0 , -400, 0  , -400, 200);
-        arr = new BBPlane(0,-1,0, -400, 400, -400, 200);
-        izq = new BBPlane(1,0,0 , -600, 200, -400, 200);
-        der = new BBPlane(-1,0,0, -200, 200, -400, 200);
-        del = new BBPlane(0,0,-1, -400, 200, -200, 200);
-        atr = new BBPlane(0,0,1 , -400, 200, -600, 200);
-        atratr = new BBPlane(0,0,1 , -400, 200, +200, 200);
+//    	for (int i=0; i<2; i++){
 //
-        lista.add(arr);
-        lista.add(aba);
-        lista.add(der);
-        lista.add(izq);
-        lista.add(atr);
-        lista.add(del);
-        lista.add(atratr);
-
-        aba = new BBPlane(0,1,0 , -400, 0  , -400, 400);
-        arr = new BBPlane(0,-1,0, -400, 400, -400, 400);
-        izq = new BBPlane(1,0,0 , -600, 200, -400, 400);
-        der = new BBPlane(-1,0,0, -200, 200, -400, 400);
-        del = new BBPlane(0,0,-1, -400, 200, -200, 400);
-        atr = new BBPlane(0,0,1 , -400, 200, -600, 400);
-        atratr = new BBPlane(0,0,1 , -400, 200, +200, 400);
+//	    	aba = new Plano(0,1,0 , -400, 0  , -400, 200);
+//	    	arr = new Plano(0,-1,0, -400, 400, -400, 200);
+//	    	izq = new Plano(1,0,0 , -600, 200, -400, 200);
+//	    	der = new Plano(1,0,0, -200, 200, -400, 200);
+//	    	del = new Plano(0,0,-1, -400, 200, -200, 200);
+//	    	atr = new Plano(0,0,1 , -400, 200, -600, 200);
+//	        atratr = new Plano(0,1,1 , -400, 200, +200, 200);
+//	//
+//	        lista.add(arr);
+//	        lista.add(aba);
+//	        lista.add(der);
+//	        lista.add(izq);
+//	        lista.add(atr);
+//	        //lista.add(del);
+//	        lista.add(atratr);
 //
-        lista.add(arr);
-        lista.add(aba);
-        lista.add(der);
-        lista.add(izq);
-        lista.add(atr);
-        lista.add(del);
-        lista.add(atratr);
+//    	}
 
 
 
         col = new CollisionsManager(lista);
+        for(int i=0;i<listaEsferasLanzar.size();i++){
+            col.add(listaEsferasLanzar.get(i));
+        }
 
         light1=new SpotLight();
         light1.setCutoff(120);
@@ -309,20 +246,39 @@ public class Billar {
             Dibujo.drawMalla(1000);
             glPopMatrix();
 
-            for(int i=0; i< listaBBSpheres.size(); i++){
-                Vector point = listaBBSpheres.get(i).getPoint();
+            for(int i=0;i<listaEsferasLanzar.size(); i++){
+
                 glPushMatrix();
                 //	glTranslated(point.x,point.y,point.z);
 
-                if(i<1){
-                    glColor3f(1.0f,1.0f,1.0f);
+
+
+                glColor3f(1.0f,0.0f,0.0f);
+                //glCallList(displayListHandle);
+                listaEsferasLanzar.get(i).draw();
+
+
+                //Dibujo.drawSphere(size, 10, 10);
+                //Dibujo.drawCube(size);
+                //s.draw(size, 30, 30);
+                glPopMatrix();
+
+            }
+
+            for(int i=0; i< listaBBSpheres.size(); i++){
+
+                glPushMatrix();
+                //	glTranslated(point.x,point.y,point.z);
+
+                if(i<11){
+                    glColor3f(0.0f,1.0f,1.0f);
                     //glCallList(displayListHandle);
                     listaBBSpheres.get(i).draw();
                 }
 
                 else{
 
-                    glColor3f(0.0f,1.0f,1.0f);
+                    glColor3f(1.0f,1.0f,1.0f);
                     //glCallList(displayListHandle);
                     listaBBSpheres.get(i).draw();
                 }
@@ -333,11 +289,18 @@ public class Billar {
                 glPopMatrix();
             }
 
-            aba.draw(); arr.draw(); der.draw(); izq.draw(); atr.draw(); //del.draw();
-            atratr.draw();
+//        aba.draw(); arr.draw(); der.draw(); izq.draw(); atr.draw(); //del.draw();
+//          atratr.draw();
         } else {
             camera.render();
 
+            glPushMatrix();
+            Vector v = camera.getDireccion();
+            glTranslated(camera.getX() + 5 * v.x, camera.getY() + 5 * v.y, camera.getZ() + 5 * v.z);
+            glColor3f(2.0f, 0.5f, 0.0f);
+            Dibujo.drawSphere(0.2f, 20, 20);
+            Dibujo.drawAxes(1);
+            glPopMatrix();
         }
     }
 
@@ -421,28 +384,58 @@ public class Billar {
             light1.off();
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
-            light1 = new DirectionalLight();
+            for (int i=7; i< listaBBSpheres.size(); i++){
+                listaBBSpheres.get(i).setVelocity(new Vector(((float) Math.random()/2), ((float) Math.random()/2), -1.2f));
+            }
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
             light1 = new SpotLight();
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
-            Vector v = camera.getDireccion();
-            light1.setLight_position(new float[]{camera.getX(), camera.getY(), camera.getZ(),1.0f});
-            light1.setSpotDir(new float[]{5*v.x, 5*v.y, 5*v.z, 1.0f});
-            Vector aux = new Vector(5*v.x, 5*v.y, 5*v.z);
-            Vector.norm(aux);
-            listaBBSpheres.get(0).setVelocity(Vector.prod(0.3f, Vector.norm(aux)));
+        while(Keyboard.next()) {
+            if(valorLanzamiento==listaEsferasLanzar.size()){
+                valorLanzamiento=0;
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_C)) {
+                Vector v = camera.getDireccion();
+                light1.setLight_position(new float[]{camera.getX(), camera.getY(), camera.getZ(), 1.0f});
+                light1.setSpotDir(new float[]{5 * v.x, 5 * v.y, 5 * v.z, 1.0f});
+                Vector aux = new Vector(5 * v.x, 5 * v.y, 5 * v.z);
+                Vector.norm(aux);
+                listaEsferasLanzar.get(valorLanzamiento).setVelocity(Vector.prod(1.2f, Vector.norm(aux)));
+
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+                listaEsferasLanzar.get(valorLanzamiento).setVelocity(0.0f, 0.0f, 0.0f);
+
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+                listaEsferasLanzar.get(valorLanzamiento).setVelocity(-0.0f, 0.1f, -1.5f);
+
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
+                listaEsferasLanzar.get(valorLanzamiento).setVelocity(-0.0f, 0.1f, 1.5f);
+
+            }
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+                if (rafaga % 10 == 0 || true) {
+
+                    Vector v = camera.getDireccion();
+                    Vector aux = new Vector(4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.x, 4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.y, 4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.z);
+                    listaEsferasLanzar.get(valorLanzamiento).setVelocity(0, 0, 0);
+                    listaEsferasLanzar.get(valorLanzamiento).setPoint(Vector.sum(new Vector(camera.getX(), camera.getY(), camera.getZ()), aux));
+
+
+                    Vector aux2 = new Vector(5 * v.x, 5 * v.y, 5 * v.z);
+                    Vector.norm(aux2);
+                    listaEsferasLanzar.get(valorLanzamiento).setVelocity(Vector.prod(1.2f, Vector.norm(aux2)));
+
+                }
+            }
+            valorLanzamiento++;
+            rafaga++;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
-            listaBBSpheres.get(0).setVelocity(0.0f,0.0f,0.0f);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-            listaBBSpheres.get(0).setVelocity(-0.5f,0.0f,-0.0f);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-            listaBBSpheres.get(0).setVelocity(-0.0f,0.0f,-0.9f);
-        }
+
 
         //----------------------------------------------------------------------
 
@@ -539,7 +532,8 @@ public class Billar {
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);
                 }
             }
-
+            for(int i=0; i<listaEsferasLanzar.size(); i++){
+                listaEsferasLanzar.get(i).move(delta);}
             col.collide(delta);
         }
     }

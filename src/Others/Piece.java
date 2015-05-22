@@ -1,5 +1,7 @@
 package Others;
 
+import Utilities.Dibujo;
+
 public class Piece {
 	
 	private float size;

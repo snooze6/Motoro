@@ -1,5 +1,5 @@
 package Camera;
-import Collision.Objects.Vector;
+import Utilities.Vector;
 
 public abstract class Cam{
 	

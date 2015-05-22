@@ -9,9 +9,10 @@ import static org.lwjgl.opengl.GL11.glNewList;
 import static org.lwjgl.opengl.GL11.glNormal3d;
 import static org.lwjgl.opengl.GL11.glVertex3d;
 
+
 import org.lwjgl.util.glu.Sphere;
 
-import Collision.Objects.Vector;
+import Utilities.Vector;
 
 
 public class Ball extends BilliardObject{

@@ -21,10 +21,10 @@ import org.lwjgl.opengl.GL11;
 import Camera.CamListener;
 import Camera.Ortho;
 import Camera.Perspective;
-import Collision.Objects.Vector;
+import Utilities.Vector;
 import Lights.ILight;
 import Lights.SpotLight;
-import Others.Dibujo;
+import Utilities.Dibujo;
 import Others.Face;
 
 public class Testing {
