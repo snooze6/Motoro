@@ -5,14 +5,14 @@ import Utilities.Vector;
 /**
  * Created by Denis on 12/05/2015.
  */
-public class BBQuad extends BBPlane {
+public class BBQuadGeneralized extends BBPlane {
     private Vector position;
     private Vector punto;
     private Vector normal;
     private BBPlane plane;
     private float size;
 
-public BBQuad(Vector normal, Vector punto, float size){
+public BBQuadGeneralized(Vector normal, Vector punto, float size){
     super(normal,punto,size);
     this.normal=normal;
     this.punto=punto;
