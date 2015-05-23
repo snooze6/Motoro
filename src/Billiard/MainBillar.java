@@ -35,8 +35,8 @@ public class MainBillar {
 
     //Lista de objetos
     private float sizeBilliard=1500;
-    private float sizeSphere=sizeBilliard/40;
-    private float largo= (float)sizeBilliard*1.5f-sizeBilliard/12;
+    private float sizeSphere=sizeBilliard/35;
+    private float largo= (float)sizeBilliard*1.5f-sizeBilliard/13;
     private float ancho=(float)12*sizeBilliard/20;
     private float ancho10=sizeBilliard/10;
     private float mini=sizeBilliard/10;
@@ -93,42 +93,52 @@ public class MainBillar {
             billiard = new Billiard(sizeBilliard);
 
         //Huecos
-      //  listaHuecos.add(new BBGap(new Vector(0,0,1000-sizeBilliard/5-sizeSphere),1,sizeSphere));
+      //  listaHuecos.add(new BBGap(new Vector(0,0,500-sizeBilliard/5-sizeSphere),1,sizeSphere));
 
         //Esferas
         black= new BBSphere(new Vector (0,0,0), 20,sizeSphere);
         listaEsferas.add(black);
-        for(int i=0;i<10;i++){
-            listaEsferas.add(new BBSphere(new Vector(sizeSphere*i*3,0,0),2,sizeSphere));
+        for(int i=0;i<30;i++){
+            listaEsferas.add(new BBSphere(new Vector(sizeSphere*i*3-1400,0,0),2,sizeSphere));
         }
         //Lista planos
 
 
 
         //Lado derecho
-        listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo,0,ancho), new Vector(largo,100,ancho), new Vector(largo,100,-ancho)));
-       listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo+mini*3/4,0,-ancho-mini), new Vector(largo+mini*3/4,100,-ancho-mini),new Vector(largo,100,-ancho) ));
-        listaPlanos.add(new BBQuad(new Vector(largo,0,ancho),new Vector(largo+mini*3/4,0,ancho+mini), new Vector(largo+mini*3/4,100,ancho+mini),new Vector(largo,100,ancho) ));
+        listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo,0,ancho), new Vector(largo,50,ancho), new Vector(largo,50,-ancho)));
+       listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo+mini*3/4,0,-ancho-mini), new Vector(largo+mini*3/4,50,-ancho-mini),new Vector(largo,50,-ancho) ));
+        listaPlanos.add(new BBQuad(new Vector(largo,0,ancho),new Vector(largo+mini*3/4,0,ancho+mini), new Vector(largo+mini*3/4,50,ancho+mini),new Vector(largo,50,ancho) ));
 
         //Lado izquierdo
-        listaPlanos.add(new BBQuad(new Vector(-largo,0,-ancho),new Vector(-largo,0,ancho), new Vector(-largo,100,ancho), new Vector(-largo,100,-ancho)));
-        listaPlanos.add(new BBQuad(new Vector(-largo,0,-ancho),new Vector(-largo-mini*3/4,0,-ancho-mini), new Vector(-largo-mini*3/4,100,-ancho-mini),new Vector(-largo,100,-ancho) ));
-        listaPlanos.add(new BBQuad(new Vector(-largo,0,ancho),new Vector(-largo-mini*3/4,0,ancho+mini), new Vector(-largo-mini*3/4,100,ancho+mini),new Vector(-largo,100,ancho) ));
+        listaPlanos.add(new BBQuad(new Vector(-largo,0,-ancho),new Vector(-largo,0,ancho), new Vector(-largo,50,ancho), new Vector(-largo,50,-ancho)));
+        listaPlanos.add(new BBQuad(new Vector(-largo,0,-ancho),new Vector(-largo-mini*3/4,0,-ancho-mini), new Vector(-largo-mini*3/4,50,-ancho-mini),new Vector(-largo,50,-ancho) ));
+        listaPlanos.add(new BBQuad(new Vector(-largo,0,ancho),new Vector(-largo-mini*3/4,0,ancho+mini), new Vector(-largo-mini*3/4,50,ancho+mini),new Vector(-largo,50,ancho) ));
 
         //Delante
         ancho=ancho+ancho10;
         largo=largo-mini;
-        listaPlanos.add(new BBQuad(new Vector(-largo,00,-ancho),new Vector(largo,00,-ancho), new Vector(largo,100,-ancho), new Vector(-largo,100,-ancho)));
-        listaPlanos.add(new BBQuad(new Vector(-largo,00,-ancho),new Vector(-largo-mini,00,-ancho-mini*3/4),new Vector(-largo-mini,100,-ancho-mini*3/4),new Vector(-largo,100,-ancho)));
-        listaPlanos.add(new BBQuad(new Vector(largo,00,-ancho),new Vector(largo+mini,00,-ancho-mini*3/4),new Vector(largo+mini,100,-ancho-mini*3/4),new Vector(largo,100,-ancho)));
-
+            //Parte izquierda
+            listaPlanos.add(new BBQuad(new Vector(-largo,00,-ancho),new Vector(0-mini*4/5,00,-ancho), new Vector(0-mini*4/5,50,-ancho), new Vector(-largo,50,-ancho)));
+            listaPlanos.add(new BBQuad(new Vector(-largo,00,-ancho),new Vector(-largo-mini,00,-ancho-mini*3/4),new Vector(-largo-mini,50,-ancho-mini*3/4),new Vector(-largo,50,-ancho)));
+            listaPlanos.add(new BBQuad(new Vector(0-mini*4/5,00,-ancho),new Vector(0-mini*4/5+mini/4,00,-ancho-mini*4/8),new Vector(0-mini*4/5+mini/4,50,-ancho-mini*4/8),new  Vector(0-mini*4/5,50,-ancho)));
+            //Parte derecha
+            listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,-ancho),new Vector(largo,00,-ancho), new Vector(largo,50,-ancho), new Vector(0+mini*4/5,50,-ancho)));
+            listaPlanos.add(new BBQuad(new Vector(largo,00,-ancho),new Vector(largo+mini,00,-ancho-mini*3/4),new Vector(largo+mini,50,-ancho-mini*3/4),new Vector(largo,50,-ancho)));
+            listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,-ancho),new Vector(0+mini*4/5-mini/4,00,-ancho-mini*4/8),new Vector(0+mini*4/5-mini/4,50,-ancho-mini*4/8),new  Vector(0+mini*4/5,50,-ancho)));
 
         //Detras
-        listaPlanos.add(new BBQuad(new Vector(-largo,00,ancho),new Vector(largo,00,ancho), new Vector(largo,100,ancho), new Vector(-largo,100,ancho)));
-        listaPlanos.add(new BBQuad(new Vector(-largo,00,ancho),new Vector(-largo-mini,00,ancho+mini*3/4),new Vector(-largo-mini,100,ancho+mini*3/4),new Vector(-largo,100,ancho)));
-        listaPlanos.add(new BBQuad(new Vector(largo,00,ancho),new Vector(largo+mini,00,ancho+mini*3/4),new Vector(largo+mini,100,ancho+mini*3/4),new Vector(largo,100,ancho)));
+            //Parte izquierda
+            listaPlanos.add(new BBQuad(new Vector(-largo,00,ancho),new Vector(0-mini*4/5,00,ancho), new Vector(0-mini*4/5,50,ancho), new Vector(-largo,50,ancho)));
+            listaPlanos.add(new BBQuad(new Vector(-largo,00,ancho),new Vector(-largo-mini,00,ancho+mini*3/4),new Vector(-largo-mini,50,ancho+mini*3/4),new Vector(-largo,50,ancho)));
+            listaPlanos.add(new BBQuad(new Vector(0-mini*4/5,00,ancho),new Vector(0-mini*4/5+mini/4,00,ancho+mini*4/8),new Vector(0-mini*4/5+mini/4,50,ancho+mini*4/8),new  Vector(0-mini*4/5,50,ancho)));
 
+            //Parte derecha
+            listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,ancho),new Vector(largo,00,ancho), new Vector(largo,50,ancho), new Vector(0+mini*4/5,50,ancho)));
+        //    listaPlanos.add(new BBQuad(new Vector(largo,00,ancho),new Vector(largo+mini,00,ancho+mini*3/4),new Vector(largo+mini,50,ancho+mini*3/4),new Vector(largo,50,ancho)));
 
+           listaPlanos.add(new BBQuad(new Vector(largo,00,ancho),new Vector(largo+mini,00,ancho+mini*3/4),new Vector(largo+mini,50,ancho+mini*3/4),new Vector(largo,50,ancho)));
+            listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,ancho),new Vector(0+mini*4/5-mini/4,00,ancho+mini*4/8),new Vector(0+mini*4/5-mini/4,50,ancho+mini*4/8),new  Vector(0+mini*4/5,50,ancho)));
         //Colisiones
         col = new CollisionsManager();
 
@@ -242,7 +252,10 @@ public class MainBillar {
 
         //Planos
         for(int i=0;i<listaPlanos.size();i++){
+            glPushMatrix();
+            glTranslated(0,-sizeSphere,0);
             listaPlanos.get(i).draw();
+            glPopMatrix();
         }
 
 
@@ -271,7 +284,7 @@ public class MainBillar {
 
     /*** @return The system time in milliseconds*/
     public long getTime() {
-        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+        return (Sys.getTime() * 500) / Sys.getTimerResolution();
     }
 
     /**Calculate the FPS and set it in the title bar*/

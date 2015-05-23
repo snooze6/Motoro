@@ -51,7 +51,7 @@ public BBQuad(Vector punto1, Vector punto2, Vector punto3, Vector punto4){
     public void draw(){
         glPushMatrix();
         glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
-        glColor3f(1.0f, 0.5f, 0.0f);     // Orange
+        glColor3f(0.0f, 1.0f, 0.0f);     // Orange
         glVertex3f( punto1.x, punto1.y,  punto1.z);
         glVertex3f( punto2.x, punto2.y,  punto2.z);
         glVertex3f( punto3.x, punto3.y,  punto3.z);
