@@ -14,7 +14,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -75,8 +74,8 @@ public class MainBillar {
     //Create objects
     protected void create() {
         //Camara
-        camera= new CamListener();
-        camera.addCam(new Ortho());
+        camera= new CamListener(new Perspective());
+        camera.addCam(new Perspective());
         camera.addCam(new Perspective());
 
         //Luces
@@ -93,18 +92,16 @@ public class MainBillar {
             billiard = new Billiard(sizeBilliard);
 
         //Huecos
-      //  listaHuecos.add(new BBGap(new Vector(0,0,500-sizeBilliard/5-sizeSphere),1,sizeSphere));
+        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere,-1150),1,sizeSphere*1.5f));
 
         //Esferas
         black= new BBSphere(new Vector (0,0,0), 20,sizeSphere);
         listaEsferas.add(black);
-        for(int i=0;i<30;i++){
+        for(int i=0;i<0;i++){
             listaEsferas.add(new BBSphere(new Vector(sizeSphere*i*3-1400,0,0),2,sizeSphere));
         }
         //Lista planos
-
-
-
+        listaPlanos= new ArrayList<BBQuad>();
         //Lado derecho
         listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo,0,ancho), new Vector(largo,50,ancho), new Vector(largo,50,-ancho)));
        listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo+mini*3/4,0,-ancho-mini), new Vector(largo+mini*3/4,50,-ancho-mini),new Vector(largo,50,-ancho) ));
@@ -139,9 +136,10 @@ public class MainBillar {
 
            listaPlanos.add(new BBQuad(new Vector(largo,00,ancho),new Vector(largo+mini,00,ancho+mini*3/4),new Vector(largo+mini,50,ancho+mini*3/4),new Vector(largo,50,ancho)));
             listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,ancho),new Vector(0+mini*4/5-mini/4,00,ancho+mini*4/8),new Vector(0+mini*4/5-mini/4,50,ancho+mini*4/8),new  Vector(0+mini*4/5,50,ancho)));
+
+
         //Colisiones
         col = new CollisionsManager();
-
         for(int i=0;i<listaPlanos.size();i++){
             col.add(listaPlanos.get(i));
         }
@@ -207,6 +205,10 @@ public class MainBillar {
 
         for(int i=0;i<listaEsferas.size();i++){
             listaEsferas.get(i).move(delta);
+            if (i==0){
+            	camera.getCam(1).setPos(listaEsferas.get(i).getPosition());
+            	camera.getCam(2).setPos(listaEsferas.get(i).getPosition());
+            }
         }
     }
 
@@ -237,15 +239,17 @@ public class MainBillar {
         //Huecos
         for(int i=0;i<listaHuecos.size();i++){
             glPushMatrix();
-            glColor3d(0,0,0);
+            glColor3d(0,0,1);
             listaHuecos.get(i).draw();
             glPopMatrix();
         }
 
         //Esferas
         for(int i=0;i<listaEsferas.size();i++){
+            glPushMatrix();
             glColor3d(1,0,0);
             listaEsferas.get(i).draw();
+            glPopMatrix();
         }
 
 
@@ -284,7 +288,7 @@ public class MainBillar {
 
     /*** @return The system time in milliseconds*/
     public long getTime() {
-        return (Sys.getTime() * 500) / Sys.getTimerResolution();
+        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
     }
 
     /**Calculate the FPS and set it in the title bar*/
@@ -315,10 +319,10 @@ public class MainBillar {
             //----------------------------------------------------------------------
 
             if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
-                black.setVelocity(-1.5f,0,-0.7f);
+                black.setVelocity(-1.0f,0,-0.0f);
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_L)) {
-                black.setVelocity(1.5f,0,1.5f);
+                black.setVelocity(1.0f,0,0.0f);
             }
         if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
             black.setVelocity(0.00f,0,0f);

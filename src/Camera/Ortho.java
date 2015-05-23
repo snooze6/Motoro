@@ -32,7 +32,7 @@ public class Ortho extends Cam{
 			float cam_ang_x, float cam_ang_y, float cam_ang_z) {
 		super();
 		pos = new Vector(cam_x,cam_y,cam_z);
-		ang = new Vector(cam_ang_x,cam_ang_y,cam_ang_y);
+		ang = new Vector(cam_ang_x,cam_ang_y,cam_ang_z);
 		tam = 100; W_WIDTH=800; W_HEIGHT=400;
 		setScale();
 	}
@@ -50,7 +50,7 @@ public class Ortho extends Cam{
 			int ulo) {
 		super();
 		pos = new Vector(cam_x,cam_y,cam_z);
-		ang = new Vector(cam_ang_x,cam_ang_y,cam_ang_y);
+		ang = new Vector(cam_ang_x,cam_ang_y,cam_ang_z);
 		tam = ulo; W_WIDTH=800; W_HEIGHT=400;
 		setScale();
 	}
@@ -68,7 +68,7 @@ public class Ortho extends Cam{
 			int ulo, int w, int h) {
 		super();
 		pos = new Vector(cam_x,cam_y,cam_z);
-		ang = new Vector(cam_ang_x,cam_ang_y,cam_ang_y);
+		ang = new Vector(cam_ang_x,cam_ang_y,cam_ang_z);
 		tam = ulo; W_WIDTH=w; W_HEIGHT=h;
 		setScale();
 	}
@@ -81,7 +81,7 @@ public class Ortho extends Cam{
 		setScale();
 	}
 	
-	private void setScale() {
+	protected void setScale() {
 		if (W_HEIGHT>0){
 			scale = (float)W_WIDTH/W_HEIGHT;
 		} else {
@@ -106,7 +106,7 @@ public class Ortho extends Cam{
 
         glMatrixMode(GL_PROJECTION); //La camara
 	        glLoadIdentity(); // Inicializamos la matriz de la cámara a la identidad
-	        glOrtho(-tam*scale, tam*scale, -tam, tam, -(2000),(2000));
+	        glOrtho(-tam*scale, tam*scale, -tam, tam, -(5000),(5000));
 	        glRotated(ang.x, 1.0, 0.0, 0.0);
 	        glRotated(ang.y, 0.0, 1.0, 0.0);
 	        glTranslated(-pos.x,-pos.y,-pos.z);

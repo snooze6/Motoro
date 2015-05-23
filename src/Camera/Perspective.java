@@ -95,7 +95,7 @@ public class Perspective extends Cam{
 
         glMatrixMode(GL_PROJECTION); //La camara
 	        glLoadIdentity(); // Inicializamos la matriz de la cámara a la identidad
-	        GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT,1,10000);
+	        GLU.gluPerspective(angvision,(float)W_WIDTH/(float)W_HEIGHT,1,30000);
 	        glRotated(ang.x, 1.0, 0.0, 0.0);
 	        glRotated(ang.y, 0.0, 1.0, 0.0);
 	        glTranslated(-pos.x,-pos.y,-pos.z);

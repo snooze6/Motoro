@@ -1,7 +1,10 @@
 package Camera;
 
 import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+
 import Utilities.Vector;
 
 public class CamListener extends Cam{
@@ -34,6 +37,22 @@ public class CamListener extends Cam{
 	public void addCam(Cam c){
 		list.add(c);
 		size++;
+	}
+	
+	public Cam getCam(int c){
+		if (!(c > list.size() && c<0)){
+			return list.get(c);
+		} else {
+			return null;
+		}
+	}
+	
+	public void delCam(Cam c){
+		list.remove(c);
+	}
+	
+	public void delCam(int c){
+		list.remove(c);
 	}
 	
 	public int getSpeedMovement() {
@@ -111,18 +130,20 @@ public class CamListener extends Cam{
         }
 
         //----------------------------------------------------------------------
+        
+        if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+            list.get(selected).morezoom();
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
+            list.get(selected).lesszoom();
+        }
+        
+        //----------------------------------------------------------------------
+        
         while(Keyboard.next()) {
-            if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-                list.get(selected).morezoom();
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
-                list.get(selected).lesszoom();
-            }
-
-            //----------------------------------------------------------------------
-
             if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
                 prevCam();
+                setWindow(Display.getWidth(), Display.getHeight());
             }
         }
 	}

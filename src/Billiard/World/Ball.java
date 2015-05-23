@@ -20,7 +20,13 @@ public class Ball extends BilliardObject{
 		this();
 		tex = TextureGL.loadTexture(path);
 	}
-	public Ball(BBSphere box){
+
+    public BBSphere getBbox() {
+        return bbox;
+    }
+
+    public Ball(BBSphere box){
+
 		bbox = box;
 		NewLista(box.getSize(),40,40);
 	}
