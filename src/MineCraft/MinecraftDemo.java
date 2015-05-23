@@ -48,7 +48,7 @@ public class MinecraftDemo {
         //Planos
         ArrayList<BBPlane> listaBBPlanes;
         //Cuadrados
-        ArrayList<BBQuad> listaCuadrados;
+        ArrayList<BBQuadOld> listaCuadrados;
 
 
     //Lista de colisiones
@@ -83,7 +83,7 @@ public class MinecraftDemo {
         listaBBSpheres = new ArrayList<BBSphere>();
         listaBBCubes =new ArrayList<BBCube>();
         listaBBPlanes = new ArrayList<BBPlane>();
-        listaCuadrados= new ArrayList<BBQuad>();
+        listaCuadrados= new ArrayList<BBQuadOld>();
 
         //Random
         rand= new Random();
@@ -222,7 +222,7 @@ public class MinecraftDemo {
         for(int i=0; i< listaBBSpheres.size(); i++){
             listaBBSpheres.get(i).move(delta);
             if(i==0){
-//	        		camera.setPosition(listaEsferas.get(i).getPoint().x, listaEsferas.get(i).getPoint().y, listaEsferas.get(i).getPoint().z-50);
+//	        		camera.setPosition(listaEsferas.get(i).getPosition().x, listaEsferas.get(i).getPosition().y, listaEsferas.get(i).getPosition().z-50);
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);
             }
         }

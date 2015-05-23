@@ -11,7 +11,7 @@ public abstract class BoundingBox{
 	public abstract void del(BoundingBox c);
 	public abstract void del(int c);
 	public abstract BoundingBox getSon(int i);
-    public abstract Vector getPoint();
+    public abstract Vector getPosition();
     public abstract Vector getVel();
     public abstract float getSize();
     public abstract void setVel(Vector v);

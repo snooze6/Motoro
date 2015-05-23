@@ -16,8 +16,8 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
 
 public class BBPlane extends BoundingBox{
 
-	Vector punto, normal;
-	private float sizeDraw=500,size;
+	public Vector punto, normal;
+	private float sizeDraw,size;
 
 	
 	public BBPlane(Vector normal, Vector punto) {
@@ -34,6 +34,8 @@ public class BBPlane extends BoundingBox{
 	public BBPlane() {
 		normal = new Vector(0,1,0);
 		punto = new Vector(0,0,0);
+       size =100;
+        sizeDraw=50;
 	}
 	
 	public BBPlane(float a, float b, float c, float d, float e, float f){
@@ -52,11 +54,7 @@ public class BBPlane extends BoundingBox{
 	//--------------------------------------------------------------------------
 	
 	public void draw(){
-        //		System.out.println("[PLANO]: n[1] "+normal.x+" - n[2] "+normal.y+" - n[3] "+normal.z);
-		//		System.out.println("[PLANO]: p[1] "+punto.x+" - p[2] "+punto.y+" - p[3] "+punto.z);
-		//		System.out.println("[PLANO]: r[1] "+punto.x+100*normal.x+" - r[2] "+(punto.y+100*normal.y)+" - r[3] "+ punto.z+100*normal.z);
-
-		glPushMatrix();
+        glPushMatrix();
 			glTranslated(punto.x, punto.y, punto.z);
 			glPushMatrix();
 			Vector p = Vector.prod(normal, Vector.ejey);
@@ -106,7 +104,7 @@ public class BBPlane extends BoundingBox{
 	//--------------------------------------------------------------------------
 
 	@Override
-	public Vector getPoint() {
+	public Vector getPosition() {
 		return punto;
 	}
 
@@ -114,6 +112,11 @@ public class BBPlane extends BoundingBox{
 	public Vector getVel() {
 		return normal;
 	}
+
+
+    public Vector getNormal() {
+        return normal;
+    }
 
 	@Override
 	public void setVel(Vector v) {

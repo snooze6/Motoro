@@ -153,7 +153,7 @@ public class ShooterSphereDemo {
 
 
 
-        int siz = 10, tam=0;
+        int siz = 11, tam=0;
         for (int i=0; i<siz; i++){
             for (int j=0; j<siz; j++){
                 for (int k=0; k<siz; k++){
@@ -528,7 +528,7 @@ public class ShooterSphereDemo {
             for(int i=0; i< listaBBSpheres.size(); i++){
                 listaBBSpheres.get(i).move(delta);
                 if(i==0){
-//	        		camera.setPosition(listaEsferas.get(i).getPoint().x, listaEsferas.get(i).getPoint().y, listaEsferas.get(i).getPoint().z-50);
+//	        		camera.setPosition(listaEsferas.get(i).getPosition().x, listaEsferas.get(i).getPosition().y, listaEsferas.get(i).getPosition().z-50);
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);
                 }
             }

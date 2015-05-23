@@ -1,8 +1,7 @@
-package Demos;
+package Collision;
 
 import Camera.Cam;
 import Camera.Perspective;
-import Collision.*;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Lights.SpotLight;
@@ -21,7 +20,7 @@ import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class platformDemo {
+public class platformDemo2 {
 
 
     //Frames
@@ -46,6 +45,8 @@ public class platformDemo {
         ArrayList<BBPlane> listaBBPlanes;
         //Cuadrados
         ArrayList<BBQuadOld> listaCuadrados;
+    //Cuadrados
+    ArrayList<BBQuad> listaCuadradosGenerales;
 
 
     //Lista de colisiones
@@ -82,62 +83,69 @@ public class platformDemo {
         listaBBPlanes = new ArrayList<BBPlane>();
         listaCuadrados= new ArrayList<BBQuadOld>();
 
-        //Random
-        rand= new Random();
-        int randomNumX;
-        int randomNumZ;
+        listaCuadradosGenerales= new ArrayList<BBQuad>();
+        listaCuadradosGenerales.add(new BBQuad(new Vector(-70f,100,-100),new Vector(-70f,100,100),new Vector(+70f,-100,+100),new Vector(70f,-100,-100)));
+        for(int i=0;i<10;i++){
+            listaCuadradosGenerales.add(new BBQuad(new Vector(-70f,100,-100),new Vector(-70f,100,100),new Vector(+70f,-100,+100),new Vector(70f,-100,-100)));
+            listaCuadradosGenerales.get(i).move(new Vector(100*i,50*i,0*i));
+        }
 
-//        //Objetos
-                //Esferas
-                for (int i=0; i<30; i++){
-                    listaBBSpheres.add(new BBSphere(new Vector(25+25*i, 0, 0), new Vector(0.1f,0.1f,-0.0f), 20, 5));
-                    listaBBSpheres.add(new BBSphere(new Vector(600+25+25*i, 0, 0), new Vector(0.1f,0.1f,-0.0f), 20, 5));
+
+//        //Random
+//        rand= new Random();
+//        int randomNumX;
+//        int randomNumZ;
+//
+////        //Objetos
+//                //Esferas
+                for (int i=0; i<1; i++){
+                    listaBBSpheres.add(new BBSphere(new Vector(10, 200, -10), new Vector(0.0f,0.0f,-0.0f), 20, 5));
                 }
-
-        //Planos
-        BBPlane plane= new BBPlane(1,0,0,1400,0,0,180);
-        BBPlane plane2= new BBPlane(1,0,0,00,0,0,180);
-
-        listaBBPlanes.add(plane);
-       //Cuadrados
-
-
-                for(int i=0;i<20;i++){
-                  //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-                    listaCuadrados.add(new BBQuadOld(new Vector(0,1,0),new Vector(50+50*i*2,0,0),50));
-                    System.out.println(listaCuadrados.get(i).getSize());
-                }
-                for(int i=0;i<20;i++){
-                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-                    listaCuadrados.add(new BBQuadOld(new Vector(0,1,0),new Vector(50*i*2,40,0),50));
-                    System.out.println(listaCuadrados.get(i).getSize());
-                }
-
-                for(int i=0;i<20;i++){
-                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-                    listaCuadrados.add(new BBQuadOld(new Vector(0,1,0),new Vector(25+50*i*2,-40,0),50));
-                    System.out.println(listaCuadrados.get(i).getSize());
-                }
-                for(int i=0;i<40;i++){
-                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-                    listaCuadrados.add(new BBQuadOld(new Vector(0,1,0),new Vector(25+25*i*2,-80,0),50));
-                    System.out.println(listaCuadrados.get(i).getSize());
-                }
-
-                for(int i=0;i<40;i++){
-                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
-                    listaCuadrados.add(new BBQuadOld(new Vector(0,1,0),new Vector(25+25*i*2,80,0),50));
-                    System.out.println(listaCuadrados.get(i).getSize());
-                }
-
-        //Colisiones
+//
+//        //Planos
+//        BBPlane plane= new BBPlane(1,0,0,1400,0,0,180);
+//        BBPlane plane2= new BBPlane(1,0,0,00,0,0,180);
+//
+//        listaBBPlanes.add(plane);
+//       //Cuadrados
+//
+//
+//                for(int i=0;i<20;i++){
+//                  //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
+//                    listaCuadrados.add(new BBQuad(new Vector(0,1,0),new Vector(50+50*i*2,0,0),50));
+//                    System.out.println(listaCuadrados.get(i).getSize());
+//                }
+//                for(int i=0;i<20;i++){
+//                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
+//                    listaCuadrados.add(new BBQuad(new Vector(0,1,0),new Vector(50*i*2,40,0),50));
+//                    System.out.println(listaCuadrados.get(i).getSize());
+//                }
+//
+//                for(int i=0;i<20;i++){
+//                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
+//                    listaCuadrados.add(new BBQuad(new Vector(0,1,0),new Vector(25+50*i*2,-40,0),50));
+//                    System.out.println(listaCuadrados.get(i).getSize());
+//                }
+//                for(int i=0;i<40;i++){
+//                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
+//                    listaCuadrados.add(new BBQuad(new Vector(0,1,0),new Vector(25+25*i*2,-80,0),50));
+//                    System.out.println(listaCuadrados.get(i).getSize());
+//                }
+//
+//                for(int i=0;i<40;i++){
+//                    //  listaCuadrados.add(new BoundingBoxQuad(new Vector(0,1,0),new Vector(0,0,0),50));
+//                    listaCuadrados.add(new BBQuad(new Vector(0,1,0),new Vector(25+25*i*2,80,0),50));
+//                    System.out.println(listaCuadrados.get(i).getSize());
+//                }
+//
+//        //Colisiones
         lista = new ArrayList<BoundingBox>(listaBBSpheres);
         col = new CollisionsManager(lista);
-            for(int i=0;i<listaCuadrados.size();i++){
-                col.add(listaCuadrados.get(i));
+            for(int i=0;i<listaCuadradosGenerales.size();i++){
+                col.add(listaCuadradosGenerales.get(i));
             }
-        col.add(plane);
-        col.add(plane2);
+//
+
 
 
 
@@ -200,6 +208,10 @@ public class platformDemo {
         col.collide(delta);
 
 
+//       if(listaCuadradosGenerales.get(0).intersection2(listaBBSpheres.get(0))==true){
+//           System.out.println("chocolate");
+//       }
+
     }
 
     public void renderGL() {
@@ -238,6 +250,10 @@ public class platformDemo {
         //Dibujo Cuadrados
         for (int i=0;i<listaCuadrados.size();i++){
             listaCuadrados.get(i).draw();
+        }
+        //Dibujo Cuadrados
+        for (int i=0;i<listaCuadradosGenerales.size();i++){
+            listaCuadradosGenerales.get(i).draw();
         }
 
     }
@@ -343,8 +359,11 @@ public class platformDemo {
             Vector.norm(aux);
             listaBBSpheres.get(0).setVelocity(Vector.prod(1.2f, Vector.norm(aux)));
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
-            listaBBSpheres.get(0).setVelocity(0.0f,0.0f,0.0f);
+        while(Keyboard.next()) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+                listaBBSpheres.get(0).setVelocity(0.0f, 0.0f, 0.0f);
+                listaCuadradosGenerales.get(0).intersection2(listaBBSpheres.get(0));
+            }
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
             listaBBSpheres.get(0).setVelocity(0.01f,0.0f,0.0f);
@@ -364,6 +383,8 @@ public class platformDemo {
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
             listaBBSpheres.get(0).setVelocity(0.0f,-0.0f,-0.01f);}
+        if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+            listaBBSpheres.get(0).setVelocity(0.3f,0.05f,0.01f);}
 
         while(Keyboard.next()){
             if (Keyboard.isKeyDown(Keyboard.KEY_0)) {
@@ -392,7 +413,7 @@ public class platformDemo {
         }
     }
     public static void main(String[] argv) {
-        platformDemo MainDenis = new platformDemo();
+        platformDemo2 MainDenis = new platformDemo2();
         MainDenis.start();
     }
 }

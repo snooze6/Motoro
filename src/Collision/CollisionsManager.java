@@ -1,8 +1,8 @@
 package Collision;
 
-import java.util.ArrayList;
-
 import Utilities.Vector;
+
+import java.util.ArrayList;
 
 
 /**
@@ -35,6 +35,12 @@ public class CollisionsManager {
         size++;
     }
 
+    public void add(ArrayList<BoundingBox> ob) {
+        for(int i=0;i<ob.size();i++){
+            add(ob.get(i));
+        }
+    }
+
     public void del(BoundingBox ob) {
         list.remove(ob);
         size--;
@@ -43,6 +49,7 @@ public class CollisionsManager {
     //-------------------------------------------------------------------------
 
     public void collide(float delta) {
+
         if (delta > 119) {
             this.delta = 0;
         } else {
@@ -62,9 +69,8 @@ public class CollisionsManager {
                 //System.out.println("[Main]: Colisión entre planos aún no implementada");
             }
             if (B instanceof BBSphere) {
-                aux = collide((BBPlane) B, (BBSphere) A);
+                aux = collide( (BBSphere) B,(BBPlane)A);
             }
-
         }
         if (A instanceof BBSphere) {
             if (B instanceof BBPlane) {
@@ -79,8 +85,8 @@ public class CollisionsManager {
 
     public boolean collide(BBSphere A, BBSphere B) {
 
-        Vector puntoA = Vector.sum(A.getPoint(), Vector.prod(delta, A.getVel()));
-        Vector puntoB = Vector.sum(B.getPoint(), Vector.prod(delta, B.getVel()));
+        Vector puntoA = Vector.sum(A.getPosition(), Vector.prod(delta, A.getVel()));
+        Vector puntoB = Vector.sum(B.getPosition(), Vector.prod(delta, B.getVel()));
 
         float distR;
         if ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
@@ -107,7 +113,7 @@ public class CollisionsManager {
             Vector AB, ABN, distanciaA, distanciaB, posFA, posFB;
 
             //Direccion AB
-            AB = Vector.del(A.getPoint(), B.getPoint());
+            AB = Vector.del(A.getPosition(), B.getPosition());
             //Direccion AB normalizada
             ABN = Vector.norm(AB);
             //Cantidad a desplazar
@@ -122,7 +128,6 @@ public class CollisionsManager {
             A.setPoint(posFA);
             B.setPoint(posFB);
 
-            //B.setPoint(B.lastPoint);
             A.setVelocity((vel1));
             B.setVelocity(vel2);
             
@@ -132,19 +137,17 @@ public class CollisionsManager {
 
     }
 
-    public boolean collide(BBSphere A, BBPlane B) {
+    public boolean collide(BBSphere A,BBPlane B) {
         float D1 = 0, D2 = 0, distancia = 0, distancia1, distancia2;
         boolean ret = false;
         float angulo1 = 0;
-        Vector I, N, R;
 
-
-        Vector punto = A.getPoint(); //Punto actual
+        Vector punto = A.getPosition(); //Punto actual
         Vector copia = new Vector(punto); //Copia punto actual comprobacion si traspaso plano
         Vector copiaVel = new Vector(A.getVelocity()); //Copia velocidad de punto A
 
-        Vector normalPlano = new Vector(B.getVel()); //Vector normal plano
-        Vector puntoPlano = B.getPoint(); //Punto plano
+        Vector normalPlano = B.getNormal(); //Vector normal plano
+        Vector puntoPlano = B.getPosition(); //Punto plano
         angulo1 = Vector.ang(normalPlano, A.getVelocity()); //Angulo entre la normal y la velocidad con la que llega la esfera
 
 
@@ -172,14 +175,13 @@ public class CollisionsManager {
         Vector desplEsf;
         boolean dentro=true;
 
-
         if(B instanceof BBQuad){
-            dentro=((BBQuad)B).intersection(punto,A);
+            dentro=((BBQuad) B).intersection2(A);
         }
 
 
 
-        if (distancia < A.getSize() && dentro) {
+        if (distancia <= A.getSize() && dentro) {
             //Cuando choca el punto futuro, segun la cantidad que haya traspasado del plano al chocar
             //Se corrige su posicion
             if (distancia2 < 0) {
@@ -197,30 +199,9 @@ public class CollisionsManager {
             aux= Vector.dot(vo,n);
             prod=Vector.prod(2*aux,n);
             vf=Vector.del(vo,prod);
-
             A.setVelocity(vf);
-
-
-
-
             ret = true;
-
-
-
         }
-
-        //Si la distancia1  y la distancia 2 tienen distintos signos es que ha cruzado el plano
-//        if ((distancia1 > 0 && distancia2 < 0) ) {
-//            //Como ha cruzado el plano, lo devolvemos a donde debería estar recalculando su
-//            //Dirección y velocidad de salida
-//            A.setPoint(copia);
-//            I = Vector.norm(copiaVel);
-//            N = Vector.norm(normalPlano);
-//            R = Vector.sum(Vector.mult(Vector.mult(Vector.prod(-1, I), N), Vector.prod(2, N)), I);
-//            Vector aux = Vector.prod(R, copiaVel.mod());
-//            A.setVelocity(aux);
-//        }
-
         return ret;
     }
 
@@ -231,85 +212,6 @@ public class CollisionsManager {
     public boolean collide(BBPlane B, BBPlane A) {
         return false;
     }
-
-
-//    public boolean collide(Esfera A,BoundingBoxCube B) {
-//
-//        int sizeCube,sizeSphere;
-//        sizeCube = B.getCube().getSize();
-//        sizeSphere= (int)A.getSize();
-//        int posicionX,posicionY,posicionZ;
-//        int posicionXSiguiente,posicionYSiguiente,posicionZSiguiente;
-//        int posicionXSiguiente2,posicionYSiguiente2,posicionZSiguiente2;
-//
-//        Vector puntoActual = A.getPoint();
-//
-//        Vector puntoSiguiente = Vector.sum(puntoActual, Vector.prod(delta, A.getVel()));
-//
-//      Vector  puntoSiguiente2 = Vector.sum(puntoSiguiente, Vector.prod(delta, A.getVel()));
-//
-//        posicionX = (int) puntoActual.x / sizeCube;
-//        posicionY = (int) puntoActual.y / sizeCube;
-//        posicionZ = (int) puntoActual.z / sizeCube;
-//
-//        posicionXSiguiente = (int) puntoSiguiente.x / sizeCube;
-//        posicionYSiguiente = (int) puntoSiguiente.y / sizeCube;
-//        posicionZSiguiente = (int) puntoSiguiente.z / sizeCube;
-//
-//        posicionXSiguiente2 = (int) puntoSiguiente2.x / sizeCube;
-//        posicionYSiguiente2 = (int) puntoSiguiente2.y / sizeCube;
-//        posicionZSiguiente2 = (int) puntoSiguiente2.z / sizeCube;
-//
-//        //System.out.println("  X   "+posicionX + "   Y  "+posicionY + "   Z  "+posicionZ);
-//
-//
-//       // System.out.print("  Cubo-------------X   "+B.getPoint().x + "   Y  "+B.getPoint().y + "   Z  "+B.getPoint().z);
-//
-//        if((int)B.getPoint().x==posicionXSiguiente && (int)B.getPoint().y==posicionYSiguiente && (int)B.getPoint().z==posicionZSiguiente){
-//
-//                System.out.println("  X   "+posicionX + "   Y  "+posicionY + "   Z  "+posicionZ);
-//                System.out.println("  X   "+posicionXSiguiente + "   Y  "+posicionYSiguiente + "   Z  "+posicionZSiguiente);
-//               // collide(A, new Plano(1,0,0,0,0,0));
-//            A.setVelocity(0,0,0);
-//
-//
-//
-//
-//
-//
-////            //Formula distancia punto plano actual
-////            float D1;
-////            float D2;
-////            float distancia,distancia2;
-////            Plano horizontalArriba;
-////            Plano horizontalAbajo;
-////            horizontalArriba= new Plano(0,1,0,0,posicionY*size,0);
-////            D1 = Vector.dot(horizontalArriba.getVel(), horizontalArriba.getPoint());
-////            D2 = Vector.dot(horizontalArriba.getVel(), puntoActual);
-////            distancia = D2 - D1;
-////
-////
-////            horizontalAbajo= new Plano(0,1,0,0,posicionY*size-size,0);
-////            D1 = Vector.dot(horizontalAbajo.getVel(), horizontalAbajo.getPoint());
-////            D2 = Vector.dot(horizontalAbajo.getVel(), puntoActual);
-////            distancia2 = D2 - D1;
-//////            System.out.println(distancia);
-//////            System.out.println(distancia2);
-////            if(Math.abs(distancia2-distancia) <=size){
-//////                System.out.println("Colision no por arriba o abajo");
-////                collide(A, new Plano(1,0,0,posicionX,posicionY,posicionZ));
-////            }
-////            else{
-////                collide(A,new Plano(0,1,0,))
-////            }
-//
-//
-//
-//
-//        }
-//        return true;
-//    }
-
 
 
 }

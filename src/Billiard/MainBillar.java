@@ -13,6 +13,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class MainBillar {
@@ -30,13 +34,26 @@ public class MainBillar {
     private ILight light1;
 
     //Lista de objetos
-    private float sizeBilliard=1000;
+    private float sizeBilliard=1500;
+    private float sizeSphere=sizeBilliard/40;
+    private float largo= (float)sizeBilliard*1.5f-sizeBilliard/12;
+    private float ancho=(float)12*sizeBilliard/20;
+    private float ancho10=sizeBilliard/10;
+    private float mini=sizeBilliard/10;
+
+
+    //BIllar
     private Billiard billiard;
 
+    //Huecos
+    private ArrayList<BBGap> listaHuecos;
+
     //Esferas
-    private float sizeSphere=sizeBilliard/30;
+    private ArrayList<BBSphere> listaEsferas;
     private BBSphere black;
 
+    //Planos
+    private ArrayList<BBQuad> listaPlanos;
 
 
     //Lista de colisiones
@@ -68,17 +85,60 @@ public class MainBillar {
         light1.setLight_position(new float[]{ 20,20,-1,0});
 
         //Arrays auxiliares
-
-
+        listaHuecos= new ArrayList<BBGap>();
+        listaPlanos= new ArrayList<BBQuad>();
+        listaEsferas = new ArrayList<BBSphere>();
 
 //        //Objetos
             billiard = new Billiard(sizeBilliard);
 
+        //Huecos
+      //  listaHuecos.add(new BBGap(new Vector(0,0,1000-sizeBilliard/5-sizeSphere),1,sizeSphere));
+
         //Esferas
         black= new BBSphere(new Vector (0,0,0), 20,sizeSphere);
+        listaEsferas.add(black);
+        for(int i=0;i<10;i++){
+            listaEsferas.add(new BBSphere(new Vector(sizeSphere*i*3,0,0),2,sizeSphere));
+        }
+        //Lista planos
+
+
+
+        //Lado derecho
+        listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo,0,ancho), new Vector(largo,100,ancho), new Vector(largo,100,-ancho)));
+       listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo+mini*3/4,0,-ancho-mini), new Vector(largo+mini*3/4,100,-ancho-mini),new Vector(largo,100,-ancho) ));
+        listaPlanos.add(new BBQuad(new Vector(largo,0,ancho),new Vector(largo+mini*3/4,0,ancho+mini), new Vector(largo+mini*3/4,100,ancho+mini),new Vector(largo,100,ancho) ));
+
+        //Lado izquierdo
+        listaPlanos.add(new BBQuad(new Vector(-largo,0,-ancho),new Vector(-largo,0,ancho), new Vector(-largo,100,ancho), new Vector(-largo,100,-ancho)));
+        listaPlanos.add(new BBQuad(new Vector(-largo,0,-ancho),new Vector(-largo-mini*3/4,0,-ancho-mini), new Vector(-largo-mini*3/4,100,-ancho-mini),new Vector(-largo,100,-ancho) ));
+        listaPlanos.add(new BBQuad(new Vector(-largo,0,ancho),new Vector(-largo-mini*3/4,0,ancho+mini), new Vector(-largo-mini*3/4,100,ancho+mini),new Vector(-largo,100,ancho) ));
+
+        //Delante
+        ancho=ancho+ancho10;
+        largo=largo-mini;
+        listaPlanos.add(new BBQuad(new Vector(-largo,00,-ancho),new Vector(largo,00,-ancho), new Vector(largo,100,-ancho), new Vector(-largo,100,-ancho)));
+        listaPlanos.add(new BBQuad(new Vector(-largo,00,-ancho),new Vector(-largo-mini,00,-ancho-mini*3/4),new Vector(-largo-mini,100,-ancho-mini*3/4),new Vector(-largo,100,-ancho)));
+        listaPlanos.add(new BBQuad(new Vector(largo,00,-ancho),new Vector(largo+mini,00,-ancho-mini*3/4),new Vector(largo+mini,100,-ancho-mini*3/4),new Vector(largo,100,-ancho)));
+
+
+        //Detras
+        listaPlanos.add(new BBQuad(new Vector(-largo,00,ancho),new Vector(largo,00,ancho), new Vector(largo,100,ancho), new Vector(-largo,100,ancho)));
+        listaPlanos.add(new BBQuad(new Vector(-largo,00,ancho),new Vector(-largo-mini,00,ancho+mini*3/4),new Vector(-largo-mini,100,ancho+mini*3/4),new Vector(-largo,100,ancho)));
+        listaPlanos.add(new BBQuad(new Vector(largo,00,ancho),new Vector(largo+mini,00,ancho+mini*3/4),new Vector(largo+mini,100,ancho+mini*3/4),new Vector(largo,100,ancho)));
+
 
         //Colisiones
+        col = new CollisionsManager();
 
+        for(int i=0;i<listaPlanos.size();i++){
+            col.add(listaPlanos.get(i));
+        }
+
+        for(int i=0;i<listaEsferas.size();i++){
+            col.add(listaEsferas.get(i));
+        }
 
 
     }
@@ -133,10 +193,11 @@ public class MainBillar {
         //Movimiento
         black.move(delta);
         //Colisiones
+        col.collide(delta);
 
-
-
-
+        for(int i=0;i<listaEsferas.size();i++){
+            listaEsferas.get(i).move(delta);
+        }
     }
 
     public void renderGL() {
@@ -153,8 +214,9 @@ public class MainBillar {
 
         //Utilidades
         //Dibujo.drawMalla(5,5);
+      //  Dibujo.drawAxes(largo);
+      //  Dibujo.drawAxes(ancho);
         Dibujo.drawAxes(sizeBilliard);
-
         //Billar
         glPushMatrix();
         glColor3d(0.6,0.6,0.6);
@@ -162,9 +224,26 @@ public class MainBillar {
         billiard.render();
         glPopMatrix();
 
+        //Huecos
+        for(int i=0;i<listaHuecos.size();i++){
+            glPushMatrix();
+            glColor3d(0,0,0);
+            listaHuecos.get(i).draw();
+            glPopMatrix();
+        }
+
         //Esferas
-        glColor3d(0,0,0);
-        black.draw();
+        for(int i=0;i<listaEsferas.size();i++){
+            glColor3d(1,0,0);
+            listaEsferas.get(i).draw();
+        }
+
+
+
+        //Planos
+        for(int i=0;i<listaPlanos.size();i++){
+            listaPlanos.get(i).draw();
+        }
 
 
     }
@@ -214,20 +293,24 @@ public class MainBillar {
     public void input(int delta){
 
             if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-                black.setVelocity(0, 0, 0.03f);
+                black.setVelocity(0, 0, 0.5f);
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
-                black.setVelocity(0,0,-0.03f);
+                black.setVelocity(0,0,-0.5f);
             }
 
             //----------------------------------------------------------------------
 
             if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
-                black.setVelocity(-0.03f,0,0.0f);
+                black.setVelocity(-1.5f,0,-0.7f);
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_L)) {
-                black.setVelocity(0.03f,0,0f);
+                black.setVelocity(1.5f,0,1.5f);
             }
+        if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+            black.setVelocity(0.00f,0,0f);
+            black.getPosition().print();
+        }
 
         int dWheel = Mouse.getDWheel();
         if (dWheel < 0) {

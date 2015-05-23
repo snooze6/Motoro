@@ -10,9 +10,9 @@ public class CamListener extends Cam{
 	private int selected=0;
 	private int size=-1;
 	
-    public int speedMovement=5;
-    public float rotateMovement=2.0f;
-	
+    public int speedMovement=10;
+    public float rotateMovement=4.0f;
+
 	public CamListener(){
 		list = new ArrayList<Cam>();
 		list.add(new Perspective());
