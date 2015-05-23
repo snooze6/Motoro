@@ -3,6 +3,7 @@ package Camera;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 import Utilities.Vector;
@@ -146,6 +147,56 @@ public class CamListener extends Cam{
                 setWindow(Display.getWidth(), Display.getHeight());
             }
         }
+        
+        mouseButton();
+	}
+	
+	//<Variables para el ratón>
+		protected float deltaAngley = 0.0f;
+		protected float deltaAnglex = 0.0f;
+		//Copias de el ángulo inicial de la cámara
+		protected float copyx=0, copyy=0;
+		//Posición inicial del ratón
+		protected int xOrigin = -1;
+		protected int yOrigin = -1;
+		
+		boolean first;
+	//</Variables para el ratón>
+	
+	protected void mouseButton() {
+		
+		if (Mouse.isButtonDown(0)){
+			if (first){
+				System.out.println("Clicked");
+				first = false;
+				
+				xOrigin = Mouse.getX();
+				yOrigin = Mouse.getY();
+				copyx=this.getAngX();
+				copyy=this.getAngY();
+			} else {
+				mouseMove(Mouse.getX(), Mouse.getY());
+			}
+		} else {
+			if (!first){
+				System.out.println("Released");
+				first = true;
+				xOrigin = -1;
+				yOrigin = -1;
+			}
+		}
+	}
+	protected void mouseMove(int x, int y) {
+		Vector ang = this.getAng();
+		if (xOrigin >= 0) {
+			deltaAnglex = (x - xOrigin) * 0.1f;
+			this.setAngle(new Vector(ang.x, copyy+deltaAnglex, ang.z));
+		}
+		ang = this.getAng();
+		if (yOrigin >= 0) {
+			deltaAngley = (y - yOrigin) * 0.1f;
+			this.setAngle(new Vector(copyx-deltaAngley, ang.y, ang.z));
+		}
 	}
 	
 	public void nextCam(){

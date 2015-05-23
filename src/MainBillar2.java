@@ -1,17 +1,6 @@
 
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glColor3d;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
@@ -112,6 +101,7 @@ public class MainBillar2 {
         
         bolas = new ArrayList<Ball>();
         bolas.add(white);
+        bolas.add(new Ball());
 //        int k=0, l=0;
 //	        for (int j=0; j<6; j++){
 //	        	for (int i=0; i<j; i++){
@@ -224,7 +214,7 @@ public class MainBillar2 {
             	camera.getCam(1).setPos(Vector.sum(Vector.prod(Vector.prod(-25, camera.getCam(1).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
             	camera.getCam(1).setDireccion(bolas.get(i).getVel());
             	
-            	camera.getCam(2).setPos(Vector.sum(Vector.prod(Vector.prod(-3, camera.getCam(2).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
+            	camera.getCam(2).setPos(Vector.sum(Vector.prod(Vector.prod(-10, camera.getCam(2).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
 
             	camera.getCam(3).setPos(Vector.sum(new Vector (0,2*sizeSphere, 0), Vector.sum(Vector.prod(Vector.prod(-3, camera.getCam(3).getDireccion()), sizeSphere), bolas.get(i).getPoint())));
 
@@ -243,8 +233,17 @@ public class MainBillar2 {
         //Dibujo
 
         //Utilidades
-        Dibujo.drawAxes(sizeBilliard);
-
+        //Dibujo.drawAxes(sizeBilliard);
+        
+        //Bolas
+        glColor3d(0,1,1);
+        glPushMatrix();
+              glBegin(GL_LINES);
+                Vector pcam = bolas.get(1).getPoint(), pball = bolas.get(0).getPoint();
+                glVertex3f(pcam.x, pcam.y, pcam.z);
+                glVertex3f(pball.x, pball.y, pball.z);
+              glEnd();
+        glPopMatrix();
 		
         //Billar
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -262,14 +261,8 @@ public class MainBillar2 {
         }
 
         ang++; if (ang>360){ang=0;}
-
-        //Bolas
-        glColor3d(1,1,1);
-        glPushMatrix();
-              white.render();
-        glPopMatrix();
         
-        //Bolas
+        //SkyBox
         glColor3d(1,1,1);
         glPushMatrix();
             //  glRotated(ang, 1, 0, 0);

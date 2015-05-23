@@ -149,7 +149,7 @@ public class Dibujo {
                 glVertex3f(sizeCubo*i,sizeCubo*j,sizeTotal);
             }
         }
-////Pintado eje y
+//		  //Pintado eje y
 //        for(j=0;j<=numCubos;j++){
 //            glColor3f(1.0f,0.0f,0.0f);
 //                for (i=0; i<=numCubos; i++) {
@@ -158,10 +158,22 @@ public class Dibujo {
 //                }
 //            }
 
-
-
         glEnd();
         glPopMatrix();
 
+    }
+    
+    public static void drawRay(Vector pos, Vector v){
+    	drawRay(pos, v, 1000);
+    }
+    
+    public static void drawRay(Vector pos, Vector v, int l){
+    	Vector aux = Vector.prod(l, Vector.norm(Vector.sum(pos, v)));
+    	glPushMatrix();
+    	  glBegin(GL_LINES);
+    	    glVertex3f(pos.x, pos.y, pos.z);
+    	    glVertex3f(aux.x, aux.y, aux.z);
+    	  glEnd();
+    	glPopMatrix();
     }
 }
