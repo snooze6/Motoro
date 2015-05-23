@@ -147,6 +147,23 @@ public class ObjectLoader {
         }
         return new Vector3f(x, y, z);
     }
+    
+    private static Vector2f parseTexVertex(String line){
+        float x = 0,y = 0; String[] xyz = new String[1];
+        try {
+            xyz = line.split(" ");
+            x = Float.valueOf(xyz[1]);
+            y = Float.valueOf(xyz[2]);
+        } catch (Exception e){
+            System.out.println("Cogida excepción parseNormal");
+            System.out.println(line);
+            System.out.println("X: "+xyz[1]);
+            System.out.println("Y: "+xyz[2]);
+            e.getStackTrace();
+            System.exit(-1);
+        }
+        return new Vector2f(x, y);
+    }
 
 //    private static void control(Boolean w, String line) {
 //    	String[] xyz = new String[1];
@@ -210,16 +227,19 @@ public class ObjectLoader {
             if (prefix.equals("#") || line.isEmpty()) {
                 continue;
             } else if (prefix.equals("v")) {
+            	//Vértice
                 m.getVertices().add(parseVertex(line));
             } else if (prefix.equals("vn")) {
+            	//Normal
                 m.getNormals().add(parseNormal(line));
             } else if (prefix.equals("f")) {
-                //control(m.hasNormals(),line);
+            	//Cara
                 m.getFaces().add(parseFace(m.hasNormals(), line));
-            } else if (prefix.equalsIgnoreCase("usemtl")){
-                //Archivo de materiales
             } else if (prefix.equals("vt")){
                 //Vértice de textura
+            	m.getTextureCoordinates().add(parseTexVertex(line));
+            } else if (prefix.equalsIgnoreCase("usemtl")){
+                //Archivo de materiales
             } else if (prefix.equals("mtllib")){
                 //Caca
             } else if (prefix.equals("s")){
@@ -302,51 +322,51 @@ public class ObjectLoader {
                 continue;
             }
             if (line.startsWith("mtllib ")) {
-                String materialFileName = line.split(" ")[1];
-                File materialFile = new File(f.getParentFile().getAbsolutePath() + "/" + materialFileName);
-                BufferedReader materialFileReader = new BufferedReader(new FileReader(materialFile));
-                String materialLine;
-                Model.Material parseMaterial = new Model.Material();
-                String parseMaterialName = "";
-                while ((materialLine = materialFileReader.readLine()) != null) {
-                    if (materialLine.startsWith("#")) {
-                        continue;
-                    }
-                    if (materialLine.startsWith("newmtl ")) {
-                        if (!parseMaterialName.equals("")) {
-                            m.getMaterials().put(parseMaterialName, parseMaterial);
-                        }
-                        parseMaterialName = materialLine.split(" ")[1];
-                        parseMaterial = new Model.Material();
-                    } else if (materialLine.startsWith("Ns ")) {
-                        parseMaterial.specularCoefficient = Float.valueOf(materialLine.split(" ")[1]);
-                    } else if (materialLine.startsWith("Ka ")) {
-                        String[] rgb = materialLine.split(" ");
-                        parseMaterial.ambientColour[0] = Float.valueOf(rgb[1]);
-                        parseMaterial.ambientColour[1] = Float.valueOf(rgb[2]);
-                        parseMaterial.ambientColour[2] = Float.valueOf(rgb[3]);
-                    } else if (materialLine.startsWith("Ks ")) {
-                        String[] rgb = materialLine.split(" ");
-                        parseMaterial.specularColour[0] = Float.valueOf(rgb[1]);
-                        parseMaterial.specularColour[1] = Float.valueOf(rgb[2]);
-                        parseMaterial.specularColour[2] = Float.valueOf(rgb[3]);
-                    } else if (materialLine.startsWith("Kd ")) {
-                        String[] rgb = materialLine.split(" ");
-                        parseMaterial.diffuseColour[0] = Float.valueOf(rgb[1]);
-                        parseMaterial.diffuseColour[1] = Float.valueOf(rgb[2]);
-                        parseMaterial.diffuseColour[2] = Float.valueOf(rgb[3]);
-                    } else if (materialLine.startsWith("map_Kd")) {
-                        parseMaterial.texture = TextureLoader.getTexture("PNG",
-                                new FileInputStream(new File(f.getParentFile().getAbsolutePath() + "/" + materialLine
-                                        .split(" ")[1])));
-                    } else {
-                        System.err.println("[MTL] Unknown Line: " + materialLine);
-                    }
-                }
-                m.getMaterials().put(parseMaterialName, parseMaterial);
-                materialFileReader.close();
+//                String materialFileName = line.split(" ")[1];
+//                File materialFile = new File(f.getParentFile().getAbsolutePath() + "/" + materialFileName);
+//                BufferedReader materialFileReader = new BufferedReader(new FileReader(materialFile));
+//                String materialLine;
+//                Model.Material parseMaterial = new Model.Material();
+//                String parseMaterialName = "";
+//                while ((materialLine = materialFileReader.readLine()) != null) {
+//                    if (materialLine.startsWith("#")) {
+//                        continue;
+//                    }
+//                    if (materialLine.startsWith("newmtl ")) {
+//                        if (!parseMaterialName.equals("")) {
+//                            m.getMaterials().put(parseMaterialName, parseMaterial);
+//                        }
+//                        parseMaterialName = materialLine.split(" ")[1];
+//                        parseMaterial = new Model.Material();
+//                    } else if (materialLine.startsWith("Ns ")) {
+//                        parseMaterial.specularCoefficient = Float.valueOf(materialLine.split(" ")[1]);
+//                    } else if (materialLine.startsWith("Ka ")) {
+//                        String[] rgb = materialLine.split(" ");
+//                        parseMaterial.ambientColour[0] = Float.valueOf(rgb[1]);
+//                        parseMaterial.ambientColour[1] = Float.valueOf(rgb[2]);
+//                        parseMaterial.ambientColour[2] = Float.valueOf(rgb[3]);
+//                    } else if (materialLine.startsWith("Ks ")) {
+//                        String[] rgb = materialLine.split(" ");
+//                        parseMaterial.specularColour[0] = Float.valueOf(rgb[1]);
+//                        parseMaterial.specularColour[1] = Float.valueOf(rgb[2]);
+//                        parseMaterial.specularColour[2] = Float.valueOf(rgb[3]);
+//                    } else if (materialLine.startsWith("Kd ")) {
+//                        String[] rgb = materialLine.split(" ");
+//                        parseMaterial.diffuseColour[0] = Float.valueOf(rgb[1]);
+//                        parseMaterial.diffuseColour[1] = Float.valueOf(rgb[2]);
+//                        parseMaterial.diffuseColour[2] = Float.valueOf(rgb[3]);
+//                    } else if (materialLine.startsWith("map_Kd")) {
+//                        parseMaterial.texture = TextureLoader.getTexture("PNG",
+//                                new FileInputStream(new File(f.getParentFile().getAbsolutePath() + "/" + materialLine
+//                                        .split(" ")[1])));
+//                    } else {
+//                        System.err.println("[MTL] Unknown Line: " + materialLine);
+//                    }
+//                }
+//                m.getMaterials().put(parseMaterialName, parseMaterial);
+//                materialFileReader.close();
             } else if (line.startsWith("usemtl ")) {
-                currentMaterial = m.getMaterials().get(line.split(" ")[1]);
+//                currentMaterial = m.getMaterials().get(line.split(" ")[1]);
             } else if (line.startsWith("v ")) {
                 String[] xyz = line.split(" ");
                 float x = Float.valueOf(xyz[1]);

@@ -1,7 +1,5 @@
 package Billiard.World;
 
-import Billiard.World.Billiard;
-
 import static org.lwjgl.opengl.GL11.*;
 
 public abstract class BilliardObject {

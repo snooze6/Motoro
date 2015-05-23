@@ -121,6 +121,9 @@ public class BBSphere extends BoundingBox{
 	public void setPoint(Vector point) {
 		this.point = point;
 	}
+	public Vector getPoint() {
+		return point;
+	}
 	public Vector getVelocity() {
 		return velocity;
 	}

@@ -52,30 +52,46 @@ public class Dibujo {
 
 	
 	public static void drawSphere(double r, int lats, int longs) {
-        int i, j;
-        for(i = 0; i <= lats; i++) {
-            double lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
-            double z0  = Math.sin(lat0);
-            double zr0 =  Math.cos(lat0);
-
-            double lat1 = Math.PI * (-0.5 + (double) i / lats);
-            double z1 =  Math.sin(lat1);
-            double zr1 = Math.cos(lat1);
-
-            glBegin(GL_QUAD_STRIP);
-            for(j = 0; j <= longs; j++) {
-                double lng = 2 * Math.PI * (double) (j - 1) / longs;
-                double x = r*Math.cos(lng);
-                double y = r*Math.sin(lng);
-
-                glNormal3d(x * zr0, y * zr0, r*z0);
-                glVertex3d(x * zr0, y * zr0, r*z0);
-                glNormal3d(x * zr1, y * zr1, r*z1);
-                glVertex3d(x * zr1, y * zr1, r*z1);
+        float x, y, z, dTheta=180/lats, dLon=360/longs;
+        
+        //glScalef((float)r, (float)r, (float)r);
+        for(float lat =0 ; lat <=180 ; lat+=dTheta){
+            glBegin( GL_QUAD_STRIP ) ;
+            for(float lon = 0 ; lon <=360; lon+=dLon){  
+            	// Vertex 1
+                x = (float) (r*Math.cos(Math.toRadians(lon)) * Math.sin(Math.toRadians(lat))) ;
+                y = (float) (r*Math.sin(Math.toRadians(lon)) * Math.sin(Math.toRadians(lat))) ;
+                z = (float) (r*Math.cos(Math.toRadians(lat))) ;
+                glNormal3f( x, y, z) ;
+                glTexCoord2d( lon/360-0.25, lat/180);
+                glVertex3f( x, y, z ) ;
+                
+                // Vertex 2
+                x = (float) (r*Math.cos(Math.toRadians(lon)) * Math.sin(Math.toRadians(lat+dTheta))) ;
+                y = (float) (r*Math.sin(Math.toRadians(lon)) * Math.sin(Math.toRadians(lat+dTheta))) ;
+                z = (float) (r*Math.cos(Math.toRadians(lat+dTheta))) ;
+                glNormal3f( x, y, z) ;
+                glTexCoord2d(lon/360-0.25, (lat + dTheta-1)/(180)); 
+                glVertex3f( x, y, z ) ;
+                
+                // Vertex 3
+                x = (float) (r*Math.cos(Math.toRadians(lon+dLon)) * Math.sin(Math.toRadians(lat))) ;
+                y = (float) (r*Math.sin(Math.toRadians(lon+dLon)) * Math.sin(Math.toRadians(lat))) ;
+                z = (float) (r*Math.cos(Math.toRadians(lat))) ;
+                glNormal3f( x, y, z) ;
+                glTexCoord2d((lon + dLon)/(360)-0.25 ,(lat)/180);
+                glVertex3f( x, y, z ) ;
+                
+                // Vertex 4
+                x = (float) (r*Math.cos(Math.toRadians(lon+dLon)) * Math.sin(Math.toRadians(lat+dTheta))) ;
+                y = (float) (r*Math.sin(Math.toRadians(lon+dLon)) * Math.sin(Math.toRadians(lat+dTheta))) ;
+                z = (float) (r*Math.cos(Math.toRadians(lat+dTheta))) ;
+                glNormal3f( x, y, z) ;
+                glTexCoord2d((lon + dLon)/360-0.25, (lat + dTheta)/(180));
+                glVertex3f( x, y, z ) ;
             }
-            glEnd();
+            glEnd() ;
         }
-    	//s.draw((float)r, lats, longs);
     }
     public static void drawAxes(float longitud){
         //DIBUJO LOS EJES
