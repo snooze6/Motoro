@@ -101,6 +101,8 @@ public class Ortho extends Cam{
 
 	@Override
 	public void render() {
+		
+		System.out.println("wasel wasel");
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // limpias los buffer
         glEnable(GL_DEPTH_TEST);
 
