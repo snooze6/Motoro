@@ -149,6 +149,13 @@ public class CamListener extends Cam{
         }
         
         mouseButton();
+        
+        int dWheel = Mouse.getDWheel();
+        if (dWheel < 0) {
+            morezoom();
+        } else if (dWheel > 0){
+            lesszoom();
+        }
 	}
 	
 	//<Variables para el ratón>

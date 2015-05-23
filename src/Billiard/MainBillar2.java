@@ -1,3 +1,4 @@
+package Billiard;
 
 
 import static org.lwjgl.opengl.GL11.*;
