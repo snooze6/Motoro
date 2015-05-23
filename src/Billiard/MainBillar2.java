@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -21,7 +20,6 @@ import Collision.BBQuad;
 import Collision.CollisionsManager;
 import Lights.DirectionalLight;
 import Lights.ILight;
-import Utilities.Dibujo;
 import Utilities.Vector;
 
 public class MainBillar2 {
@@ -79,9 +77,6 @@ public class MainBillar2 {
         CreateObjects();
     }
 
-
-
-
     protected void resize() {
        camera.setWindow(Display.getWidth(), Display.getHeight());
        glViewport(0, 0, Display.getWidth(), Display.getHeight());
@@ -120,8 +115,6 @@ public class MainBillar2 {
         Display.destroy();
     }
 
-
-
     public void update(int delta) {
     //Metodos de entrada por teclado
         input(delta);
@@ -143,12 +136,8 @@ public class MainBillar2 {
             	camera.getCam(2).setPos(Vector.sum(Vector.prod(Vector.prod(-10, camera.getCam(2).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
 
             	camera.getCam(3).setPos(Vector.sum(new Vector (0,2*sizeSphere, 0), Vector.sum(Vector.prod(Vector.prod(-3, camera.getCam(3).getDireccion()), sizeSphere), bolas.get(i).getPoint())));
-
             }
         }
-
-
-
     }
 
     public void renderGL() {
@@ -302,14 +291,14 @@ public class MainBillar2 {
         
         bolas = new ArrayList<Ball>();
         bolas.add(white);
-        bolas.add(new Ball());
-//        int k=0, l=0;
-//	        for (int j=0; j<6; j++){
-//	        	for (int i=0; i<j; i++){
-//	        		k++;
-//	        		bolas.add(new Ball(new Vector(-(2*sizeSphere)*j-(float)(sizeBilliard/2.0f), sizeSphere*2*l, (i)*2*sizeSphere-(sizeSphere)*j+sizeSphere), 5, sizeSphere, "/res/images/pallina"+k+".jpg"));
-//	        	}
-//	        }
+        //bolas.add(new Ball());
+        int k=0, l=0;
+	        for (int j=0; j<6; j++){
+	        	for (int i=0; i<j; i++){
+	        		k++;
+	        		bolas.add(new Ball(new Vector(-(2*sizeSphere)*j-(float)(sizeBilliard/2.0f), sizeSphere*2*l, (i)*2*sizeSphere-(sizeSphere)*j+sizeSphere), 5, sizeSphere, "/res/images/pallina"+k+".jpg"));
+	        	}
+	        }
 
         //Lista planos
         listaPlanos= new ArrayList<BBQuad>();
