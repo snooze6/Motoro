@@ -109,7 +109,7 @@ public abstract class Cam{
 	//--------------------------------------------------------------------------
 
 	public Vector getFront(float far) {
-        return Vector.sum(getDireccion(), Vector.prod(far, pos));
+        return Vector.sum(getPos(), Vector.prod(far, getDireccion()));
 	}
 	public Vector getPos() {
 		return pos;

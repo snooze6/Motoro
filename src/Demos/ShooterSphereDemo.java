@@ -1,16 +1,8 @@
 package Demos;
-import Camera.Cam;
-import Camera.Ortho;
-import Camera.Perspective;
-import Collision.BoundingBox;
-import Collision.BBSphere;
-import Collision.BBPlane;
-import Utilities.Vector;
-import Collision.CollisionsManager;
-import Lights.ILight;
-import Lights.SpotLight;
-import Utilities.Dibujo;
-import Others.Face;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.util.ArrayList;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -18,9 +10,18 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import java.util.ArrayList;
-
-import static org.lwjgl.opengl.GL11.*;
+import Camera.CamListener;
+import Camera.Ortho;
+import Camera.Perspective;
+import Collision.BBPlane;
+import Collision.BBSphere;
+import Collision.BoundingBox;
+import Collision.CollisionsManager;
+import Lights.ILight;
+import Lights.SpotLight;
+import Others.Face;
+import Utilities.Dibujo;
+import Utilities.Vector;
 
 
 /**
@@ -52,11 +53,10 @@ public class ShooterSphereDemo {
     long lastFrame;/** time at last frame */
     int fps;/** frames per second */
     long lastFPS;/** last fps time */
-    private float runtime = 0;
 
     private Face cara;
 
-    private Cam camera, cam1, cam2;
+    private CamListener camera;
     private int delta;
 
     private BBPlane arr, aba, der, izq, del, atr, atratr;
@@ -79,9 +79,8 @@ public class ShooterSphereDemo {
         Display.setVSyncEnabled(VSYNC); //whether hardware VSync is enabled
         Display.setFullscreen(FULLSCREEN); //whether fullscreen is enable
 
-        cam1 = new Ortho();
-        cam2 = new Perspective(-400, 50, 0, 0, 0, 0);
-        camera = cam2;
+        camera = new CamListener();
+        camera.addCam(new Ortho());
         camera.setWindow(Display.getWidth(), Display.getHeight());
 
         //nod = new Node();
@@ -153,7 +152,7 @@ public class ShooterSphereDemo {
 
 
 
-        int siz = 11, tam=0;
+        int siz = 8, tam=0;
         for (int i=0; i<siz; i++){
             for (int j=0; j<siz; j++){
                 for (int k=0; k<siz; k++){
@@ -236,8 +235,18 @@ public class ShooterSphereDemo {
             camera.render();
 
             Vector v = camera.getDireccion();
-            light1.setLight_position(new float[]{camera.getX(), camera.getY(), camera.getZ(),1.0f});
-            light1.setSpotDir(new float[]{5*v.x, 5*v.y, 5*v.z, 1.0f});
+	            light1.setLight_position(new float[]{camera.getX(), camera.getY(), camera.getZ(),1.0f});
+	            light1.setSpotDir(new float[]{5*v.x, 5*v.y, 5*v.z, 1.0f});
+	            
+            glPushMatrix();
+	            v = camera.getDireccion();
+	            //glTranslated(camera.getX() + 5 * v.x, camera.getY() + 5 * v.y, camera.getZ() + 5 * v.z);
+	            	light1.off();
+		            glColor3f(0,1,1);
+		            Dibujo.drawPoint(camera.getFront(5));
+		            light1.on();
+
+            glPopMatrix();
 
             glPushMatrix();
             //Dibujo.drawCube(50);
@@ -256,7 +265,6 @@ public class ShooterSphereDemo {
                 glColor3f(1.0f,0.0f,0.0f);
                 //glCallList(displayListHandle);
                 listaEsferasLanzar.get(i).draw();
-
 
                 //Dibujo.drawSphere(size, 10, 10);
                 //Dibujo.drawCube(size);
@@ -317,65 +325,6 @@ public class ShooterSphereDemo {
     }
 
     public void input(int delta){
-        int speedMovement=3;
-        float rotateMovement=1.5f;
-        // Translate cam
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            camera.moveStraight(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            camera.moveBack(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            camera.moveRight(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            camera.moveLeft(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-            camera.moveUp(speedMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-            camera.moveDown(speedMovement);
-        }
-        // Rotate cam
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-            camera.lookDown(rotateMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-            camera.lookUp(rotateMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-            camera.lookRight(rotateMovement);
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-            camera.lookLeft(rotateMovement);
-        }
-
-        //----------------------------------------------------------------------
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-            camera.morezoom();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
-            camera.lesszoom();
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
-            camera=cam1;
-            resize();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-            camera=cam2;
-            resize();
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
-            Vector v = camera.getDireccion();
-            camera.setDireccion(v.x, v.y, v.z);;
-            resize();
-        }
-
-        //----------------------------------------------------------------------
 
         if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
             light1.on();
@@ -417,7 +366,7 @@ public class ShooterSphereDemo {
 
             }
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
                 if (rafaga % 10 == 0 || true) {
 
                     Vector v = camera.getDireccion();
@@ -436,17 +385,8 @@ public class ShooterSphereDemo {
             rafaga++;
         }
 
+        camera.listen();
 
-        //----------------------------------------------------------------------
-
-        int dWheel = Mouse.getDWheel();
-        if (dWheel < 0) {
-            camera.morezoom();
-            System.out.println("Rueda arriba");
-        } else if (dWheel > 0){
-            camera.lesszoom();
-            System.out.println("Rueda abajo");
-        }
     }
 
     public float Idle(float fAngulo){
@@ -473,7 +413,7 @@ public class ShooterSphereDemo {
      */
     public void updateFPS() {
         if (getTime() - lastFPS > 1000) {
-            Display.setTitle("FPS: " + fps); runtime++;
+            Display.setTitle("FPS: " + fps); //runtime++;
             if (fps<10){
                 lag = true;
             } else {
@@ -503,7 +443,7 @@ public class ShooterSphereDemo {
 
     public void update(int delta) {
 
-        runtime+=delta;
+        //runtime+=delta;
         //System.out.println("[Runtime]: "+runtime/1000);
 
         float aux = (float)delta/(float)17;

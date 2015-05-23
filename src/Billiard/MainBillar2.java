@@ -17,9 +17,11 @@ import Camera.CamListener;
 import Camera.Isometric;
 import Camera.Perspective;
 import Collision.BBQuad;
+import Collision.BBSphere;
 import Collision.CollisionsManager;
 import Lights.DirectionalLight;
 import Lights.ILight;
+import Utilities.Dibujo;
 import Utilities.Vector;
 
 public class MainBillar2 {
@@ -138,6 +140,11 @@ public class MainBillar2 {
             	camera.getCam(3).setPos(Vector.sum(new Vector (0,2*sizeSphere, 0), Vector.sum(Vector.prod(Vector.prod(-3, camera.getCam(3).getDireccion()), sizeSphere), bolas.get(i).getPoint())));
             }
         }
+        
+        for (int i=0; i<listaEsferasLanzar.size(); i++){
+        	listaEsferasLanzar.get(i).setVel(Vector.prod(0.997f,bolas.get(i).getVel()));
+        	listaEsferasLanzar.get(i).move(delta);
+        }
     }
 
     public void renderGL() {
@@ -149,6 +156,11 @@ public class MainBillar2 {
 
         //Utilidades
         //Dibujo.drawAxes(sizeBilliard);
+        //Mirilla
+    	light1.off();
+	        glColor3f(0,1,1);
+	        Dibujo.drawPoint(camera.getFront(5), 10);
+        light1.on();
         
         //Bolas
         glColor3d(0,1,1);
@@ -173,6 +185,10 @@ public class MainBillar2 {
         
         for (int i=0; i<bolas.size(); i++){
         	bolas.get(i).render();
+        }
+        
+        for(int i=0;i<listaEsferasLanzar.size(); i++){
+            listaEsferasLanzar.get(i).draw();
         }
 
         ang++; if (ang>360){ang=0;}
@@ -223,6 +239,11 @@ public class MainBillar2 {
     public void exit() {
         state = BillarState.FINISHED;
     }
+    
+    // Metralleta
+    int valorLanzamiento=0;
+    int rafaga=10;
+    private ArrayList<BBSphere> listaEsferasLanzar;
 
     public void input(int delta){
 
@@ -233,7 +254,7 @@ public class MainBillar2 {
                 white.setVel(0,0,-1.0f);
             }
 
-            //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
             if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
                 white.setVel(-1.0f,0,0.0f);
@@ -241,13 +262,41 @@ public class MainBillar2 {
             if (Keyboard.isKeyDown(Keyboard.KEY_L)) {
                 white.setVel(1.0f,0,0f);
             }
+//            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+//            	white.setTransparent();
+//            	for(int i=0; i<bolas.size(); i++){
+//            		bolas.get(i).setTransparent();
+//            	}
+//            }
             
-            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-            	white.setTransparent();
-            	for(int i=0; i<bolas.size(); i++){
-            		bolas.get(i).setTransparent();
-            	}
+        //----------------------------------------------------------------------
+            
+            while(Keyboard.next()) {
+                if(valorLanzamiento==listaEsferasLanzar.size()){
+                    valorLanzamiento=0;
+                }
+
+                if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+                    if (rafaga % 10 == 0 || true) {
+
+                        Vector v = camera.getDireccion();
+                        Vector aux = new Vector(4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.x, 4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.y, 4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.z);
+                        listaEsferasLanzar.get(valorLanzamiento).setVelocity(0, 0, 0);
+                        listaEsferasLanzar.get(valorLanzamiento).setPoint(Vector.sum(new Vector(camera.getX(), camera.getY(), camera.getZ()), aux));
+
+
+                        Vector aux2 = new Vector(5 * v.x, 5 * v.y, 5 * v.z);
+                        Vector.norm(aux2);
+                        listaEsferasLanzar.get(valorLanzamiento).setVelocity(Vector.prod(1.2f, Vector.norm(aux2)));
+
+                    }
+                }
+                valorLanzamiento++;
+                rafaga++;
             }
+            
+        //----------------------------------------------------------------------
+            
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             Vector v = camera.getDireccion();
             Vector aux = new Vector(5 * v.x, 0 * v.y, 5 * v.z);
@@ -333,15 +382,23 @@ public class MainBillar2 {
 	        listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,ancho),new Vector(0+mini*4/5-mini/4,00,ancho+mini*4/8),new Vector(0+mini*4/5-mini/4,50,ancho+mini*4/8),new  Vector(0+mini*4/5,50,ancho)));
 
 
+	    //Metralleta
+        listaEsferasLanzar = new ArrayList<BBSphere>();
+        for (int i=0; i<100; i++){
+            listaEsferasLanzar.add(new BBSphere(new Vector(-5000, +100, +100), new Vector(-0.0f,-0.0f,-0.0f), 20, 20));
+        } 
+	        
         //Colisiones
-
         col=new CollisionsManager();
-        for(int i=0; i< bolas.size();i++){
-            col.add(bolas.get(i).getBbox());
-        }
-        for(int i=0; i<listaPlanos.size();i++){
-            col.add(listaPlanos.get(i));
-        }
+	        for(int i=0; i< bolas.size();i++){
+	            col.add(bolas.get(i).getBbox());
+	        }
+	        for(int i=0; i<listaPlanos.size();i++){
+	            col.add(listaPlanos.get(i));
+	        }
+	        for(int i=0;i<listaEsferasLanzar.size();i++){
+	            col.add(listaEsferasLanzar.get(i));
+	        }
 	}
 }
 

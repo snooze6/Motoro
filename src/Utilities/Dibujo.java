@@ -176,4 +176,18 @@ public class Dibujo {
     	  glEnd();
     	glPopMatrix();
     }
+    
+    public static void drawPoint(Vector v){
+    	drawPoint(v,20);
+    }
+    
+    public static void drawPoint(Vector v, int s){
+        glPointSize(s);
+	        glBegin(GL_POINTS);
+	        	glColor3f(0,1,1);
+	            glVertex3f( v.x,  v.y, v.z);
+	            glNormal3f(-v.x, -v.y, v.z) ;
+	        glEnd();
+        glPointSize(1.0f);
+    }
 }

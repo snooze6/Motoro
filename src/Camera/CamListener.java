@@ -174,7 +174,7 @@ public class CamListener extends Cam{
 		
 		if (Mouse.isButtonDown(0)){
 			if (first){
-				System.out.println("Clicked");
+				//System.out.println("Clicked");
 				first = false;
 				
 				xOrigin = Mouse.getX();
@@ -186,7 +186,7 @@ public class CamListener extends Cam{
 			}
 		} else {
 			if (!first){
-				System.out.println("Released");
+				//System.out.println("Released");
 				first = true;
 				xOrigin = -1;
 				yOrigin = -1;
