@@ -63,34 +63,9 @@ public class BBSphere extends BoundingBox{
 	//--------------------------------------------------------------------------
 	
 	public void NewLista(double r, int lats, int longs) {
-
-        int i, j; double lat0, z0, zr0, lat1, z1, zr1; 
-		org.lwjgl.util.glu.Sphere aux= new org.lwjgl.util.glu.Sphere();
 		glNewList(this.displayListHandle, GL_COMPILE);
-		    aux.draw((float)r,lats,longs);
-//	        for(i = 0; i <= lats; i++) {
-//	            lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
-//	            z0  = Math.sin(lat0);
-//	            zr0 =  Math.cos(lat0);
-//
-//	            lat1 = Math.PI * (-0.5 + (double) i / lats);
-//	            z1 =  Math.sin(lat1);
-//	            zr1 = Math.cos(lat1);
-//
-//	            glBegin(GL_QUAD_STRIP);
-//	            for(j = 0; j <= longs; j++) {
-//	                double lng = 2 * Math.PI * (double) (j - 1) / longs;
-//	                double x = r*Math.cos(lng);
-//	                double y = r*Math.sin(lng);
-//
-//	                glNormal3d(x * zr0, y * zr0, r*z0);
-//	                glVertex3d(x * zr0, y * zr0, r*z0);
-//	                glNormal3d(x * zr1, y * zr1, r*z1);
-//	                glVertex3d(x * zr1, y * zr1, r*z1);
-//	            }
-//	            glEnd();
-//	         }
-         glEndList();
+		    Dibujo.drawSphere((float)r,lats,longs);
+        glEndList();
 	}
 	
 	//--------------------------------------------------------------------------

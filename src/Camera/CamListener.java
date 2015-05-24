@@ -97,6 +97,7 @@ public class CamListener extends Cam{
 	
 	public void listen(){
 
+
         // Translate cam
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
         	list.get(selected).moveStraight(speedMovement);
@@ -142,7 +143,7 @@ public class CamListener extends Cam{
         //----------------------------------------------------------------------
         
         while(Keyboard.next()) {
-            if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
                 prevCam();
                 setWindow(Display.getWidth(), Display.getHeight());
             }
