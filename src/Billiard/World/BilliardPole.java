@@ -11,6 +11,7 @@ public class BilliardPole extends BilliardObject {
 	Ball bola;
 	double anjulo=0;
 	Vector direccion=new Vector(0,0,0);
+	Vector color = new Vector(0,1,0);
 	
 	public BilliardPole(Ball b){
 		bola = b;
@@ -94,11 +95,42 @@ public class BilliardPole extends BilliardObject {
 		anjulo+=updateang(aux);
 	}
 	
+	public void updateColor(float caca){
+		switch((int)caca){
+			case 0:
+				color = new Vector(0,1,0);
+				break;
+			case 1:
+				color = new Vector(0.5f,1,0);
+				break;
+			case 2:
+				color = new Vector(1, 1,0);
+				break;
+			case 3:
+				color = new Vector(1,0.5f,0);
+				break;
+			case 4:
+				color = new Vector(1,0,0);
+				break;
+			case 5:
+				color = new Vector(1,0,0);
+				break;
+			case 6:
+				color = new Vector(1,0,0);
+				break;
+			default:
+				color = new Vector(0,1,1);
+				break;
+		}
+//		System.out.println("Strong: "+(int)caca);
+//		color.print();
+	}
+	
 	@Override
 	public void render(){
 		if (bola.getVel().mod()==0){
 			glPushMatrix();
-				glColor3f(0,1,0);
+				glColor3f(color.x, color.y, color.z);
 				Dibujo.drawPoint(Vector.sum(bola.getPoint(), Vector.prod(2*bola.getSize() , direccion)));
 				Dibujo.drawPoint(Vector.sum(bola.getPoint(), Vector.prod(5*bola.getSize() , direccion)));
 				Dibujo.drawLine(Vector.sum(bola.getPoint(), Vector.prod(2*bola.getSize() , direccion)),
@@ -106,10 +138,6 @@ public class BilliardPole extends BilliardObject {
 				
 				Dibujo.drawLine(Vector.sum(bola.getPoint(), Vector.prod(-2*bola.getSize() , direccion)),
 								Vector.sum(bola.getPoint(), Vector.prod(-100*bola.getSize() , direccion)));
-				
-				glTranslatef(0,1000,0);
-				glScalef(1000,1000,1000);
-				super.render();
 			glPopMatrix();
 		}
 	}
@@ -132,8 +160,10 @@ public class BilliardPole extends BilliardObject {
 	}
 	
 	public void disparar(float f){
-		Vector aux = Vector.norm(Vector.prod(-1,direccion));
-		bola.setVel(Vector.prod(0.7f*f, aux));
+		if (bola.getVel().mod()==0){
+			Vector aux = Vector.norm(Vector.prod(-1,direccion));
+			bola.setVel(Vector.prod(0.7f*f, aux));
+		}
 	}
 	
 	public void listen(){

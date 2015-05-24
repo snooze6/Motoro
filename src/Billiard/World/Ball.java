@@ -128,7 +128,6 @@ public class Ball extends BilliardObject{
 			  glPushMatrix();  
 					glTranslated(punto.x, punto.y, punto.z);
 					glMultMatrix(rotationMatrix);
-					Dibujo.drawAxes(bbox.getSize()*2);
 					super.render();
 			  glPopMatrix();
 			tex.off();
@@ -136,7 +135,6 @@ public class Ball extends BilliardObject{
 			  glPushMatrix();
 					glTranslated(punto.x, punto.y, punto.z);
 					glMultMatrix(rotationMatrix);
-					Dibujo.drawAxes(bbox.getSize()*2);
 					super.render();
 			  glPopMatrix();
 		}

@@ -214,11 +214,10 @@ public class MainBillar2{
         //Dibujo.drawAxes(sizeBilliard);
         //Mirilla
     	light1.off();
-    		//Mirilla
-	        glColor3f(0,1,1);
-	        Dibujo.drawPoint(camera.getFront(5), 10);
+//    		//Mirilla
+//	        glColor3f(0,1,1);
+//	        Dibujo.drawPoint(camera.getFront(5), 10);
         	palo.render();
-        	
         light1.on();
 		
         //Billar
@@ -343,7 +342,7 @@ public class MainBillar2{
             
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			updateStrong((float)delta/500);
-//			System.out.println("Strong: "+strong);
+			palo.updateColor(strong);
 //			while(Keyboard.next()) {
 //				palo.disparar(2);
 //			}
@@ -351,6 +350,7 @@ public class MainBillar2{
 			if (strong>0){
 				palo.disparar(strong);
 				strong = 0;
+				palo.updateColor(10);
 			}
 		}
 		
