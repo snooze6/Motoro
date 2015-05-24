@@ -154,8 +154,7 @@ public class CamListener extends Cam{
         
         while(Keyboard.next()) {
             if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
-                prevCam();
-                setWindow(Display.getWidth(), Display.getHeight());
+                nextCam();
             }
         }
         
@@ -223,6 +222,7 @@ public class CamListener extends Cam{
 		} else {
 			selected=0;
 		}
+		setWindow(Display.getWidth(), Display.getHeight());
 	}
 	
 	public void prevCam(){
@@ -231,6 +231,7 @@ public class CamListener extends Cam{
 		} else {
 			selected=size;
 		}
+		setWindow(Display.getWidth(), Display.getHeight());
 	}
 	
 	//--------------------------------------------------------------------------

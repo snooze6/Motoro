@@ -322,9 +322,8 @@ public class MainBillar2{
     		camera.listen();
     	} else {
     		if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
-                	while(Keyboard.next()) {
+                while(Keyboard.next()) {
                     camera.prevCam();
-                    camera.setWindow(Display.getWidth(), Display.getHeight());
                 }
             }
     	}
@@ -344,7 +343,7 @@ public class MainBillar2{
             
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			updateStrong((float)delta/500);
-			System.out.println("Strong: "+strong);
+//			System.out.println("Strong: "+strong);
 //			while(Keyboard.next()) {
 //				palo.disparar(2);
 //			}
@@ -384,6 +383,8 @@ public class MainBillar2{
 	        //Camara 1 - Cámara Isométrica
 	        camera.getCam(1).setPos(sizeBilliard*3, sizeBilliard*2, sizeBilliard*2);
 	        camera.getCam(1).setAngle(35, -52, 0);
+	        
+	        camera.getCam(2).setAngle(0, -90, 0);
 
         //Luces
         light1 = new DirectionalLight();
