@@ -221,8 +221,8 @@ public class CollisionsManager {
             ret = true;
         }
         
-        if (ret && !Musica.ballplane.isPlaying())
-        	Musica.ballplane.playAsMusic(1.0f, 1.0f, false);
+//        if (ret && !Musica.ballplane.isPlaying())
+//        	Musica.ballplane.playAsMusic(1.0f, 1.0f, false);
         
         return ret;
     }
