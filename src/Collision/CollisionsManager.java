@@ -90,7 +90,20 @@ public class CollisionsManager {
 
         float distR;
         if ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
-
+            //Codigo huecos
+            if(A instanceof BBGap){
+                A.setVelocity(new Vector(0,0,0));
+                B.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.15f,B.getVelocity())));
+                this.del(B);
+                return true;
+            }
+            if(B instanceof BBGap){
+                B.setVelocity(new Vector(0, 0, 0));
+                A.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.15f, A.getVelocity())));
+                this.del(A);
+                return true;
+            }
+            //Fin codigo huecos
             Vector vel1, vel2, v1, v2, v1x, v2x, v1y, v2y, x;
             float m1, m2;
 

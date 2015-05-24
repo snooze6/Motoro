@@ -33,7 +33,7 @@ import Billiard.World.BilliardPole;
 import Camera.CamListener;
 import Camera.Isometric;
 import Camera.Perspective;
-import Collision.BBQuad;
+import Collision.*;
 import Collision.BBSphere;
 import Collision.CollisionsManager;
 import Lights.DirectionalLight;
@@ -71,13 +71,18 @@ public class MainBillar2{
     private ILight light1;
 
     //Tamaños
+    //Tamaños
     private float sizeBilliard=1500;
     private float sizeSphere=sizeBilliard/40;
     private float largo= (float)sizeBilliard*1.5f-sizeBilliard/13;
-    private float ancho=(float)12*sizeBilliard/20;
+    private float ancho=(float)12*sizeBilliard/20+20;
     private float ancho10=sizeBilliard/10;
     private float mini=sizeBilliard/10;
-    
+
+
+    private float sizeGap=60.0f;
+
+
     //Objetos
     	//Billar
 	    private Billiard billiard;
@@ -89,8 +94,13 @@ public class MainBillar2{
 	    private ArrayList<BBQuad>listaPlanos;
     
     //Lista de colisiones
-    private CollisionsManager col;
-    
+    private CollisionsManager col,col2;
+
+    //Huecos
+    private ArrayList<BBGap> listaHuecos;
+
+
+
     //Variables palo
     BilliardPole palo;
     
@@ -154,6 +164,7 @@ public class MainBillar2{
         white.update(delta);
         //Colisiones
         col.collide(delta);
+        col2.collide(delta);
 
         for(int i=0; i< bolas.size();i++){
             bolas.get(i).setVel(Vector.prod(0.996f,bolas.get(i).getVel()));
@@ -161,12 +172,8 @@ public class MainBillar2{
             bolas.get(i).update(delta);
             
             if (i==0){
-            	camera.getCam(1).setPos(Vector.sum(Vector.prod(Vector.prod(-25, camera.getCam(1).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
-            	camera.getCam(1).setDireccion(bolas.get(i).getVel());
-            	
-            	camera.getCam(2).setPos(Vector.sum(Vector.prod(Vector.prod(-10, camera.getCam(2).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
-
-            	camera.getCam(3).setPos(Vector.sum(new Vector (0,2*sizeSphere, 0), Vector.sum(Vector.prod(Vector.prod(-3, camera.getCam(3).getDireccion()), sizeSphere), bolas.get(i).getPoint())));
+                camera.getCam(2).setPos(Vector.sum(Vector.prod(Vector.prod(-10, camera.getCam(2).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
+                camera.getCam(2).moveUp(100);
             }
             
             if (isOut(bolas.get(i))) {
@@ -191,10 +198,7 @@ public class MainBillar2{
             }	
         }
         
-        for (int i=0; i<listaEsferasLanzar.size(); i++){
-        	listaEsferasLanzar.get(i).setVel(Vector.prod(0.997f,listaEsferasLanzar.get(i).getVel()));
-        	listaEsferasLanzar.get(i).move(delta);
-        }
+
     }
     
     public void renderGL() {
@@ -224,13 +228,16 @@ public class MainBillar2{
         glPopMatrix();
 	       
         for (int i=0; i<bolas.size(); i++){
+            if(bolas.get(i).getPoint().y> (-sizeSphere*2))
         	bolas.get(i).render();
         }
-        for(int i=0;i<listaEsferasLanzar.size(); i++){
-            listaEsferasLanzar.get(i).draw();
-        }
+
         for(int i=0;i<bolasPerdidas.size(); i++){
         	bolasPerdidas.get(i).render();
+        }
+
+        for(int i=0;i<listaHuecos.size(); i++){
+            listaHuecos.get(i).draw();
         }
 
         ang++; if (ang>360){ang=0;}
@@ -322,45 +329,10 @@ public class MainBillar2{
                 palo.girar(-2);
             }
 
-        //----------------------------------------------------------------------
-
-//            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-//            	white.setTransparent();
-//            	for(int i=0; i<bolas.size(); i++){
-//            		bolas.get(i).setTransparent();
-//            	}
-//            }
            if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
         	   bolas.get(0).setVel(0, 0, 0);
            }
-            
-        //----------------------------------------------------------------------
-            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-            while(Keyboard.next()) {
-                if(valorLanzamiento==listaEsferasLanzar.size()){
-                    valorLanzamiento=0;
-                }
 
-
-                    if (rafaga % 10 == 0 || true) {
-
-                        Vector v = camera.getDireccion();
-                        Vector aux = new Vector(4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.x, 4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.y, 4 * listaEsferasLanzar.get(valorLanzamiento).getSize() * v.z);
-                        listaEsferasLanzar.get(valorLanzamiento).setVelocity(0, 0, 0);
-                        listaEsferasLanzar.get(valorLanzamiento).setPoint(Vector.sum(new Vector(camera.getX(), camera.getY(), camera.getZ()), aux));
-                        
-                        Vector aux2 = new Vector(5 * v.x, 5 * v.y, 5 * v.z);
-                        Vector.norm(aux2);
-                        listaEsferasLanzar.get(valorLanzamiento).setVelocity(Vector.prod(1.2f, Vector.norm(aux2)));
-
-                    }
-                
-                
-                valorLanzamiento++;
-                rafaga++;
-            }}
-            
-        //----------------------------------------------------------------------
             
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
         	while(Keyboard.next()) {
@@ -456,23 +428,32 @@ public class MainBillar2{
 	        listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,ancho),new Vector(0+mini*4/5-mini/4,00,ancho+mini*4/8),new Vector(0+mini*4/5-mini/4,50,ancho+mini*4/8),new  Vector(0+mini*4/5,50,ancho)));
 
 
-	    //Metralleta
-        listaEsferasLanzar = new ArrayList<BBSphere>();
-        for (int i=0; i<100; i++){
-            listaEsferasLanzar.add(new BBSphere(new Vector(-5000, +100, +100), new Vector(-0.0f,-0.0f,-0.0f), 20, 20));
-        } 
-	        
+        //Huecos
+        listaHuecos = new ArrayList<BBGap>();
+        //Medio
+        System.out.println(sizeSphere*1.5f);
+        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere,-1150),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere,+1150),1,sizeGap));
+        //Derecha
+        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere,-1100),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere,1100),1,sizeGap));
+        //Izquierda
+        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere,-1100),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere,1100),1,sizeGap));
+
+
+
         //Colisiones
         col=new CollisionsManager();
+        col2=new CollisionsManager();
 	        for(int i=0; i< bolas.size();i++){
 	            col.add(bolas.get(i).getBbox());
 	        }
 	        for(int i=0; i<listaPlanos.size();i++){
 	            col.add(listaPlanos.get(i));
+                col2.add(listaPlanos.get(i));
 	        }
-	        for(int i=0;i<listaEsferasLanzar.size();i++){
-	            col.add(listaEsferasLanzar.get(i));
-	        }
+
 	        
 	    //Palo
 	        palo = new BilliardPole(bolas.get(0));

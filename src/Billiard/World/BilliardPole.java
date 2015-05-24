@@ -133,7 +133,7 @@ public class BilliardPole extends BilliardObject {
 	
 	public void disparar(float f){
 		Vector aux = Vector.norm(Vector.prod(-1,direccion));
-		bola.setVel(Vector.prod(0.7f, aux));
+		bola.setVel(Vector.prod(0.7f*f, aux));
 	}
 	
 	public void listen(){
