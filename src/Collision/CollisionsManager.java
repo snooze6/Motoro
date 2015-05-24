@@ -1,5 +1,6 @@
 package Collision;
 
+import Billiard.Others.Musica;
 import Utilities.Vector;
 
 import java.util.ArrayList;
@@ -144,6 +145,10 @@ public class CollisionsManager {
             A.setVelocity((vel1));
             B.setVelocity(vel2);
             
+            if (!Musica.ballball.isPlaying())
+            	//System.out.println((vel1.mod()+vel2.mod())/4.0f);
+            	Musica.ballball.playAsMusic((vel1.mod()+vel2.mod())+0.5f, (vel1.mod()+vel2.mod())+0.5f, false);
+            
             return true;
         }
         return false;
@@ -151,13 +156,13 @@ public class CollisionsManager {
     }
 
     public boolean collide(BBSphere A,BBPlane B) {
-        float D1 = 0, D2 = 0, distancia = 0, distancia1, distancia2;
+        float D1 = 0, D2 = 0, distancia = 0, distancia2;
         boolean ret = false;
         float angulo1 = 0;
 
         Vector punto = A.getPosition(); //Punto actual
-        Vector copia = new Vector(punto); //Copia punto actual comprobacion si traspaso plano
-        Vector copiaVel = new Vector(A.getVelocity()); //Copia velocidad de punto A
+//        Vector copia = new Vector(punto); //Copia punto actual comprobacion si traspaso plano
+//        Vector copiaVel = new Vector(A.getVelocity()); //Copia velocidad de punto A
 
         Vector normalPlano = B.getNormal(); //Vector normal plano
         Vector puntoPlano = B.getPosition(); //Punto plano
@@ -171,7 +176,6 @@ public class CollisionsManager {
         //Formula distancia punto plano actual
         D1 = Vector.dot(normalPlano, puntoPlano);
         D2 = Vector.dot(normalPlano, punto);
-        distancia1 = D2 - D1;
 
         // Formula distancia punto plano siguiente
         punto = Vector.sum(punto, Vector.prod(delta, A.getVel()));
@@ -179,6 +183,7 @@ public class CollisionsManager {
         D1 = Vector.dot(normalPlano, puntoPlano);
         D2 = Vector.dot(normalPlano, punto);
         distancia2 = D2 - D1;
+        
         distancia = Math.abs(D2 - D1);
 
         //Normalizar
@@ -215,6 +220,10 @@ public class CollisionsManager {
             A.setVelocity(vf);
             ret = true;
         }
+        
+        if (ret && !Musica.ballplane.isPlaying())
+        	Musica.ballplane.playAsMusic(1.0f, 1.0f, false);
+        
         return ret;
     }
 

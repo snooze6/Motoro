@@ -24,7 +24,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.SlickException;
 
 import Billiard.Others.Musica;
 import Billiard.World.Ball;
@@ -34,8 +33,6 @@ import Camera.CamListener;
 import Camera.Isometric;
 import Camera.Perspective;
 import Collision.*;
-import Collision.BBSphere;
-import Collision.CollisionsManager;
 import Lights.DirectionalLight;
 import Lights.ILight;
 import Utilities.Dibujo;
@@ -106,6 +103,13 @@ public class MainBillar2{
     
     //Variable chorras
     private float ang;
+    private float strong;
+    
+    protected void updateStrong(float d){
+    	if (strong+d<6.0f){
+    		strong+=d;
+    	}
+    }
     
     //Create objects
     protected void create() {
@@ -154,9 +158,6 @@ public class MainBillar2{
     public void update(int delta) {
     //Metodos de entrada por teclado
         input(delta);
-        
-        camera.listen();
-        palo.listen();
         
         palo.update(delta);
         
@@ -314,31 +315,38 @@ public class MainBillar2{
     // Metralleta
     int valorLanzamiento=0;
     int rafaga=10;
-    private ArrayList<BBSphere> listaEsferasLanzar;
     
     public void input(int delta){
-
-            if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-                //white.setVel(0, 0, 1.0f);
-            	//anjulo += updateang(2);
-            	palo.girar(2);;
+    	
+    	if (camera.getSelected()!=0){
+    		camera.listen();
+    	} else {
+    		if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
+                	while(Keyboard.next()) {
+                    camera.prevCam();
+                    camera.setWindow(Display.getWidth(), Display.getHeight());
+                }
             }
-            if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
-                //white.setVel(0,0,-1.0f);
-                //anjulo += updateang(-2);
-                palo.girar(-2);
-            }
+    	}
+    	
+        palo.listen();
 
-           if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
-        	   bolas.get(0).setVel(0, 0, 0);
-           }
+		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+			palo.girar(2);;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
+		    palo.girar(-2);
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+			bolas.get(0).setVel(0, 0, 0);
+		}
 
             
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-        	while(Keyboard.next()) {
-        		palo.disparar(2);
-        	}
-        }      
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			while(Keyboard.next()) {
+				palo.disparar(2);
+			}
+		}      
     }
     
     public static void main(String[] argv) {
@@ -358,18 +366,16 @@ public class MainBillar2{
 		
 		//Camara
         camera= new CamListener(); 
-        camera.addCam(new Perspective()); //Cámara 3ª persona
-        camera.addCam(new Perspective());
-        camera.addCam(new Isometric());
+        camera.addCam(new Perspective()); 
+        camera.addCam(new Perspective()); 
         
 	        //Cámara 0 - Cámara Aérea
 	        camera.setPos(0,5800,0);
 	        camera.setAngle(90, 270, 0);
 	        
-	        //Camara 4 - Cámara Isométrica
-	        for (int i=0; i<(sizeSphere/4); i++){
-	        	camera.getCam(3).lesszoom();
-	        }
+	        //Camara 1 - Cámara Isométrica
+	        camera.getCam(1).setPos(sizeBilliard*3, sizeBilliard*2, sizeBilliard*2);
+	        camera.getCam(1).setAngle(35, -52, 0);
 
         //Luces
         light1 = new DirectionalLight();

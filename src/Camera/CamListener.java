@@ -35,11 +35,21 @@ public class CamListener extends Cam{
 	
 	//--------------------------------------------------------------------------
 	
+	
+	
 	public void addCam(Cam c){
 		list.add(c);
 		size++;
 	}
 	
+	public int getSelected() {
+		return selected;
+	}
+
+	public void setSelected(int selected) {
+		this.selected = selected;
+	}
+
 	public Cam getCam(int c){
 		if (!(c > list.size() && c<0)){
 			return list.get(c);
