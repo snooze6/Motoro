@@ -343,10 +343,18 @@ public class MainBillar2{
 
             
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			while(Keyboard.next()) {
-				palo.disparar(2);
+			updateStrong((float)delta/500);
+			System.out.println("Strong: "+strong);
+//			while(Keyboard.next()) {
+//				palo.disparar(2);
+//			}
+		} else {
+			if (strong>0){
+				palo.disparar(strong);
+				strong = 0;
 			}
-		}      
+		}
+		
     }
     
     public static void main(String[] argv) {
