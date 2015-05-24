@@ -94,13 +94,13 @@ public class CollisionsManager {
             //Codigo huecos
             if(A instanceof BBGap){
                 A.setVelocity(new Vector(0,0,0));
-                B.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.15f,B.getVelocity())));
+                B.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.25f,B.getVelocity())));
                 this.del(B);
                 return true;
             }
             if(B instanceof BBGap){
                 B.setVelocity(new Vector(0, 0, 0));
-                A.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.15f, A.getVelocity())));
+                A.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.25f, A.getVelocity())));
                 this.del(A);
                 return true;
             }
