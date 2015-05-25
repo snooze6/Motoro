@@ -93,14 +93,23 @@ public class CollisionsManager {
         if ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
             //Codigo huecos
             if(A instanceof BBGap){
+//                System.out.println("La velocidad es ");
+//                B.getVel().print();
                 A.setVelocity(new Vector(0,0,0));
-                B.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.25f,B.getVelocity())));
+                B.setVelocity(Vector.sum(new Vector(0,-0.05f,0),(B.getVel())));
+//                System.out.println("La velocidad es ");
+//                      B.getVelocity().print();
+
                 this.del(B);
                 return true;
             }
             if(B instanceof BBGap){
+//                System.out.println("La velocidad es ");
+//                A.getVel().print();
                 B.setVelocity(new Vector(0, 0, 0));
-                A.setVelocity(Vector.sum(new Vector(0,-0.2f,0),Vector.prod(0.25f, A.getVelocity())));
+                A.setVelocity(Vector.sum(new Vector(0,-0.05f,0),B.getVel()));
+//                System.out.println("La velocidad es ");
+//                A.getVelocity().print();
                 this.del(A);
                 return true;
             }

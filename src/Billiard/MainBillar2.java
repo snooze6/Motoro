@@ -77,7 +77,7 @@ public class MainBillar2{
     private float mini=sizeBilliard/10;
 
 
-    private float sizeGap=60.0f;
+    private float sizeGap=45.0f;
 
 
     //Objetos
@@ -237,13 +237,13 @@ public class MainBillar2{
         }
 
         for(int i=0;i<listaHuecos.size(); i++){
-            listaHuecos.get(i).draw();
+           // listaHuecos.get(i).draw();
         }
 
         ang++; if (ang>360){ang=0;}
         
         //SkyBox
-        glColor3d(1,1,1);
+        glColor3d(1, 1, 1);
         glPushMatrix();
               //glRotatef(ang, 1, 0, 0);
               skyBox.render();
@@ -253,15 +253,15 @@ public class MainBillar2{
 			        glBegin(GL11.GL_QUADS);
 			        	glTexCoord2d(0.0f, 0.0f);
 			        	glVertex3f( +5*sizeBilliard,1, +5*sizeBilliard);
-			        	glNormal3f( +5*sizeBilliard,1, +5*sizeBilliard);
+			        	glNormal3f(+5 * sizeBilliard, 1, +5 * sizeBilliard);
 			        	
 			        	glTexCoord2d(0.0f, 1.0f);
 			        	glVertex3f( +5*sizeBilliard,1, -5*sizeBilliard);
-			        	glNormal3f( +5*sizeBilliard,1, -5*sizeBilliard);
+			        	glNormal3f(+5 * sizeBilliard, 1, -5 * sizeBilliard);
 			        	
 			        	glTexCoord2d(1.0f, 1.0f);
-			        	glVertex3f( -5*sizeBilliard,1, -5*sizeBilliard);
-			        	glNormal3f( -5*sizeBilliard,1, -5*sizeBilliard);
+			        	glVertex3f(-5 * sizeBilliard, 1, -5 * sizeBilliard);
+			        	glNormal3f(-5 * sizeBilliard, 1, -5 * sizeBilliard);
 			        	
 			        	glTexCoord2d(1.0f, 0.0f);
 			        	glVertex3f( -5*sizeBilliard,1, +5*sizeBilliard);
@@ -396,7 +396,7 @@ public class MainBillar2{
         //Objetos
         billiard = new Billiard(sizeBilliard);
         floor = TextureGL.loadTexture("res/images/wood.jpg");
-        white = new Ball(new Vector (sizeBilliard,0,0), 20,sizeSphere,"/res/images/pallina"+13+".jpg");
+        white = new Ball(new Vector (sizeBilliard,0,0), 20,sizeSphere);
         skyBox = new Ball(new Vector (0,0,0), 20,sizeSphere*200, "/res/images/sky1.jpg");
         
         bolas = new ArrayList<Ball>();
@@ -447,14 +447,14 @@ public class MainBillar2{
         listaHuecos = new ArrayList<BBGap>();
         //Medio
         System.out.println(sizeSphere*1.5f);
-        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere,-1150),1,sizeGap));
-        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere,+1150),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere/2,-1150),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere/2,+1150),1,sizeGap));
         //Derecha
-        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere,-1100),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere/2,-1100),1,sizeGap));
         listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere,1100),1,sizeGap));
         //Izquierda
-        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere,-1100),1,sizeGap));
-        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere,1100),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere/2,-1100),1,sizeGap));
+        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere/2,1100),1,sizeGap));
 
 
 
@@ -463,12 +463,15 @@ public class MainBillar2{
         col2=new CollisionsManager();
 	        for(int i=0; i< bolas.size();i++){
 	            col.add(bolas.get(i).getBbox());
+                col2.add(bolas.get(i).getBbox());
 	        }
 	        for(int i=0; i<listaPlanos.size();i++){
 	            col.add(listaPlanos.get(i));
-                col2.add(listaPlanos.get(i));
 	        }
 
+        for(int i=0; i< listaHuecos.size();i++){
+            col2.add(listaHuecos.get(i));
+        }
 	        
 	    //Palo
 	        palo = new BilliardPole(bolas.get(0));
