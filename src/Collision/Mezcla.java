@@ -46,7 +46,7 @@ public class Mezcla extends BoundingBox{
 	}
 	
 	@Override
-	public Vector getPosition() {
+	public Vector getCenterPoint() {
 		// TODO Auto-generated method stub
 		return null;
 	}

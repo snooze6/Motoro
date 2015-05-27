@@ -121,6 +121,9 @@ public class Vector {
         Vector b= new Vector(bx,by,bz);
         return dist(a,b);
     }
+    public static float distPuntos(Vector a,Vector b){
+     return (float)Math.sqrt ((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y)+(a.z-b.z)*(a.z-b.z));
+    }
 
     public static float dot(Vector a, Vector b){
         return (a.x*b.x + a.y*b.y + a.z*b.z);

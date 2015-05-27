@@ -206,8 +206,8 @@ public class MainBillar {
         for(int i=0;i<listaEsferas.size();i++){
             listaEsferas.get(i).move(delta);
             if (i==0){
-            	camera.getCam(1).setPos(listaEsferas.get(i).getPosition());
-            	camera.getCam(2).setPos(listaEsferas.get(i).getPosition());
+            	camera.getCam(1).setPos(listaEsferas.get(i).getCenterPoint());
+            	camera.getCam(2).setPos(listaEsferas.get(i).getCenterPoint());
             }
         }
     }
@@ -326,7 +326,7 @@ public class MainBillar {
             }
         if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
             black.setVelocity(0.00f,0,0f);
-            black.getPosition().print();
+            black.getCenterPoint().print();
         }
 
         int dWheel = Mouse.getDWheel();

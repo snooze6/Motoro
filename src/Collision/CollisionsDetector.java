@@ -5,18 +5,20 @@ import Utilities.Vector;
 import java.util.ArrayList;
 
 
-public class CollisionsManager {
+public class CollisionsDetector {
     private ArrayList<BoundingBox> list;
     private int size = 0;
     private float delta = 0;
+    private float distanceRay;
+    private BoundingBox boundingBoxCollision;
 
     //-------------------------------------------------------------------------
-    public CollisionsManager(ArrayList<BoundingBox> list) {
+    public CollisionsDetector(ArrayList<BoundingBox> list) {
         this.list = list;
         size = list.size();
     }
 
-    public CollisionsManager() {
+    public CollisionsDetector() {
         this.list = new ArrayList<BoundingBox>();
         size = 0;
     }
@@ -53,6 +55,76 @@ public class CollisionsManager {
         }
     }
 
+    public BoundingBox rayCollider(Vector origen,Vector direccion) {
+
+        distanceRay=100000000;
+        boundingBoxCollision =null;
+        for (int i = 1; i < list.size(); i++) {
+                if(list.get(i) instanceof BBSphere ){
+                    boundingBoxCollision =collideRay(origen,direccion,(BBSphere)list.get(i));
+                }
+            }
+        return boundingBoxCollision;
+    }
+
+    public Vector getPoint(Vector origen,Vector  direccion,BBSphere B,float size,float delta) {
+
+        BBSphere white = new BBSphere(list.get(0).getCenterPoint(), Vector.prod(-1.0f, direccion), B.mass, B.getSize());
+
+        BBSphere A = white;
+
+
+        Vector puntoA = Vector.sum(A.getCenterPoint(), Vector.prod(delta, A.getVel()));
+        Vector puntoB = Vector.sum(B.getCenterPoint(), Vector.prod(delta, B.getVel()));
+
+
+        float distR;
+        while ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
+             puntoA = Vector.sum(A.getCenterPoint(), Vector.prod(delta, A.getVel()));
+             puntoB = Vector.sum(B.getCenterPoint(), Vector.prod(delta, B.getVel()));
+            delta=delta+0.01f;
+
+        }
+            Vector vel1, vel2, v1, v2, v1x, v2x, v1y, v2y, x;
+            float m1, m2;
+            //Calculo la direccion en la que ha penetrado A sobre B
+//            Vector aux=Vector.norm(Vector.del(puntoB,puntoA));
+//            //Sobre esa dirección, quiero
+//            aux=Vector.prod(-A.getSize(),aux);
+//            Vector puntoA2=Vector.sum(puntoB,aux);
+
+            int i = 0;
+            Vector puntoA2 = puntoA;
+            Vector aux = Vector.norm(A.getVel());
+
+            Vector puntoB2 = puntoB;
+            Vector aux2 = Vector.norm(B.getVel());
+            if (aux.x != 0 || aux.y != 0 || aux.z != 0) {
+                while ((Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize())) {
+                    puntoA2 = Vector.sum(puntoA2, Vector.prod(-0.01f, aux));
+                }
+            }
+
+            x = Vector.norm(Vector.del(puntoA2, puntoB2));
+            v1 = A.getVel();
+            v1x = Vector.prod(x, Vector.dot(x, v1));
+            v1y = Vector.del(v1, v1x);
+            m1 = A.getMass();
+
+            x = Vector.prod(x, -1);
+            v2 = B.getVel();
+            v2x = Vector.prod(x, Vector.dot(x, v2));
+            v2y = Vector.del(v2, v2x);
+            m2 = B.getMass();
+
+            vel1 = Vector.sum(v1y, Vector.sum(Vector.prod(v1x, ((m1 - m2) / (m1 + m2))), Vector.prod(v2x, ((2 * m2) / (m1 + m2)))));
+            vel2 = Vector.sum(v2y, Vector.sum(Vector.prod(v1x, ((2 * m1) / (m1 + m2))), Vector.prod(v2x, ((m2 - m1) / (m1 + m2)))));
+
+            return vel2;
+
+        }
+
+
 
     public boolean collide(BoundingBox A, BoundingBox B) {
 	    boolean aux = false;
@@ -76,21 +148,24 @@ public class CollisionsManager {
 	    return aux;
     }
 
-    public boolean collide(BBSphere A, BBSphere B) {
+    public Vector collide2(BBSphere A, BBSphere B,Vector direccion) {
+        delta=17;
+        A = new BBSphere(A.getCenterPoint(),direccion,A.getMass(),A.getSize());
+
 
         Vector puntoA = Vector.sum(A.getCenterPoint(), Vector.prod(delta, A.getVel()));
         Vector puntoB = Vector.sum(B.getCenterPoint(), Vector.prod(delta,B.getVel()));
 
 
         float distR;
-        if ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
+        while ((distR = Vector.dist(puntoA, puntoB)) > (A.getSize() + B.getSize())) {
+            delta=delta+0.01f;
+            puntoA = Vector.sum(A.getCenterPoint(), Vector.prod(delta, A.getVel()));
+        }
+
             Vector vel1, vel2, v1, v2, v1x, v2x, v1y, v2y, x;
             float m1, m2;
-            //Calculo la direccion en la que ha penetrado A sobre B
-//            Vector aux=Vector.norm(Vector.del(puntoB,puntoA));
-//            //Sobre esa dirección, quiero
-//            aux=Vector.prod(-A.getSize(),aux);
-//            Vector puntoA2=Vector.sum(puntoB,aux);
+
 
             int i=0;
             Vector puntoA2=puntoA;
@@ -99,7 +174,7 @@ public class CollisionsManager {
             Vector puntoB2=puntoB;
             Vector aux2=Vector.norm(B.getVel());
             if(aux.x!=0 || aux.y!=0 || aux.z!=0){
-                while(( Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize())){
+                while(( Vector.distPuntos(puntoA2, puntoB2)) < (A.getSize() + B.getSize())){
                     puntoA2=Vector.sum(puntoA2,Vector.prod(-0.01f,aux));
                 }
             }
@@ -119,37 +194,20 @@ public class CollisionsManager {
             vel1 = Vector.sum(v1y, Vector.sum(Vector.prod(v1x, ((m1 - m2) / (m1 + m2))), Vector.prod(v2x, ((2 * m2) / (m1 + m2)))));
             vel2 = Vector.sum(v2y, Vector.sum(Vector.prod(v1x, ((2 * m1) / (m1 + m2))), Vector.prod(v2x, ((m2 - m1) / (m1 + m2)))));
 
-            Vector AB, ABN, distanciaA, distanciaB, posFA, posFB;
 
-            //Direccion AB
-            AB = Vector.del(A.getCenterPoint(), B.getCenterPoint());
-            //Direccion AB normalizada
-            ABN = Vector.norm(AB);
-            //Cantidad a desplazar
-            float dist = A.getSize() + B.getSize() - distR;
-
-            distanciaA = Vector.prod(dist / 2.0f, ABN);
-            distanciaB = Vector.prod(-dist / 2.0f, ABN);
-
-            posFA = Vector.sum(distanciaA, puntoA);
-            posFB = Vector.sum(distanciaB, puntoB);
-
-            A.setPoint(posFA);
-            B.setPoint(posFB);
-
-            A.setVelocity((vel1));
-            B.setVelocity(vel2);
-
-//            System.out.println("Velocidad 1 cm");
+//            System.out.print("Velocidad 1 cm");
 //            Vector.norm(vel1).print();
-//            System.out.println("Velocidad 2 cm");
+//            System.out.print("Velocidad 2 cm");
 //            Vector.norm(vel2).print();
 
 
+//            System.out.println("La velocidad es");
+//            vel2.print();
+            return vel2;
 
-            return true;
-        }
-        return false;
+
+
+
     }
 
     public boolean collide(BBSphere A,BBPlane B) {
@@ -177,7 +235,7 @@ public class CollisionsManager {
         D1 = Vector.dot(normalPlano, puntoPlano);
         D2 = Vector.dot(normalPlano, punto);
         distancia2 = D2 - D1;
-        
+
         distancia = Math.abs(D2 - D1);
 
         //Normalizar
@@ -195,28 +253,31 @@ public class CollisionsManager {
         }
 
         if (distancia <= A.getSize() && dentro) {
-            //Cuando choca el punto futuro, segun la cantidad que haya traspasado del plano al chocar
-            //Se corrige su posicion
-            if (distancia2 < 0) {
-                desplEsf = Vector.prod(A.getSize() - distancia + A.getSize(), Vector.norm(normalPlano));
-            } else {
-                desplEsf = Vector.prod(A.getSize() - distancia, Vector.norm(normalPlano));
-            }
-            A.setPoint(Vector.sum(punto, desplEsf));
-
-            //calculo nueva velocidad esfera
-            Vector vf,vo,n,prod;
-            float aux;
-            n=Vector.norm(normalPlano);
-            vo=A.getVel();
-            aux= Vector.dot(vo,n);
-            prod=Vector.prod(2*aux,n);
-            vf=Vector.del(vo,prod);
-            A.setVelocity(vf);
             ret = true;
         }
 
         return ret;
+    }
+    float distancia=0;
+
+
+
+    public BoundingBox collideRay(Vector origen,Vector direccion,BBSphere B){
+
+        float distancia;
+
+        Vector aux;
+        aux=Vector.del(B.getCenterPoint(),origen);
+        aux=Vector.prod(aux,direccion);
+        distancia=Vector.mod(aux);
+        
+        distancia=distancia/Vector.mod(direccion);
+        float distanciaOrigen=Math.abs(Vector.dist(B.getCenterPoint(),origen));
+       if(distancia<B.getSize()*2 && distanciaOrigen<distanceRay){
+           distanceRay=distanciaOrigen;
+           boundingBoxCollision =B;
+       }
+        return boundingBoxCollision;
     }
 
 }

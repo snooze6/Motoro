@@ -1,9 +1,12 @@
 package Collision;
 
-import Utilities.Vector;
+import Billiard.World.Ball;
+import Utilities.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
+
+
 
 /**
  * Created by Denis on 12/05/2015.
@@ -17,6 +20,8 @@ public class BBQuad extends BBPlane  {
     public float size;
     public float size2;
     public float sizeDraw;
+    public int constant;
+
 
 public BBQuad(Vector punto1, Vector punto2, Vector punto3, Vector punto4){
 
@@ -44,21 +49,76 @@ public BBQuad(Vector punto1, Vector punto2, Vector punto3, Vector punto4){
         position= Vector.sum(position,traslacion);
     }
 
-    public Vector getPosition(){
+    public Vector getCenterPoint(){
         return this.position;
     }
 
     public void draw(){
         glPushMatrix();
+        if(constant==0){
+      //  glRotatef(90.0f, 1, 0, 0);
+      }
+
         glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
         glColor3f(0.0f, 1.0f, 0.0f);     // Orange
-        glVertex3f( punto1.x, punto1.y,  punto1.z);
-        glVertex3f( punto2.x, punto2.y,  punto2.z);
-        glVertex3f( punto3.x, punto3.y,  punto3.z);
-        glVertex3f( punto4.x, punto4.y,  punto4.z);
-
+            glVertex3f( punto1.x, punto1.y,  punto1.z);
+            glVertex3f( punto2.x, punto2.y,  punto2.z);
+            glVertex3f( punto3.x, punto3.y,  punto3.z);
+            glVertex3f( punto4.x, punto4.y,  punto4.z);
         glEnd();
+
+if(constant == 0){
+            glPushMatrix();
+            glTranslatef(punto1.x, punto1.y, punto1.z);
+            punto1 = Ball.getVectorPosition();
+
+            glPopMatrix();
+
+            glPushMatrix();
+            glTranslatef(punto2.x, punto2.y, punto2.z);
+            punto2 = Ball.getVectorPosition();
+
+            glPopMatrix();
+
+            glPushMatrix();
+            glTranslatef(punto3.x, punto3.y, punto3.z);
+            punto3 = Ball.getVectorPosition();
+
+            glPopMatrix();
+
+            glPushMatrix();
+            glTranslatef(punto4.x, punto4.y, punto4.z);
+            punto4 = Ball.getVectorPosition();
+            glPopMatrix();
+            constant=1;
+
+
+    size=(Vector.mod(Vector.del(punto1,punto2)));
+    size2=(Vector.mod(Vector.del(punto2,punto3)));
+    this.vector1= Vector.del(punto1,punto2);
+    this.vector2=Vector.del(punto3,punto2);
+    vector1=Vector.norm(vector1);
+    vector2=Vector.norm(vector2);
+    this.position=Vector.sum(punto2, Vector.prod(size/2, Vector.norm(vector1)));
+    this.position=Vector.sum(position,Vector.prod(size2/2,Vector.norm(vector2)));
+    this.normal=Vector.prod(vector1,vector2);
+        }
+
         glPopMatrix();
+
+
+
+
+//        glPushMatrix();
+//        glTranslated(0,0,-100);
+//        glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
+//        glColor3f(0.0f, 1.0f, 0.0f);     // Orange
+//        glVertex3f( punto1.x, punto1.y,  punto1.z);
+//        glVertex3f( punto2.x, punto2.y,  punto2.z);
+//        glVertex3f( punto3.x, punto3.y,  punto3.z);
+//        glVertex3f( punto4.x, punto4.y,  punto4.z);
+//        glEnd();
+//        glPopMatrix();
 
     }
 
@@ -72,10 +132,10 @@ public BBQuad(Vector punto1, Vector punto2, Vector punto3, Vector punto4){
         float distancia1,distancia2;
 
         D1 = Vector.dot(vector1, position);
-        D2 = Vector.dot(vector1, A.getPosition());
+        D2 = Vector.dot(vector1, A.getCenterPoint());
         distancia1 = Math.abs(D2 - D1)-A.getSize();
         D1 = Vector.dot(vector2, position);
-        D2 = Vector.dot(vector2, A.getPosition());
+        D2 = Vector.dot(vector2, A.getCenterPoint());
         distancia2 = Math.abs(D2 - D1)-A.getSize();
 
 //

@@ -104,7 +104,7 @@ public class BBPlane extends BoundingBox{
 	//--------------------------------------------------------------------------
 
 	@Override
-	public Vector getPosition() {
+	public Vector getCenterPoint() {
 		return punto;
 	}
 

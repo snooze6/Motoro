@@ -310,7 +310,7 @@ public class Billar {
             glPopMatrix();
 
             for(int i=0; i< listaBBSpheres.size(); i++){
-                Vector point = listaBBSpheres.get(i).getPosition();
+                Vector point = listaBBSpheres.get(i).getCenterPoint();
                 glPushMatrix();
                 //	glTranslated(point.x,point.y,point.z);
 
@@ -535,7 +535,7 @@ public class Billar {
             for(int i=0; i< listaBBSpheres.size(); i++){
                 listaBBSpheres.get(i).move(delta);
                 if(i==0){
-//	        		camera.setPosition(listaEsferas.get(i).getPosition().x, listaEsferas.get(i).getPosition().y, listaEsferas.get(i).getPosition().z-50);
+//	        		camera.setPosition(listaEsferas.get(i).getCenterPoint().x, listaEsferas.get(i).getCenterPoint().y, listaEsferas.get(i).getCenterPoint().z-50);
 //	        		camera.setDireccion(listaEsferas.get(i).getVelocity().x,listaEsferas.get(i).getVelocity().y,listaEsferas.get(i).getVelocity().z);
                 }
             }

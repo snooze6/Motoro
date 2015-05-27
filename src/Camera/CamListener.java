@@ -151,12 +151,13 @@ public class CamListener extends Cam{
         }
         
         //----------------------------------------------------------------------
-        
-        while(Keyboard.next()) {
-            if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
-                nextCam();
+        if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
+            while(Keyboard.next()) {
+               nextCam();
             }
         }
+
+
         
         mouseButton();
         

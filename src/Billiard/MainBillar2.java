@@ -1,23 +1,10 @@
 package Billiard;
 
-
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3d;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glNormal3f;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTexCoord2d;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glViewport;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Utilities.Dibujo;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -30,97 +17,50 @@ import Billiard.World.Ball;
 import Billiard.World.Billiard;
 import Billiard.World.BilliardPole;
 import Camera.CamListener;
-import Camera.Isometric;
 import Camera.Perspective;
 import Collision.*;
 import Lights.DirectionalLight;
 import Lights.ILight;
-import Utilities.Dibujo;
 import Utilities.TextureGL;
 import Utilities.Vector;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class MainBillar2{
-	
-	public enum BillarState {LOADING, READY, RUNNING, FINISHED}
 
-	//Atributos ventana
-	    //Enable vsync
-	    public static final boolean VSYNC = true;
-	    // Width and height of our window
-	    public static final int WIDTH = 800;
-	    public static final int HEIGHT = 800;
-	    // Whether to use fullscreen mode
-	    public static final boolean FULLSCREEN = false;
-	    // Whether our MainDenis loop is running
-	    //Frames
-	    long lastFrame;/** time at last frame */
-	    int fps;/** frames per second */
-	    long lastFPS;/** last fps time */
-	    
-	//Atributos juego
-	    int bolasRestantes=0;
-	    BillarState state = BillarState.LOADING;
-
-    //Cam
-    private CamListener camera;
-
-    //Lights
-    private ILight light1;
-
-    //Tamaños
-    //Tamaños
-    private float sizeBilliard=1500;
-    private float sizeSphere=sizeBilliard/40;
-    private float largo= (float)sizeBilliard*1.5f-sizeBilliard/13;
-    private float ancho=(float)12*sizeBilliard/20+20;
-    private float ancho10=sizeBilliard/10;
-    private float mini=sizeBilliard/10;
-
-
-    private float sizeGap=45.0f;
-
-
-    //Objetos
-    	//Billar
-	    private Billiard billiard;
-	    private TextureGL floor;
-	    //Esferas
-	    private Ball white, skyBox;
-	    private ArrayList<Ball> bolas, bolasPerdidas = new ArrayList<Ball>();
-	    //Planos
-	    private ArrayList<BBQuad>listaPlanos;
-    
-    //Lista de colisiones
-    private CollisionsManager col,col2;
-
-    //Huecos
-    private ArrayList<BBGap> listaHuecos;
-
-
-
-    //Variables palo
-    BilliardPole palo;
-    
-    //Variable chorras
-    private float ang;
-    private float strong;
-    
-    protected void updateStrong(float d){
-    	if (strong+d<6.0f){
-    		strong+=d;
-    	}
-    }
-    
-    //Create objects
+    public static void main(String[] argv) {
+        MainBillar2 BILL = new MainBillar2();
+        BILL.start();
+    } //Main
     protected void create() {
         CreateObjects();
-    }
-
+    }    //Create objects
     protected void resize() {
-       camera.setWindow(Display.getWidth(), Display.getHeight());
-       glViewport(0, 0, Display.getWidth(), Display.getHeight());
-    }
+        camera.setWindow(Display.getWidth(), Display.getHeight());
+        glViewport(0, 0, Display.getWidth(), Display.getHeight());
+    }   //Resize
+    //------------------Time and fps
+    public int getDelta() {
+        long time = getTime();
+        int delta = (int) (time - lastFrame);
+        lastFrame = time;
+        return delta;
+    }    /*** Calculate how many milliseconds have passed * since last frame.*/
+    public long getTime() {
+        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+    } /*** @return The system time in milliseconds*/
+    public void updateFPS() {
+        if (getTime() - lastFPS > 1000) {
+            Display.setTitle("FPS: " + fps);
+            fps = 0;
+            lastFPS += 1000;
 
+        }
+        fps++;
+    }/**Calculate the FPS and set it in the title bar*/
+    public void exit() {
+        state = BillarState.FINISHED;
+    }    // Exit our MainDenis loop and close the window
     //Ejecucion en bucle
     public void start() {
         try {
@@ -135,7 +75,6 @@ public class MainBillar2{
         }
 
         create(); // Create our OpenGL context and initialize any resources
-        initGL(); // init OpenGL
         resize();     // Call this before running to set up our initial size
         getDelta(); // call once before loop to initialise lastFrame
         lastFPS = getTime(); // call before loop to initialise fps timer
@@ -153,69 +92,123 @@ public class MainBillar2{
         dispose();
         Display.destroy();
         Musica.dispose();
+    }   //Start the game
+    //Dibujar suelo
+    private void floorDraw() {
+        floor.on();
+        glBegin(GL11.GL_QUADS);
+        glTexCoord2d(0.0f, 0.0f);
+        glVertex3f( +5*sizeBilliard,1, +5*sizeBilliard);
+        glNormal3f(+5 * sizeBilliard, 1, +5 * sizeBilliard);
+
+        glTexCoord2d(0.0f, 1.0f);
+        glVertex3f( +5*sizeBilliard,1, -5*sizeBilliard);
+        glNormal3f(+5 * sizeBilliard, 1, -5 * sizeBilliard);
+
+        glTexCoord2d(1.0f, 1.0f);
+        glVertex3f(-5 * sizeBilliard, 1, -5 * sizeBilliard);
+        glNormal3f(-5 * sizeBilliard, 1, -5 * sizeBilliard);
+
+        glTexCoord2d(1.0f, 0.0f);
+        glVertex3f( -5*sizeBilliard,1, +5*sizeBilliard);
+        glNormal3f( -5*sizeBilliard,1, +5*sizeBilliard);
+        glEnd();
+        floor.off();
     }
+    // Called to destroy our MainDenis upon exiting
+    protected void dispose() {
+    }
+
+	//Atributos ventana
+	    //Enable vsync
+	    public static final boolean VSYNC = true;
+	    // Width and height of our window
+	    public static final int WIDTH = 800;
+	    public static final int HEIGHT = 800;
+	    // Whether to use fullscreen mode
+	    public static final boolean FULLSCREEN = false;
+	    // Whether our MainDenis loop is running
+        public enum BillarState {LOADING, READY, RUNNING, FINISHED}
+        BillarState state = BillarState.LOADING;
+
+	    //Frames
+	    long lastFrame;/** time at last frame */
+	    int fps;/** frames per second */
+	    long lastFPS;/** last fps time */
+
+        //Cam
+        private CamListener camera;
+
+        //Lights
+        private ILight light1;
+
+        //Tamaños
+        private float sizeBilliard=1500;
+        private float sizeSphere=sizeBilliard/40;
+        private float largo= (float)sizeBilliard*1.5f-sizeBilliard/13;
+        private float ancho=(float)12*sizeBilliard/20+20;
+        private float ancho10=sizeBilliard/10;
+        private float mini=sizeBilliard/10;
+
+        private float sizeGap=45.0f;
+
+    //Objetos
+    	//Billar
+	    private Billiard billiard;
+	    private TextureGL floor;
+	    //Esferas
+	    private Ball white, skyBox;
+	    private ArrayList<Ball> listaBolas, bolasPerdidas = new ArrayList<Ball>();
+        float numSpheres=6;
+	    //Planos
+	    private ArrayList<BBQuad>listaPlanos;
+        //Huecos
+        private ArrayList<BBGap> listaHuecos;
+        //Variables palo
+        BilliardPole palo;
+        private Vector direccionDisparo = new Vector(0,0,0);
+
+
+    //Lista de colisiones
+    private CollisionsManager col,col2;
+    private CollisionsDetector colDetector;
+
 
     public void update(int delta) {
     //Metodos de entrada por teclado
         input(delta);
-        
+        //Update palo
         palo.update(delta);
         
         //Movimiento
         white.update(delta);
+        camera.getCam(2).setPos(Vector.sum(Vector.prod(Vector.prod(-10, camera.getCam(2).getDireccion()), sizeSphere), listaBolas.get(0).getCenterPoint()));
+        camera.getCam(2).moveUp(100);
+
         //Colisiones
         col.collide(delta);
         col2.collide(delta);
 
-        for(int i=0; i< bolas.size();i++){
-            bolas.get(i).setVel(Vector.prod(0.996f,bolas.get(i).getVel()));
-            if (bolas.get(i).getVel().mod()<0.03) {bolas.get(i).setVel(0,0,0);}
-            bolas.get(i).update(delta);
-            
-            if (i==0){
-                camera.getCam(2).setPos(Vector.sum(Vector.prod(Vector.prod(-10, camera.getCam(2).getDireccion()), sizeSphere), bolas.get(i).getPoint()));
-                camera.getCam(2).moveUp(100);
-            }
-            
-            if (isOut(bolas.get(i))) {
-            	if (i==0){
-            		System.out.println("White out!");
-            		bolas.get(i).getBbox().setPoint(new Vector (sizeBilliard,0,0));
-            		bolas.get(i).setVel(new Vector (0,0,0));
-            		
-            		if (!Musica.bad.isPlaying())
-            		  Musica.bad.playAsMusic(1.0f, 1.0f, false);
-            	} else {
-            		System.out.println("Una menos");
-            		bolasRestantes--;
-            		bolas.get(i).getBbox().setPoint(new Vector (sizeBilliard*2+300,200,sizeBilliard - (14-bolasRestantes)*sizeSphere));
-            		bolas.get(i).setVel(new Vector (0,0,0));
-            		bolasPerdidas.add(bolas.get(i));
-            		bolas.remove(i);
-            		
-            		if (!Musica.good.isPlaying())
-            		  Musica.good.playAsMusic(1.0f, 1.0f, false);
-            	}
-            }	
-        }
-        
 
-    }
-    
+
+        for(int i=0; i< listaBolas.size();i++){
+               listaBolas.get(i).setVel(Vector.prod(0.996f, listaBolas.get(i).getVel()));
+                listaBolas.get(i).update(delta);
+                if (listaBolas.get(i).getVel().mod()<0.03) {
+                    listaBolas.get(i).setVel(0,0,0);}
+        }
+    }//End update
+
     public void renderGL() {
         updateFPS(); // update FPS Counter
         //Renderizo la camara
         camera.render();
 
-        //Dibujo
-
-        //Utilidades
-
-        //Dibujo.drawAxes(sizeBilliard);
         //Mirilla
     	light1.off();
 //    		//Mirilla
 //	        glColor3f(0,1,1);
+ //       Dibujo.drawAxes(10000);
 //	        Dibujo.drawPoint(camera.getFront(5), 10);
         	palo.render();
         light1.on();
@@ -227,9 +220,9 @@ public class MainBillar2{
 	        billiard.render();
         glPopMatrix();
 	       
-        for (int i=0; i<bolas.size(); i++){
-            if(bolas.get(i).getPoint().y> (-sizeSphere*2))
-        	bolas.get(i).render();
+        for (int i=0; i< listaBolas.size(); i++){
+            if(listaBolas.get(i).getCenterPoint().y> (-sizeSphere*2))
+        	listaBolas.get(i).render();
         }
 
         for(int i=0;i<bolasPerdidas.size(); i++){
@@ -237,153 +230,116 @@ public class MainBillar2{
         }
 
         for(int i=0;i<listaHuecos.size(); i++){
-           // listaHuecos.get(i).draw();
+            listaHuecos.get(i).draw();
         }
-
-        ang++; if (ang>360){ang=0;}
+        for(int i=0;i<listaPlanos.size(); i++){
+           // listaPlanos.get(i).draw();
+        }
         
         //SkyBox
         glColor3d(1, 1, 1);
         glPushMatrix();
-              //glRotatef(ang, 1, 0, 0);
-              skyBox.render();
-              
-              glTranslatef(0,-1250,0);
-              	floor.on();
-			        glBegin(GL11.GL_QUADS);
-			        	glTexCoord2d(0.0f, 0.0f);
-			        	glVertex3f( +5*sizeBilliard,1, +5*sizeBilliard);
-			        	glNormal3f(+5 * sizeBilliard, 1, +5 * sizeBilliard);
-			        	
-			        	glTexCoord2d(0.0f, 1.0f);
-			        	glVertex3f( +5*sizeBilliard,1, -5*sizeBilliard);
-			        	glNormal3f(+5 * sizeBilliard, 1, -5 * sizeBilliard);
-			        	
-			        	glTexCoord2d(1.0f, 1.0f);
-			        	glVertex3f(-5 * sizeBilliard, 1, -5 * sizeBilliard);
-			        	glNormal3f(-5 * sizeBilliard, 1, -5 * sizeBilliard);
-			        	
-			        	glTexCoord2d(1.0f, 0.0f);
-			        	glVertex3f( -5*sizeBilliard,1, +5*sizeBilliard);
-			        	glNormal3f( -5*sizeBilliard,1, +5*sizeBilliard);
-		        	glEnd();
-	        	floor.off();
+            skyBox.render();
+            glTranslatef(0,-1250,0);
+            floorDraw();
         glPopMatrix();
-    }
 
-
-    //Init opengl
-    public void initGL() {               
-
-    }
-    // Called to destroy our MainDenis upon exiting
-    protected void dispose() {
-    }
-
-    //------------------Time and fps
-    /*** Calculate how many milliseconds have passed
-     * since last frame.*/
-    public int getDelta() {
-        long time = getTime();
-        int delta = (int) (time - lastFrame);
-        lastFrame = time;
-        return delta;
-    }
-
-    /*** @return The system time in milliseconds*/
-    public long getTime() {
-        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
-    }
-
-    /**Calculate the FPS and set it in the title bar*/
-    public void updateFPS() {
-        if (getTime() - lastFPS > 1000) {
-            Display.setTitle("FPS: " + fps);
-            fps = 0;
-            lastFPS += 1000;
-
+        if(white.getVel().x==0 && white.getVel().z ==0 || 1==1){
+            glPushMatrix();
+            light1.off();
+            glBegin(GL_LINES);
+            glColor3d(1.0,0,0);
+            glVertex3d(inicial.x,inicial.y+sizeSphere/2,inicial.z);
+            glVertex3d(terminar.x,terminar.y+sizeSphere/2,terminar.z);
+            glEnd();
+            glPushMatrix();
+            light1.on();
         }
-        fps++;
+        else{
+            inicial=white.getCenterPoint();
+            terminar=white.getCenterPoint();
+        }
+
     }
 
-    // Exit our MainDenis loop and close the window
-    public void exit() {
-        state = BillarState.FINISHED;
-    }
-    
-    // Metralleta
-    int valorLanzamiento=0;
-    int rafaga=10;
-    
+
+    Vector inicial= new Vector(0,0,0);
+    Vector terminar=new Vector(0,0,0);
     public void input(int delta){
-    	
-    	if (camera.getSelected()!=0){
-    		camera.listen();
-    	} else {
-    		if (Keyboard.isKeyDown(Keyboard.KEY_T)) {
-                while(Keyboard.next()) {
-                    camera.prevCam();
+    	camera.listen();
+        palo.listen(delta);
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+            listaBolas.get(0).setVel(0, 0, 0);
+        }
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+            palo.direccion.print();
+        }
+
+            while(Keyboard.next()){
+                if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
+                direccionDisparo=Vector.prod(-1,palo.direccion);
+                    if(colDetector.rayCollider(white.getCenterPoint(),direccionDisparo)!=null){
+                        BBSphere a = (BBSphere) colDetector.rayCollider(white.getCenterPoint(), direccionDisparo);
+//                        System.out.print("La esfera se encuentra en ");
+                        a.getCenterPoint().print();
+                        Vector v = colDetector.collide2(white.getBbox(), a, direccionDisparo);
+                        float size=1000;
+                        Vector aux=Vector.sum(a.getCenterPoint(),Vector.prod(size,Vector.norm(v)));
+                        inicial=a.getCenterPoint();
+                        terminar=aux;
+//                        listaBolas.add(new Ball(aux,a.getMass(),a.getSize()));
+                    }
+            }
+        }
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
+            listaBolas.get(0).setVel(-0.5f, 0, 0);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+            listaBolas.get(0).setVel(-3.0f, 0, 0);
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_N)) {
+            white.getBbox().setPoint(new Vector(sizeBilliard,0,0));
+            white.setVel(0,0,0);
+            int k = 0;
+            for (int j = 0; j < numSpheres; j++) {
+                for (int i = 0; i < j; i++) {
+                    k++;
+                    listaBolas.get(k).getBbox().setPoint(new Vector(-(2 * sizeSphere) * j - (float) (sizeBilliard / 2.0f), 0, 0 + (i) * 2 * sizeSphere - (sizeSphere) * j + sizeSphere));
+                    listaBolas.get(k).getBbox().setVel(new Vector(0,0,0));
                 }
             }
-    	}
-    	
-        palo.listen();
+        }
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-			palo.girar(2);;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
-		    palo.girar(-2);
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
-			bolas.get(0).setVel(0, 0, 0);
-		}
 
-            
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			updateStrong((float)delta/500);
-			palo.updateColor(strong);
-//			while(Keyboard.next()) {
-//				palo.disparar(2);
-//			}
-		} else {
-			if (strong>0){
-				palo.disparar(strong);
-				strong = 0;
-				palo.updateColor(10);
-			}
-		}
-		
-    }
-    
-    public static void main(String[] argv) {
-        MainBillar2 BILL = new MainBillar2();
-        BILL.start();
-    }
+    }//End of input
+
     
 	private void CreateObjects() {
-		
+		//Music
 		try {
 			Musica.load();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        //Arrays auxiliares
+        listaBolas = new ArrayList<Ball>();
+        listaPlanos= new ArrayList<BBQuad>();
+        listaHuecos = new ArrayList<BBGap>();
 
-		
 		//Camara
         camera= new CamListener(); 
         camera.addCam(new Perspective()); 
-        camera.addCam(new Perspective()); 
-        
+        camera.addCam(new Perspective());
 	        //Cámara 0 - Cámara Aérea
-	        camera.setPos(0,5800,0);
+	        camera.setPos(0, 5800, 0);
 	        camera.setAngle(90, 270, 0);
-	        
-	        //Camara 1 - Cámara Isométrica
-	        camera.getCam(1).setPos(sizeBilliard*3, sizeBilliard*2, sizeBilliard*2);
-	        camera.getCam(1).setAngle(35, -52, 0);
-	        
+	        //Camara 1 - camara libre
+	        camera.getCam(1).setPos(2817, 1866, -1480);
+	        camera.getCam(1).setAngle(34,-120, 0);
+	        //Camara 2º persona
 	        camera.getCam(2).setAngle(0, -90, 0);
 
         //Luces
@@ -391,27 +347,23 @@ public class MainBillar2{
         light1.on();
         light1.setLight_position(new float[]{ 20,20,-1,0});
 
-        //Arrays auxiliares
-
         //Objetos
         billiard = new Billiard(sizeBilliard);
         floor = TextureGL.loadTexture("res/images/wood.jpg");
-        white = new Ball(new Vector (sizeBilliard,0,0), 20,sizeSphere);
+
         skyBox = new Ball(new Vector (0,0,0), 20,sizeSphere*200, "/res/images/sky1.jpg");
-        
-        bolas = new ArrayList<Ball>();
-        bolas.add(white);
-        //bolas.add(new Ball());
-        int k=0, l=0;
-	        for (int j=0; j<6; j++){
+
+        white = new Ball(new Vector (sizeBilliard,0,0), 5,sizeSphere);
+        listaBolas.add(white);
+        int k=0;
+	        for (int j=0; j<numSpheres; j++){
 	        	for (int i=0; i<j; i++){
-	        		k++; bolasRestantes++;
-	        		bolas.add(new Ball(new Vector(-(2*sizeSphere)*j-(float)(sizeBilliard/2.0f), sizeSphere*2*l, (i)*2*sizeSphere-(sizeSphere)*j+sizeSphere), 5, sizeSphere, "/res/images/pallina"+k+".jpg"));
+	        		k++;
+	        		listaBolas.add(new Ball(new Vector(-(2 * sizeSphere) * j - (float) (sizeBilliard / 2.0f), 0, 00+(i) * 2 * sizeSphere - (sizeSphere) * j + sizeSphere), 5, sizeSphere, "/res/images/pallina" + k + ".jpg"));
+
 	        	}
 	        }
 
-        //Lista planos
-        listaPlanos= new ArrayList<BBQuad>();
         //Lado derecho
 	        listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo,0,ancho), new Vector(largo,50,ancho), new Vector(largo,50,-ancho)));
 	        listaPlanos.add(new BBQuad(new Vector(largo,0,-ancho),new Vector(largo+mini*3/4,0,-ancho-mini), new Vector(largo+mini*3/4,50,-ancho-mini),new Vector(largo,50,-ancho) ));
@@ -443,55 +395,37 @@ public class MainBillar2{
 	        listaPlanos.add(new BBQuad(new Vector(0+mini*4/5,00,ancho),new Vector(0+mini*4/5-mini/4,00,ancho+mini*4/8),new Vector(0+mini*4/5-mini/4,50,ancho+mini*4/8),new  Vector(0+mini*4/5,50,ancho)));
 
 
-        //Huecos
-        listaHuecos = new ArrayList<BBGap>();
         //Medio
-        System.out.println(sizeSphere*1.5f);
-        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere/2,-1150),1,sizeGap));
-        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere/2,+1150),1,sizeGap));
-        //Derecha
-        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere/2,-1100),1,sizeGap));
-        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere,1100),1,sizeGap));
-        //Izquierda
-        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere/2,-1100),1,sizeGap));
-        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere/2,1100),1,sizeGap));
+//        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere/2,-1150),1,sizeGap));
+//        listaHuecos.add(new BBGap(new Vector(0,-sizeSphere/2,+1150),1,sizeGap));
+//        //Derecha
+//        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere/2,-1100),1,sizeGap));
+//        listaHuecos.add(new BBGap(new Vector(2190,-sizeSphere,1100),1,sizeGap));
+//        //Izquierda
+//        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere/2,-1100),1,sizeGap));
+//        listaHuecos.add(new BBGap(new Vector(-2190,-sizeSphere/2,1100),1,sizeGap));
 
-
+        //Palo
+        palo = new BilliardPole(listaBolas.get(0));
 
         //Colisiones
         col=new CollisionsManager();
         col2=new CollisionsManager();
-	        for(int i=0; i< bolas.size();i++){
-	            col.add(bolas.get(i).getBbox());
-                col2.add(bolas.get(i).getBbox());
-	        }
+        colDetector=new CollisionsDetector();
+
+	        for(int i=0; i< listaBolas.size();i++){
+	            col.add(listaBolas.get(i).getBbox());
+                col2.add(listaBolas.get(i).getBbox());
+                colDetector.add(listaBolas.get(i).getBbox());
+            }
+
 	        for(int i=0; i<listaPlanos.size();i++){
 	            col.add(listaPlanos.get(i));
 	        }
 
-        for(int i=0; i< listaHuecos.size();i++){
-            col2.add(listaHuecos.get(i));
-        }
-	        
-	    //Palo
-	        palo = new BilliardPole(bolas.get(0));
+            for(int i=0; i< listaHuecos.size();i++){
+                col2.add(listaHuecos.get(i));
+            }
 	}
-
-	protected boolean isOut(Ball b){
-		Vector pos = b.getPoint();
-		return ((pos.x>2*sizeBilliard+200||pos.x<-2*sizeBilliard+200)||(pos.y>200||pos.y<-200)||(pos.z>sizeBilliard+200||pos.z<-sizeBilliard+200));
-	}
-	
-	protected double updateang(double ang){
-		if (ang>360){
-			return ang-360;
-		} else {
-			if (ang<-360) {
-				return ang+360;
-			} else {
-				return ang;
-			}
-		}
-	}
-}
+}//Fin create objects
 

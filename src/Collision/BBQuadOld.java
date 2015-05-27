@@ -57,14 +57,14 @@ public BBQuadOld(Vector normal, Vector punto, float size){
         return false;
     }
 
-    public boolean intersection(Vector intersection, BBSphere A){
+    public boolean intersection( BBSphere A){
 
        float distanciaX,distanciaZ;
-        float puntoX= getPosition().x;
-        float puntoZ= getPosition().z;
-        distanciaX=Math.abs(puntoX-A.getPosition().x)-A.getSize();
+        float puntoX= getCenterPoint().x;
+        float puntoZ= getCenterPoint().z;
+        distanciaX=Math.abs(puntoX-A.getCenterPoint().x)-A.getSize();
 
-        distanciaZ=Math.abs(puntoZ-A.getPosition().z)-A.getSize();
+        distanciaZ=Math.abs(puntoZ-A.getCenterPoint().z)-A.getSize();
 //        System.out.println(distanciaX + "      " + size/2.0f);
         if(distanciaX>size/2 || distanciaZ>size/2.0f)
             return false;

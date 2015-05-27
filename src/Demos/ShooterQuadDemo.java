@@ -1,18 +1,7 @@
 package Demos;
-import static org.lwjgl.opengl.GL11.*;
-
-import java.util.ArrayList;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 
 import Camera.CamListener;
 import Camera.Ortho;
-import Camera.Perspective;
 import Collision.BBPlane;
 import Collision.BBSphere;
 import Collision.BoundingBox;
@@ -22,13 +11,22 @@ import Lights.SpotLight;
 import Others.Face;
 import Utilities.Dibujo;
 import Utilities.Vector;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+
+import java.util.ArrayList;
+
+import static org.lwjgl.opengl.GL11.*;
 
 
 /**
  * A bare-bones implementation of a LWJGL application.
  * @author davedes
  */
-public class ShooterSphereDemo {
+public class ShooterQuadDemo {
 
     // Whether to enable VSync in hardware.
     public static final boolean VSYNC = true;
@@ -67,7 +65,7 @@ public class ShooterSphereDemo {
 
     float fAngulo=0;
     public static void main(String[] args) throws LWJGLException {
-        new ShooterSphereDemo().start();
+        new ShooterQuadDemo().start();
     }
 
     // Start our MainDenis
@@ -152,12 +150,12 @@ public class ShooterSphereDemo {
 
 
 
-        int siz = 3, tam=0;
+        int siz = 11, tam=0;
         for (int i=0; i<siz; i++){
             for (int j=0; j<siz; j++){
                 for (int k=0; k<siz; k++){
                     tam++;
-                    listaBBSpheres.add(new BBSphere(new Vector(-580 + 22*k, 12 + 22*j, -580 + 22*i), new Vector(0.0f,0.0f,0.0f),10 , 10));
+                    listaBBSpheres.add(new BBSphere(new Vector(-580 + 22*k, 12 + 22*j, -580 + 22*i), new Vector(0.0f,0.0f,0.0f),50 , 40));
                 }
             }
         }
@@ -278,18 +276,12 @@ public class ShooterSphereDemo {
                 glPushMatrix();
                 //	glTranslated(point.x,point.y,point.z);
 
-                if(i<11){
-                    glColor3f(0.0f,1.0f,1.0f);
-                    //glCallList(displayListHandle);
-                    listaBBSpheres.get(i).draw();
-                }
 
-                else{
 
                     glColor3f(1.0f,1.0f,1.0f);
                     //glCallList(displayListHandle);
-                    listaBBSpheres.get(i).draw();
-                }
+                    listaBBSpheres.get(i).draw2();
+
 
                 //Dibujo.drawSphere(size, 10, 10);
                 //Dibujo.drawCube(size);

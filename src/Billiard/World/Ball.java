@@ -29,9 +29,6 @@ public class Ball extends BilliardObject{
 		tex = TextureGL.loadTexture(path);
 	}
 
-    public BBSphere getBbox() {
-        return bbox;
-    }
 
     public Ball(BBSphere box){
 		bbox = box;
@@ -75,22 +72,62 @@ public class Ball extends BilliardObject{
         
         rotationMatrix.put(aux);
         rotationMatrix.rewind();
-        
-//        final float[] array = new float[16];
-//        rotationMatrix.get(array);
-//        
-//    	System.out.println("  <  Matrix >");
-//	  	  for(int i=0; i<4; i++){
-//	  		  System.out.print("  (");
-//	  		  for (int j=0; j<4; j++){
-//	  			  System.out.print(" "+array[i*4+j]+" ");
-//	  		  }
-//	  		  System.out.println(")");
-//	  	  }
-//	  	System.out.println("  < /Matrix >");
+
+
 	}
-	
-	protected double updateang(double ang){
+
+
+    public BBSphere getBbox() {
+        return bbox;
+    }
+
+    public static void print() {
+        FloatBuffer modelMatrix;
+        modelMatrix = BufferUtils.createFloatBuffer(16);;
+        modelMatrix.rewind();
+        GL11.glGetFloat( GL_MODELVIEW_MATRIX, modelMatrix );
+
+        final float[] array = new float[16];
+        modelMatrix.get(array);
+
+        //System.out.println("  <  Matrix >");
+        for(int i=3; i<4; i++){
+            System.out.print("  (");
+            for (int j=0; j<4; j++){
+                System.out.print(" "+array[i*4+j]+" ");
+            }
+            System.out.println(")");
+        }
+        //System.out.println("  < /Matrix >");
+
+        modelMatrix.rewind();
+    }
+
+    public static Vector  getVectorPosition() {
+        FloatBuffer modelMatrix;
+        modelMatrix = BufferUtils.createFloatBuffer(16);;
+        modelMatrix.rewind();
+        GL11.glGetFloat( GL_MODELVIEW_MATRIX, modelMatrix );
+
+        final float[] array = new float[16];
+        modelMatrix.get(array);
+
+        //System.out.println("  <  Matrix >");
+//        for(int i=3; i<4; i++){
+//            System.out.print("  (");
+//            for (int j=0; j<4; j++){
+//                System.out.print(" "+array[i*4+j]+" ");
+//            }
+//            System.out.println(")");
+//        }
+        //System.out.println("  < /Matrix >");
+
+        modelMatrix.rewind();
+        return new Vector(array[12],array[13],array[14]);
+    }
+
+
+    protected double updateang(double ang){
 		if (ang>360){
 			return ang-360;
 		} else {
@@ -104,7 +141,7 @@ public class Ball extends BilliardObject{
 	
 	@Override
 	public void render(){
-		Vector punto = bbox.getPoint();
+		Vector punto = bbox.getCenterPoint();
 		Vector vel = Vector.prod(Vector.ejey, bbox.getVel());
 		
 		ang = vel.mod()*10;
@@ -135,14 +172,16 @@ public class Ball extends BilliardObject{
 			  glPushMatrix();
 					glTranslated(punto.x, punto.y, punto.z);
 					glMultMatrix(rotationMatrix);
+
 					super.render();
+                   // print();
 			  glPopMatrix();
 		}
 		
 	}
 	
 //	public void render(){
-//		Vector punto = bbox.getPoint();
+//		Vector punto = bbox.getCenterPoint();
 //		Vector vel = Vector.prod(Vector.ejey, bbox.getVel());
 //		
 //		change = false;
@@ -199,8 +238,8 @@ public class Ball extends BilliardObject{
 		bbox.move(delta);
 	}
 	
-	public Vector getPoint() {
-		return bbox.getPoint();
+	public Vector getCenterPoint() {
+		return bbox.getCenterPoint();
 	}
 
 	public Vector getVel() {

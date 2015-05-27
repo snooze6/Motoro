@@ -23,7 +23,6 @@ public class BBSphere extends BoundingBox{
 		this.velocity = new Vector(0,0,0);
 		this.mass = 1;
 		this.size = 10;
-		
 		NewLista(size, 30, 30);
 	}
 	public BBSphere(Vector point, float mass, float size) {
@@ -40,7 +39,6 @@ public class BBSphere extends BoundingBox{
 		super();
 		this.point = point;
         this.lastPoint=point;
-		//this.velocity = Vector.prod(1.0f/1000.0f,velocity);
         this.velocity = velocity;
 		this.mass = mass;
 		this.size = size;
@@ -90,15 +88,13 @@ public class BBSphere extends BoundingBox{
 	
 	//--------------------------------------------------------------------------
 	
-	public Vector getPosition() {
+	public Vector getCenterPoint() {
 		return point;
 	}
 	public void setPoint(Vector point) {
 		this.point = point;
 	}
-	public Vector getPoint() {
-		return point;
-	}
+
 	public Vector getVelocity() {
 		return velocity;
 	}

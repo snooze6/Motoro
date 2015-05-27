@@ -2,6 +2,7 @@ package Billiard.World;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import Utilities.Dibujo;
@@ -10,65 +11,13 @@ import Utilities.Vector;
 public class BilliardPole extends BilliardObject {
 	Ball bola;
 	double anjulo=0;
-	Vector direccion=new Vector(0,0,0);
+	public Vector direccion=new Vector(0,0,0);
 	Vector color = new Vector(0,1,0);
+    float strong=0;
 	
 	public BilliardPole(Ball b){
 		bola = b;
-		
-//		Model m = null;
-//        try {
-//            m = ObjectLoader.loadModel(new File("res/models/billar.obj"));
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            Display.destroy();
-//            System.exit(1);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Display.destroy();
-//            System.exit(1);
-//        }
-//		
-//        glNewList(list, GL_COMPILE);
-//
-//        glBegin(GL_TRIANGLES);
-//        //Dibujo.drawCube(100);
-//        for (Model.Face face : m.getFaces()) {
-//
-//            try {
-//            	
-//                Vector3f n1 = m.getNormals().get(face.getNormalIndices()[0] - 1);
-//                glNormal3f(n1.x, n1.y, n1.z);
-//                Vector3f v1 = m.getVertices().get(face.getVertexIndices()[0] - 1);
-//                glVertex3f(v1.x, v1.y, v1.z);
-//  
-//                Vector3f n2 = m.getNormals().get(face.getNormalIndices()[1] - 1);
-//                glNormal3f(n2.x, n2.y, n2.z);
-//                Vector3f v2 = m.getVertices().get(face.getVertexIndices()[1] - 1);
-//                glVertex3f(v2.x, v2.y, v2.z);
-//
-//                Vector3f n3 = m.getNormals().get(face.getNormalIndices()[2] - 1);
-//                glNormal3f(n3.x, n3.y, n3.z);
-//                Vector3f v3 = m.getVertices().get(face.getVertexIndices()[2] - 1);
-//                glVertex3f(v3.x, v3.y, v3.z);
-//                
-//                Vector2f vt1 = m.getTextureCoordinates().get(face.getVertexIndices()[0] - 1);
-//                glTexCoord2d(vt1.x, vt1.y);
-//                Vector2f vt2 = m.getTextureCoordinates().get(face.getVertexIndices()[1] - 1);
-//                glTexCoord2d(vt2.x, vt2.y);
-//                Vector2f vt3 = m.getTextureCoordinates().get(face.getVertexIndices()[2] - 1);
-//                glTexCoord2d(vt3.x, vt3.y);
-//                
-//            } catch (Exception e) {
-////		            		System.out.println("\nCogida excepcion Billar");
-////		            		System.out.println("Tamaño normal:   "+face.getNormalIndices().length+" [X:"+face.getNormalIndices()[0]+" , Y: "+face.getNormalIndices()[1]+" , Z: "+face.getNormalIndices()[2]+"]");
-////		            		System.out.println("Tamaño vertices: "+face.getVertexIndices().length+" [X:"+face.getVertexIndices()[0]+" , Y: "+face.getVertexIndices()[1]+" , Z: "+face.getVertexIndices()[2]+"]");
-//                e.getStackTrace();
-//                //System.out.println("Tamaño vertice: "+face.getVertexIndices().length+);
-//            }
-//        }
-//        glEnd();
-//        glEndList();
+
 	}
 	
 	protected double updateang(double ang){
@@ -128,16 +77,16 @@ public class BilliardPole extends BilliardObject {
 	
 	@Override
 	public void render(){
-		if (bola.getVel().mod()==0){
+		if (bola.getVel().mod()==0 || 1==1){
 			glPushMatrix();
 				glColor3f(color.x, color.y, color.z);
-				Dibujo.drawPoint(Vector.sum(bola.getPoint(), Vector.prod(2*bola.getSize() , direccion)));
-				Dibujo.drawPoint(Vector.sum(bola.getPoint(), Vector.prod(5*bola.getSize() , direccion)));
-				Dibujo.drawLine(Vector.sum(bola.getPoint(), Vector.prod(2*bola.getSize() , direccion)),
-								Vector.sum(bola.getPoint(), Vector.prod(5*bola.getSize() , direccion)));
+				Dibujo.drawPoint(Vector.sum(bola.getCenterPoint(), Vector.prod(2*bola.getSize() , direccion)));
+				Dibujo.drawPoint(Vector.sum(bola.getCenterPoint(), Vector.prod(5*bola.getSize() , direccion)));
+				Dibujo.drawLine(Vector.sum(bola.getCenterPoint(), Vector.prod(2*bola.getSize() , direccion)),
+								Vector.sum(bola.getCenterPoint(), Vector.prod(5*bola.getSize() , direccion)));
 				
-				Dibujo.drawLine(Vector.sum(bola.getPoint(), Vector.prod(-2*bola.getSize() , direccion)),
-								Vector.sum(bola.getPoint(), Vector.prod(-100*bola.getSize() , direccion)));
+				Dibujo.drawLine(Vector.sum(bola.getCenterPoint(), Vector.prod(-2*bola.getSize() , direccion)),
+								Vector.sum(bola.getCenterPoint(), Vector.prod(-100*bola.getSize() , direccion)));
 			glPopMatrix();
 		}
 	}
@@ -146,7 +95,7 @@ public class BilliardPole extends BilliardObject {
 	public void update(float delta) {
         // Direccion palo
 		double anguloInicial;
-		direccion = Vector.del(bola.getPoint(), new Vector(0,0,0));
+		direccion = Vector.del(bola.getCenterPoint(), new Vector(0,0,0));
 		
 		if (direccion.z!=0){
 			anguloInicial = Vector.ang(Vector.ejex, direccion)*((direccion.z)/Math.abs(direccion.z));
@@ -166,10 +115,23 @@ public class BilliardPole extends BilliardObject {
 		}
 	}
 	
-	public void listen(){
+	public void listen(float delta){
 		mouseButton();
+        //Disparo palo
+        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            if (strong+((float)delta/500)<5.0f){
+                strong+=(float)delta/500;
+            }
+            updateColor(strong);
+        } else {
+            if (strong>0){
+                disparar(strong);
+                strong = 0;
+                updateColor(10);
+            }
+        }//Fin disparo palo
 	}
-	
+
 	//<Variables para el ratón>
 	protected float deltaAngley = 0.0f;
 	protected float deltaAnglex = 0.0f;

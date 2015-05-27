@@ -91,7 +91,7 @@ public void initGL() {
 
     //glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 2.0f);
     //glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.001f);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION,atenuation);
+   // glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION,atenuation);
 
 
     }
