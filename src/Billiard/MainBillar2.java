@@ -282,8 +282,6 @@ public class MainBillar2{
                 direccionDisparo=Vector.prod(-1,palo.direccion);
                     if(colDetector.rayCollider(white.getCenterPoint(),direccionDisparo)!=null){
                         BBSphere a = (BBSphere) colDetector.rayCollider(white.getCenterPoint(), direccionDisparo);
-//                        System.out.print("La esfera se encuentra en ");
-                        a.getCenterPoint().print();
                         Vector v = colDetector.collide2(white.getBbox(), a, direccionDisparo);
                         float size=1000;
                         Vector aux=Vector.sum(a.getCenterPoint(),Vector.prod(size,Vector.norm(v)));

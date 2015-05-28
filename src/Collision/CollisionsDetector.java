@@ -77,13 +77,12 @@ public class CollisionsDetector {
         Vector puntoA = Vector.sum(A.getCenterPoint(), Vector.prod(delta, A.getVel()));
         Vector puntoB = Vector.sum(B.getCenterPoint(), Vector.prod(delta, B.getVel()));
 
-
+        int i = 0;
         float distR;
         while ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
              puntoA = Vector.sum(A.getCenterPoint(), Vector.prod(delta, A.getVel()));
              puntoB = Vector.sum(B.getCenterPoint(), Vector.prod(delta, B.getVel()));
             delta=delta+0.01f;
-
         }
             Vector vel1, vel2, v1, v2, v1x, v2x, v1y, v2y, x;
             float m1, m2;
@@ -93,14 +92,15 @@ public class CollisionsDetector {
 //            aux=Vector.prod(-A.getSize(),aux);
 //            Vector puntoA2=Vector.sum(puntoB,aux);
 
-            int i = 0;
+
             Vector puntoA2 = puntoA;
             Vector aux = Vector.norm(A.getVel());
 
             Vector puntoB2 = puntoB;
             Vector aux2 = Vector.norm(B.getVel());
+
             if (aux.x != 0 || aux.y != 0 || aux.z != 0) {
-                while ((Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize())) {
+                while ((Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize()) ) {
                     puntoA2 = Vector.sum(puntoA2, Vector.prod(-0.01f, aux));
                 }
             }
@@ -193,16 +193,6 @@ public class CollisionsDetector {
 
             vel1 = Vector.sum(v1y, Vector.sum(Vector.prod(v1x, ((m1 - m2) / (m1 + m2))), Vector.prod(v2x, ((2 * m2) / (m1 + m2)))));
             vel2 = Vector.sum(v2y, Vector.sum(Vector.prod(v1x, ((2 * m1) / (m1 + m2))), Vector.prod(v2x, ((m2 - m1) / (m1 + m2)))));
-
-
-//            System.out.print("Velocidad 1 cm");
-//            Vector.norm(vel1).print();
-//            System.out.print("Velocidad 2 cm");
-//            Vector.norm(vel2).print();
-
-
-//            System.out.println("La velocidad es");
-//            vel2.print();
             return vel2;
 
 
@@ -270,13 +260,16 @@ public class CollisionsDetector {
         aux=Vector.del(B.getCenterPoint(),origen);
         aux=Vector.prod(aux,direccion);
         distancia=Vector.mod(aux);
-        
+
+        if(Vector.dot(direccion,Vector.del(B.getCenterPoint(),origen))>0){
+
         distancia=distancia/Vector.mod(direccion);
         float distanciaOrigen=Math.abs(Vector.dist(B.getCenterPoint(),origen));
        if(distancia<B.getSize()*2 && distanciaOrigen<distanceRay){
            distanceRay=distanciaOrigen;
            boundingBoxCollision =B;
        }
+        }
         return boundingBoxCollision;
     }
 
