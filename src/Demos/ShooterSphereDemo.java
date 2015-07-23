@@ -152,7 +152,7 @@ public class ShooterSphereDemo {
 
 
 
-        int siz = 3, tam=0;
+        int siz = 10, tam=0;
         for (int i=0; i<siz; i++){
             for (int j=0; j<siz; j++){
                 for (int k=0; k<siz; k++){

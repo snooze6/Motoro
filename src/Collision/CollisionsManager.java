@@ -52,8 +52,7 @@ public class CollisionsManager {
             }
         }
     }
-
-
+    
     public boolean collide(BoundingBox A, BoundingBox B) {
 	    boolean aux = false;
         if (A instanceof BBPlane) {
@@ -63,7 +62,6 @@ public class CollisionsManager {
                 aux = collide( (BBSphere) B,(BBPlane)A);
             }
         }
-
         if (A instanceof BBSphere) {
             if (B instanceof BBPlane) {
                 aux =  collide((BBSphere)A, (BBPlane)B);
@@ -78,43 +76,67 @@ public class CollisionsManager {
 
     public boolean collide(BBSphere A, BBSphere B) {
 
+    	/*
+    	 * Calculamos las colisiones en el futuro, por lo tanto calculamos los puntos futuros
+    	 */
         Vector puntoA = Vector.sum(A.getCenterPoint(), Vector.prod(delta, A.getVel()));
         Vector puntoB = Vector.sum(B.getCenterPoint(), Vector.prod(delta,B.getVel()));
 
-
         float distR;
         if ((distR = Vector.dist(puntoA, puntoB)) < (A.getSize() + B.getSize())) {
-            Vector vel1, vel2, v1, v2, v1x, v2x, v1y, v2y, x;
-            float m1, m2;
-            //Calculo la direccion en la que ha penetrado A sobre B
-//            Vector aux=Vector.norm(Vector.del(puntoB,puntoA));
-//            //Sobre esa dirección, quiero
-//            aux=Vector.prod(-A.getSize(),aux);
-//            Vector puntoA2=Vector.sum(puntoB,aux);
+            Vector vel1, vel2, v1 = A.getVel(), v2 = B.getVel(), v1x, v2x, v1y, v2y, x;
+            float m1= A.getMass(), m2 = B.getMass();
 
-            int i=0;
-            Vector puntoA2=puntoA;
-            Vector aux=Vector.norm(A.getVel());
-
-            Vector puntoB2=puntoB;
-            Vector aux2=Vector.norm(B.getVel());
-            if(aux.x!=0 || aux.y!=0 || aux.z!=0){
-                while(( Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize())){
-                    puntoA2=Vector.sum(puntoA2,Vector.prod(-0.01f,aux));
-                }
-            }
-
+/*
+ * Vaaaamos a ver, aquí estaba la maravilla de bucle para resolver una ecuación
+ * 
+ * Me parece que lo que buscabamos inicialmente era lo siguiente:
+ * - 2 Bolas colisionaban con diferentes velocidades y ángulos
+ * - Retroceder ambas una cantidad pertinente
+ * 
+ * Sin embargo aquí lo que haces es retroceder la primera bola hasta que la distancia
+ * entre ellas es mayor que la suma de sus radios, lo cual no parece adecuado
+ */
+//  //Calculo la direccion en la que ha penetrado A sobre B
+//  Vector aux=Vector.norm(Vector.del(puntoB,puntoA));
+//  //Sobre esa dirección, quiero
+//  aux=Vector.prod(-A.getSize(),aux);
+//  Vector puntoA2=Vector.sum(puntoB,aux);
+//    Vector puntoA2=puntoA, puntoB2=puntoB, aux=Vector.norm(A.getVel());
+//    if(aux.x!=0 || aux.y!=0 || aux.z!=0){
+//        while(( Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize())){
+//            puntoA2=Vector.sum(puntoA2,Vector.prod(-0.01f,aux));
+//        }
+//    }
+            
+            /*
+             * PROBLEMA 1:
+             * 
+             * Las bolas al chocar se pueden poner una sobre otra
+             * 
+             * Bien, segundo razonamiento, sabemos que colisionaron, en consecuencia
+             * es evidente que debemos retrocederlas, cada una en la dirección de su velocidad
+             * pero invertida, y la pregunta es que cantidad, la respuesta es evidente
+             * - Cantidad = (A.getSize() + B.getSize())-distR
+             * o lo que es lo mismo
+             * cantidad + distR = A.getSize() + B.getSize()
+             * 
+             * Bien, una vez solucionado esto simplemente hay que saber cuanto retroceder cada una
+             * y eso depende únicamente del módulo de la velocidad de cada una, así pues
+             */
+            float cant = (A.getSize() + B.getSize())-distR;
+            float cantA = (cant*v1.mod())/(v1.mod()+v2.mod()),
+            	  cantB = (cant*v2.mod())/(v1.mod()+v2.mod());
+            Vector puntoA2=Vector.sum(puntoA, Vector.prod(cantA, Vector.norm(v1))),
+            	   puntoB2=Vector.sum(puntoB, Vector.prod(cantB, Vector.norm(v2)));
+           
             x = Vector.norm(Vector.del(puntoA2, puntoB2));
-            v1 = A.getVel();
             v1x = Vector.prod(x, Vector.dot(x, v1));
             v1y = Vector.del(v1, v1x);
-            m1 = A.getMass();
 
             x = Vector.prod(x, -1);
-            v2 = B.getVel();
             v2x = Vector.prod(x, Vector.dot(x, v2));
             v2y = Vector.del(v2, v2x);
-            m2 = B.getMass();
 
             vel1 = Vector.sum(v1y, Vector.sum(Vector.prod(v1x, ((m1 - m2) / (m1 + m2))), Vector.prod(v2x, ((2 * m2) / (m1 + m2)))));
             vel2 = Vector.sum(v2y, Vector.sum(Vector.prod(v1x, ((2 * m1) / (m1 + m2))), Vector.prod(v2x, ((m2 - m1) / (m1 + m2)))));
@@ -139,13 +161,6 @@ public class CollisionsManager {
 
             A.setVelocity((vel1));
             B.setVelocity(vel2);
-
-//            System.out.println("Velocidad 1 cm");
-//            Vector.norm(vel1).print();
-//            System.out.println("Velocidad 2 cm");
-//            Vector.norm(vel2).print();
-
-
 
             return true;
         }
