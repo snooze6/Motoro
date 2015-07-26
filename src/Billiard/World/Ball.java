@@ -72,8 +72,6 @@ public class Ball extends BilliardObject{
         
         rotationMatrix.put(aux);
         rotationMatrix.rewind();
-
-
 	}
 
 

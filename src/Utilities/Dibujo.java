@@ -1,6 +1,20 @@
 package Utilities;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_POINTS;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_QUAD_STRIP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glNormal3f;
+import static org.lwjgl.opengl.GL11.glPointSize;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glTexCoord2d;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+
+import org.lwjgl.util.vector.Matrix4f;
 
 public class Dibujo {
 	
@@ -49,7 +63,6 @@ public class Dibujo {
 	        glVertex3f(size, -size, -size);
 	        glEnd();  // End of drawing color-cube
 	}
-
 	
 	public static void drawSphere(double r, int lats, int longs) {
         float x, y, z, dTheta=180/lats, dLon=360/longs;
@@ -191,4 +204,5 @@ public class Dibujo {
     	glEnd();
     }
     
+  
 }

@@ -159,7 +159,7 @@ public class MainBillar2{
 	    //Esferas
 	    private Ball white, skyBox;
 	    private ArrayList<Ball> listaBolas, bolasPerdidas = new ArrayList<Ball>();
-        float numSpheres=6;
+        float numSpheres=2;
 	    //Planos
 	    private ArrayList<BBQuad>listaPlanos;
         //Huecos

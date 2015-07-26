@@ -1,8 +1,10 @@
-package Rubik;
+package Rubik.Backup;
 
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glViewport;
+
+import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -10,10 +12,14 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import Camera.CamListener;
 import Camera.Perspective;
+import Rubik.Cube;
 import Utilities.Dibujo;
+import Utilities.Vector;
 
 public class Main {
 
@@ -27,6 +33,8 @@ public class Main {
     
     //Cubo
     private Cube rubik;
+    private Piece pieza;
+    private ArrayList<Piece> piezas = new ArrayList<Piece>();
 
     //Enable vsync
     public static final boolean VSYNC = true;
@@ -46,6 +54,60 @@ public class Main {
 		          camera.addCam(new Perspective());
         
         rubik = new Cube(3, 10, 0);
+        
+        	Matrix4f m = new Matrix4f();
+        	m.setIdentity();
+        	Vector back;
+        	
+        	for (int i=0; i<8; i++) {
+        		/*
+        		 * Los roto una única vez el ángulo correcto
+        		 */
+        		m.setIdentity();
+        		pieza = new Piece(new Matrix4f(m.translate(new Vector3f(12,0,0))),5);
+        		back = pieza.getPos();
+        		pieza.setPos(new Vector(0,0,0));
+	        	pieza.rotate(i*45, new Vector(0,1,0));
+	        	pieza.translate(back);
+        		piezas.add(pieza);
+        		
+        	}
+        	
+        	for (int i=0; i<8; i++){
+            	m.setIdentity();
+            	pieza = new Piece(new Matrix4f(m.translate(new Vector3f(24,0,0))),5);
+            	back = pieza.getPos();
+            	pieza.setPos(new Vector(0,0,0));
+            	for (int j=0; j<i; j++){
+                	pieza.rotate(45, new Vector(0,1,0));
+                	//pieza.translate(new Vector(12,0,0));
+            	}
+            	pieza.translate(back);
+            	
+            	piezas.add(pieza);
+        	}
+        	
+//        	System.out.println(piezas.size());
+//        	Utils.printMatrix4f(piezas.get(2).getM());
+//        	Utils.printMatrix4f(piezas.get(8+2).getM());
+        	
+        	//------------------------------------------------------------------
+        	
+//        	Matrix4f m1 = new Matrix4f(), m2 = new Matrix4f();
+//        	
+//    		m1.m30 = 0; m1.m31 = 0; m1.m32 = 0;
+//    		m1.rotate((float)Math.toRadians(45), new Vector3f(0,1,0));
+//    		m1.translate(new Vector3f(24,0,0));
+//    		m1.m30 = 0; m1.m31 = 0; m1.m32 = 0;
+//    		m1.rotate((float)Math.toRadians(45), new Vector3f(0,1,0));
+//    		m1.translate(new Vector3f(24,0,0));
+//    		Utils.printMatrix4f(m1);
+//    		
+//    		m2.m30 = 0; m2.m31 = 0; m2.m32 = 0;
+//    		m2.rotate((float)Math.toRadians(90), new Vector3f(0,1,0));
+//    		m2.translate(new Vector3f(24,0,0));
+//    		Utils.printMatrix4f(m2);
+        	
     }
     
 
@@ -105,8 +167,12 @@ public class Main {
         camera.render();
 
         glPushMatrix();
-	        Dibujo.drawMalla(100);
-	        rubik.render();        
+        Dibujo.drawMalla(100);
+        //rubik.render();
+        for (int i=0; i<piezas.size(); i++){
+        	piezas.get(i).render();
+        }
+        
         glPopMatrix();
 
     }
@@ -155,11 +221,8 @@ public class Main {
 
     public void input(int delta){
         while(Keyboard.next()){
-            if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             	rubik.U(0);
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
-            	rubik.R(0);
             }
         }
             

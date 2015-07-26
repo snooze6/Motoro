@@ -97,38 +97,42 @@ public class CollisionsManager {
  * Sin embargo aquí lo que haces es retroceder la primera bola hasta que la distancia
  * entre ellas es mayor que la suma de sus radios, lo cual no parece adecuado
  */
-//  //Calculo la direccion en la que ha penetrado A sobre B
-//  Vector aux=Vector.norm(Vector.del(puntoB,puntoA));
-//  //Sobre esa dirección, quiero
-//  aux=Vector.prod(-A.getSize(),aux);
-//  Vector puntoA2=Vector.sum(puntoB,aux);
-//    Vector puntoA2=puntoA, puntoB2=puntoB, aux=Vector.norm(A.getVel());
-//    if(aux.x!=0 || aux.y!=0 || aux.z!=0){
-//        while(( Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize())){
-//            puntoA2=Vector.sum(puntoA2,Vector.prod(-0.01f,aux));
-//        }
-//    }
+  //Calculo la direccion en la que ha penetrado A sobre B
+  Vector aux=Vector.norm(Vector.del(puntoB,puntoA));
+  //Sobre esa dirección, quiero
+  aux=Vector.prod(-A.getSize(),aux);
+  Vector puntoA2=Vector.sum(puntoB,aux), puntoB2;
+  
+    puntoA2=puntoA;
+	puntoB2=puntoB;
+	aux=Vector.norm(A.getVel());
+    if(aux.x!=0 || aux.y!=0 || aux.z!=0){
+        while(( Vector.distPuntos(puntoA2, puntoB2)) <= (A.getSize() + B.getSize())){
+            puntoA2=Vector.sum(puntoA2,Vector.prod(-0.01f,aux));
+        }
+    }
             
-            /*
-             * PROBLEMA 1:
-             * 
-             * Las bolas al chocar se pueden poner una sobre otra
-             * 
-             * Bien, segundo razonamiento, sabemos que colisionaron, en consecuencia
-             * es evidente que debemos retrocederlas, cada una en la dirección de su velocidad
-             * pero invertida, y la pregunta es que cantidad, la respuesta es evidente
-             * - Cantidad = (A.getSize() + B.getSize())-distR
-             * o lo que es lo mismo
-             * cantidad + distR = A.getSize() + B.getSize()
-             * 
-             * Bien, una vez solucionado esto simplemente hay que saber cuanto retroceder cada una
-             * y eso depende únicamente del módulo de la velocidad de cada una, así pues
-             */
-            float cant = (A.getSize() + B.getSize())-distR;
-            float cantA = (cant*v1.mod())/(v1.mod()+v2.mod()),
-            	  cantB = (cant*v2.mod())/(v1.mod()+v2.mod());
-            Vector puntoA2=Vector.sum(puntoA, Vector.prod(cantA, Vector.norm(v1))),
-            	   puntoB2=Vector.sum(puntoB, Vector.prod(cantB, Vector.norm(v2)));
+//            /*
+//             * PROBLEMA 1:
+//             * 
+//             * Las bolas al chocar se pueden poner una sobre otra
+//             * 
+//             * Bien, segundo razonamiento, sabemos que colisionaron, en consecuencia
+//             * es evidente que debemos retrocederlas, cada una en la dirección de su velocidad
+//             * pero invertida, y la pregunta es que cantidad, la respuesta es evidente
+//             * - Cantidad = (A.getSize() + B.getSize())-distR
+//             * o lo que es lo mismo
+//             * cantidad + distR = A.getSize() + B.getSize()
+//             * 
+//             * Bien, una vez solucionado esto simplemente hay que saber cuanto retroceder cada una
+//             * y eso depende únicamente del módulo de la velocidad de cada una, así pues
+//             */
+//            float cant = (A.getSize() + B.getSize())-distR;
+//            float cantA = (cant*v1.mod())/(v1.mod()+v2.mod()),
+//            	  cantB = (cant*v2.mod())/(v1.mod()+v2.mod());
+//            Vector puntoA2=Vector.sum(puntoA, Vector.prod(cantA, Vector.norm(v1))),
+//            	   puntoB2=Vector.sum(puntoB, Vector.prod(cantB, Vector.norm(v2)));
+//            System.out.println((cant + distR) + " - "+ (A.getSize() + B.getSize()));
            
             x = Vector.norm(Vector.del(puntoA2, puntoB2));
             v1x = Vector.prod(x, Vector.dot(x, v1));
