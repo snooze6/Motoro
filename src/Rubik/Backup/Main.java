@@ -20,6 +20,7 @@ import Camera.Perspective;
 import Rubik.Cube;
 import Utilities.Dibujo;
 import Utilities.Vector;
+import Rubik.Piece;
 
 public class Main {
 
@@ -87,27 +88,34 @@ public class Main {
             	piezas.add(pieza);
         	}
         	
-//        	System.out.println(piezas.size());
-//        	Utils.printMatrix4f(piezas.get(2).getM());
-//        	Utils.printMatrix4f(piezas.get(8+2).getM());
+        	m.setIdentity();
+        	pieza = new Piece(new Matrix4f(m.translate(new Vector3f(0, 24, 0))), 5);
+        	piezas.add(pieza);
         	
-        	//------------------------------------------------------------------
-        	
-//        	Matrix4f m1 = new Matrix4f(), m2 = new Matrix4f();
-//        	
-//    		m1.m30 = 0; m1.m31 = 0; m1.m32 = 0;
-//    		m1.rotate((float)Math.toRadians(45), new Vector3f(0,1,0));
-//    		m1.translate(new Vector3f(24,0,0));
-//    		m1.m30 = 0; m1.m31 = 0; m1.m32 = 0;
-//    		m1.rotate((float)Math.toRadians(45), new Vector3f(0,1,0));
-//    		m1.translate(new Vector3f(24,0,0));
-//    		Utils.printMatrix4f(m1);
-//    		
-//    		m2.m30 = 0; m2.m31 = 0; m2.m32 = 0;
-//    		m2.rotate((float)Math.toRadians(90), new Vector3f(0,1,0));
-//    		m2.translate(new Vector3f(24,0,0));
-//    		Utils.printMatrix4f(m2);
-        	
+    }
+    
+    public void input(int delta){
+        while(Keyboard.next()){
+            if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_J)) {
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
+            }
+        }
+            
+        int dWheel = Mouse.getDWheel();
+        if (dWheel < 0) {
+            camera.morezoom();
+        } else if (dWheel > 0){
+            camera.lesszoom();
+        }
     }
     
 
@@ -219,20 +227,6 @@ public class Main {
         running = false;
     }
 
-    public void input(int delta){
-        while(Keyboard.next()){
-            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            	rubik.U(0);
-            }
-        }
-            
-        int dWheel = Mouse.getDWheel();
-        if (dWheel < 0) {
-            camera.morezoom();
-        } else if (dWheel > 0){
-            camera.lesszoom();
-        }
-    }
     public static void main(String[] argv) {
         Main MainDenis = new Main();
         MainDenis.start();

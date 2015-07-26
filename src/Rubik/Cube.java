@@ -127,11 +127,6 @@ public class Cube {
 		        	Piece back;
 		        	for (int k=0; k<n-1; k++){
 		        		for(int i=k; i<n-1-k; i++){
-//		        	   		piezas[i][j][k].translate(new Vector(+150,0,0));
-//			        		piezas[n-1-k][j][i].translate(new Vector(+150,0,0));
-//			        		piezas[n-1-i][j][n-1-k].translate(new Vector(+150,0,0));
-//			        		piezas[k][j][n-1-i].translate(new Vector(+150,0,0));
-		        			
 			        		back = piezas[i][j][k];
 			        		piezas[i][j][k] = piezas[k][j][n-1-i];
 			        		piezas[k][j][n-1-i] = piezas[n-1-i][j][n-1-k];
@@ -191,6 +186,20 @@ public class Cube {
 		        	    	piezas[j][i][k].translate(pos[j][i][k]);
 		        		}	
 			        }
+			        
+			        /*
+			         * Cambiar piezas en la matriz
+			         */
+		        	Piece back;
+		        	for (int k=0; k<n-1; k++){
+		        		for(int i=k; i<n-1-k; i++){
+			        		back = piezas[j][i][k];
+			        		piezas[j][i][k] = piezas[j][k][n-1-i];
+			        		piezas[j][k][n-1-i] = piezas[j][n-1-i][n-1-k];
+			        		piezas[j][n-1-i][n-1-k] = piezas[j][n-1-k][i];
+			        		piezas[j][n-1-k][i] = back;
+		        		}
+		        	}
 			        
 					System.out.println("Acabo - Ángulo Recorrido: "+angR+" - Tiempo empleado: "+cantime);
 					status = CubeState.RESTING;

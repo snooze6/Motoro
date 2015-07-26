@@ -1,6 +1,8 @@
 package Rubik;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glMultMatrix;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 import java.nio.FloatBuffer;
 
@@ -12,28 +14,28 @@ import Utilities.Dibujo;
 import Utilities.Vector;
 
 public class Piece {
-	
+
 	private Matrix4f m;
-	int size;
+	private int size;
 	
-	Piece(){
+	public Piece(){
 		m = new Matrix4f();
 		m.setIdentity();
 		size = 10;
 	}
 	
-	Piece(Matrix4f m){
+	public Piece(Matrix4f m){
 		this.m = new Matrix4f(m);
 		size = 10;
 	}
 	
-	Piece(int size){
+	public Piece(int size){
 		m = new Matrix4f();
 		m.setIdentity();
 		this.size = size;
 	}
 	
-	Piece(Matrix4f m, int size){
+	public Piece(Matrix4f m, int size){
 		this.m = new Matrix4f(m);
 		this.size = size;
 	}
@@ -63,6 +65,9 @@ public class Piece {
 //	public void mult(Matrix4f m){
 //		m = Matrix4f.mul(this.m, m, this.m);
 //	}
+	
+	//--------------------------------------------------------------------------
+	
 	
 	//--------------------------------------------------------------------------
 
