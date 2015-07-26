@@ -120,18 +120,26 @@ public class Cube {
 		        	    	piezas[i][j][k].translate(pos[i][j][k]);
 		        		}	
 			        }
-			        
-			        //TO-DO: Cambiar piezas en la matriz
+
+			        /*
+			         * Cambiar piezas en la matriz
+			         */
 		        	Piece back;
-		        	//piezas[0][j][0].translate(new Vector(-22, 0, 0));
-		        	for (int i=0; i<n-1; i++){
-		        		back = piezas[0][j][0];
-		        		piezas[0][j][0] = piezas[n-1][j][0] ;
-		        		piezas[n-1][j][0] = piezas[n-1][j][n-1];
-		        		piezas[n-1][j][n-1] = piezas[0][j][n-1];
-		        		piezas[0][j][n-1] = back;
+		        	for (int k=0; k<n-1; k++){
+		        		for(int i=k; i<n-1-k; i++){
+//		        	   		piezas[i][j][k].translate(new Vector(+150,0,0));
+//			        		piezas[n-1-k][j][i].translate(new Vector(+150,0,0));
+//			        		piezas[n-1-i][j][n-1-k].translate(new Vector(+150,0,0));
+//			        		piezas[k][j][n-1-i].translate(new Vector(+150,0,0));
+		        			
+			        		back = piezas[i][j][k];
+			        		piezas[i][j][k] = piezas[k][j][n-1-i];
+			        		piezas[k][j][n-1-i] = piezas[n-1-i][j][n-1-k];
+			        		piezas[n-1-i][j][n-1-k] = piezas[n-1-k][j][i];
+			        		piezas[n-1-k][j][i] = back;
+		        		}
 		        	}
-			        
+		        	
 					System.out.println("Acabo - Ángulo Recorrido: "+angR+" - Tiempo empleado: "+cantime);
 					status = CubeState.RESTING;
 				} else {
@@ -164,7 +172,12 @@ public class Cube {
 				break;
 			case R:
 				j=(n-1)-move; //Capa a mover
-				centro = Vector.del(centros.get(2), new Vector(0,move*(2*size+dist),0));
+//		        for (int i=0; i<n; i++){
+//	        		for (int k=0; k<n; k++){
+//	        	    	piezas[j][i][k].translate(new Vector(2,0,0));
+//	        		}	
+//		        }
+				centro = Vector.del(centros.get(4),new Vector(0,move*(2*size+dist),0));
 				if (cantime >= timeAnimation){
 					/*
 					 * Se acabó la animación
@@ -173,22 +186,11 @@ public class Cube {
 					 */				
 			        for (int i=0; i<n; i++){
 		        		for (int k=0; k<n; k++){
-		        	    	piezas[i][j][k].setPos(centro);
-		        	    	piezas[i][j][k].rotate(-90-angR, new Vector(0,1,0));
-		        	    	piezas[i][j][k].translate(pos[i][j][k]);
+		        	    	piezas[j][i][k].setPos(centro);
+		        	    	piezas[j][i][k].rotate(-90-angR, new Vector(1,0,0));
+		        	    	piezas[j][i][k].translate(pos[j][i][k]);
 		        		}	
 			        }
-			        
-			        //TO-DO: Cambiar piezas en la matriz
-		        	Piece back;
-		        	//piezas[0][j][0].translate(new Vector(-22, 0, 0));
-		        	for (int i=0; i<n-1; i++){
-		        		back = piezas[0][j][0];
-		        		piezas[0][j][0] = piezas[n-1][j][0] ;
-		        		piezas[n-1][j][0] = piezas[n-1][j][n-1];
-		        		piezas[n-1][j][n-1] = piezas[0][j][n-1];
-		        		piezas[0][j][n-1] = back;
-		        	}
 			        
 					System.out.println("Acabo - Ángulo Recorrido: "+angR+" - Tiempo empleado: "+cantime);
 					status = CubeState.RESTING;
@@ -207,13 +209,13 @@ public class Cube {
 		        		for (int k=0; k<n; k++){
 		        			if (cantime==0) {
 		        				//En el primer giro copio la posición de la pieza
-		        				pos[i][j][k] = new Vector(piezas[i][j][k].getPos());
-		        				pos[i][j][k].y=0;
-		        				System.out.print("  - Save - ");pos[i][j][k].print();
+		        				pos[j][i][k] = new Vector(piezas[j][i][k].getPos());
+		        				pos[j][i][k].x=0;
+		        				System.out.print("  - Save - ");pos[j][i][k].print();
 		        			}
-		        	    	piezas[i][j][k].setPos(centro);
-		        	    	piezas[i][j][k].rotate(ang, new Vector(0,1,0));
-		        	    	piezas[i][j][k].translate(pos[i][j][k]);
+		        	    	piezas[j][i][k].setPos(centro);
+		        	    	piezas[j][i][k].rotate(ang, new Vector(1,0,0));
+		        	    	piezas[j][i][k].translate(pos[j][i][k]);
 		        		}	
 			        }
 			        System.out.println("Me muevo - Tiempo pasado: "+cantime+" - Angulo: "+ang);

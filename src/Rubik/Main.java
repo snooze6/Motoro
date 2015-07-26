@@ -45,10 +45,26 @@ public class Main {
 		          camera.addCam(new Perspective());
 		          camera.addCam(new Perspective());
         
-        rubik = new Cube(3, 10, 0);
+        rubik = new Cube(4, 10, 0);
     }
     
-
+    public void input(int delta){
+        while(Keyboard.next()){
+            if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+            	rubik.U(0);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
+            	rubik.R(0);
+            }
+        }
+            
+        int dWheel = Mouse.getDWheel();
+        if (dWheel < 0) {
+            camera.morezoom();
+        } else if (dWheel > 0){
+            camera.lesszoom();
+        }
+    }
     
 
     protected void resize() {
@@ -153,23 +169,6 @@ public class Main {
         running = false;
     }
 
-    public void input(int delta){
-        while(Keyboard.next()){
-            if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
-            	rubik.U(0);
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_K)) {
-            	rubik.R(0);
-            }
-        }
-            
-        int dWheel = Mouse.getDWheel();
-        if (dWheel < 0) {
-            camera.morezoom();
-        } else if (dWheel > 0){
-            camera.lesszoom();
-        }
-    }
     public static void main(String[] argv) {
         Main MainDenis = new Main();
         MainDenis.start();
